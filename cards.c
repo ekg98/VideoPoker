@@ -3,18 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-/* structure definition for a deck of cards */
-struct card {
-	int value;
-	int suit;
-	int hold;
-};
+#include "cards.h"
 
 enum { HEART, DIAMOND, CLUB, SPADE, YES, NO };
 
 /* deal:  This function takes a structure of cards as input and randomly populates the deck with new cards.  This checks to see if the cards are held and if they are duplicates too. */
-void deal(struct card *deck, int size)
+void deal(struct card deck[], int size)
 {
 	int i, dupecheck;
 
@@ -39,14 +33,14 @@ void deal(struct card *deck, int size)
 			if(dupecheck != i)
 				if(deck[i].value == deck[dupecheck].value && deck[i].suit == deck[dupecheck].suit)
 				{
-					deal(deck, size);
+					/*deal(deck, size);*/
 				}
 		}
 	}
 }
 
 /* undeck:  unholds the deck and makes it useable */
-void unhold(struct card *deck, int size)
+void unhold(struct card deck[], int size)
 {
 	int i;
 
@@ -54,7 +48,8 @@ void unhold(struct card *deck, int size)
 		deck[i].hold = NO;
 }
 
-void hold(struct card *deck, int size)
+/* hold:  holds a whole deck of cards.  Effectively making it read only */
+void hold(struct card deck[], int size)
 {
 	int i;
 

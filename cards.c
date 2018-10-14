@@ -16,7 +16,7 @@ enum { HEART, DIAMOND, CLUB, SPADE, YES, NO };
 /* deal:  This function takes a structure of cards as input and randomly populates the deck with new cards.  This checks to see if the cards are held and if they are duplicates too. */
 void deal(struct card *deck, int size)
 {
-	int i;
+	int i, dupecheck;
 
 	srand(time(0));
 
@@ -29,8 +29,18 @@ void deal(struct card *deck, int size)
 			
 			while((deck[i].suit = rand() / (RAND_MAX / 4)) == 0);
 		}
+	}
 
-		/* check for duplicate card */
-		
+	/* check for duplicate card */
+	for(i = 0; i < size; i++)
+	{
+		for(dupecheck = 0; dupecheck < size; dupecheck++)		
+		{
+			if(dupecheck != i)
+				if(deck[i].value == deck[dupecheck].value && deck[i].suit == deck[dupecheck].suit)
+				{
+					deal(deck, size);
+				}
+		}
 	}
 }

@@ -44,3 +44,20 @@ void deal(struct card *deck, int size)
 		}
 	}
 }
+
+/* undeck:  unholds the deck and makes it useable */
+void unhold(struct card *deck, int size)
+{
+	int i;
+
+	for(i = 0; i < size; i++)
+		deck[i].hold = NO;
+}
+
+void hold(struct card *deck, int size)
+{
+	int i;
+
+	for(i = 0; i < size; i++)
+		deck[i].hold = YES;
+}

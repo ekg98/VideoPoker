@@ -5,10 +5,8 @@
 #include <time.h>
 #include "cards.h"
 
-enum { HEART, DIAMOND, CLUB, SPADE, YES, NO };
-
 /* deal:  This function takes a structure of cards as input and randomly populates the deck with new cards.  This checks to see if the cards are held and if they are duplicates too. */
-void deal(struct card deck[], int size)
+void deal(struct card *deck, int size)
 {
 	int i, dupecheck;
 
@@ -33,7 +31,7 @@ void deal(struct card deck[], int size)
 			if(dupecheck != i)
 				if(deck[i].value == deck[dupecheck].value && deck[i].suit == deck[dupecheck].suit)
 				{
-					/*deal(deck, size);*/
+					printf("Duplicate found card %d and %d.\n", i + 1, dupecheck + 1);	
 				}
 		}
 	}

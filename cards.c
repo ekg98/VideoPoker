@@ -6,51 +6,55 @@
 #include "cards.h"
 
 /* deal:  This function takes a structure of cards as input and randomly populates the deck with new cards.  This checks to see if the cards are held and if they are duplicates too. */
-void deal(struct card *deck, int size)
+void deal(struct card *hand, int size)
 {
-	int i, dupecheck;
+	int i, dupecheck, dupe = NO;
+
 
 	srand(time(0));
 
 	for(i = 0; i < size; i++)
 	{
 		/* if card is not held generate a new card on function call */
-		if(deck[i].hold == NO)
+		if(hand[i].hold == NO)
 		{
-			while((deck[i].value = rand() / (RAND_MAX / 13)) <= 1);
+			hand[i].value = 2 + (rand() / (RAND_MAX / 13));
 			
-			while((deck[i].suit = rand() / (RAND_MAX / 4)) == 0);
+			hand[i].suit = 1 + (rand() / (RAND_MAX / 4));
 		}
 	}
 
-	/* check for duplicate card */
+	/* check for duplicate cards */
 	for(i = 0; i < size; i++)
 	{
 		for(dupecheck = 0; dupecheck < size; dupecheck++)		
 		{
 			if(dupecheck != i)
-				if(deck[i].value == deck[dupecheck].value && deck[i].suit == deck[dupecheck].suit)
+				if(hand[i].value == hand[dupecheck].value && hand[i].suit == hand[dupecheck].suit)
 				{
-					printf("Duplicate found card %d and %d.\n", i + 1, dupecheck + 1);	
+					dupe = YES;	
 				}
 		}
 	}
+
+	/*if(dupe == YES)
+		deal(hand, size);*/
 }
 
-/* undeck:  unholds the deck and makes it useable */
-void unhold(struct card deck[], int size)
+/* undeck:  unholds the hand and makes it useable */
+void unhold(struct card hand[], int size)
 {
 	int i;
 
 	for(i = 0; i < size; i++)
-		deck[i].hold = NO;
+		hand[i].hold = NO;
 }
 
-/* hold:  holds a whole deck of cards.  Effectively making it read only */
-void hold(struct card deck[], int size)
+/* hold:  holds a whole hand of cards.  Effectively making it read only */
+void hold(struct card hand[], int size)
 {
 	int i;
 
 	for(i = 0; i < size; i++)
-		deck[i].hold = YES;
+		hand[i].hold = YES;
 }

@@ -10,4 +10,4 @@ void deal(struct card *, int);
 void unhold(struct card *, int);
 void hold(struct card *, int);
 
-enum { HEART, DIAMOND, CLUB, SPADE, YES, NO };
+enum { HEARTS, DIAMONDS, CLUBS, SPADES, YES, NO };

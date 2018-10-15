@@ -1,6 +1,8 @@
 /* debug:  This program is used as a interim test of the functions useable in cards.c */
 
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 #include "cards.h"
 
 int main()
@@ -34,7 +36,8 @@ int main()
 		"A"
 	};
 
-	unhold(hand, 5);
+	srand(time(NULL));
+	inithand(hand, 5);
 	deal(hand, 5);
 
 

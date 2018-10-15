@@ -8,11 +8,8 @@
 /* deal:  This function takes a structure of cards as input and randomly populates the deck with new cards.  This checks to see if the cards are held and if they are duplicates too. */
 void deal(struct card *hand, int size)
 {
-	int i, dupecheck, dupe = NO;
-
-
-	srand(time(0));
-
+	int i, dupcheck, duplicate = NO;
+	
 	for(i = 0; i < size; i++)
 	{
 		/* if card is not held generate a new card on function call */
@@ -27,22 +24,26 @@ void deal(struct card *hand, int size)
 	/* check for duplicate cards */
 	for(i = 0; i < size; i++)
 	{
-		for(dupecheck = 0; dupecheck < size; dupecheck++)		
+		for(dupcheck = 0; dupcheck < size; dupcheck++)		
 		{
-			if(dupecheck != i)
-				if(hand[i].value == hand[dupecheck].value && hand[i].suit == hand[dupecheck].suit)
+			if(dupcheck != i)
+				if(hand[i].value == hand[dupcheck].value && hand[i].suit == hand[dupcheck].suit)
 				{
-					dupe = YES;	
+					duplicate = YES;
+					break;	
 				}
+
 		}
 	}
 
-	/*if(dupe == YES)
-		deal(hand, size);*/
+	if(duplicate == YES)
+	{
+		deal(hand, size);
+	}
 }
 
 /* undeck:  unholds the hand and makes it useable */
-void unhold(struct card hand[], int size)
+void unhold(struct card *hand, int size)
 {
 	int i;
 
@@ -51,10 +52,26 @@ void unhold(struct card hand[], int size)
 }
 
 /* hold:  holds a whole hand of cards.  Effectively making it read only */
-void hold(struct card hand[], int size)
+void hold(struct card *hand, int size)
 {
 	int i;
 
 	for(i = 0; i < size; i++)
 		hand[i].hold = YES;
+}
+
+/* inithand:  Initializes a hand of cards */
+int inithand(struct card *hand, int size)
+{
+	int i;
+
+	for(i = 0; i < size; i++)
+	{
+		hand[i].value = 0;
+		hand[i].suit = 0;
+	}
+
+	unhold(hand, size);
+
+	return 0;
 }

@@ -36,7 +36,7 @@ int main()
 		"A"
 	};
 
-	srand(time(NULL));
+	srand(time(NULL));	/* seed the random number generator.  Need to break this out at a later date for more randomness */
 	inithand(hand, 5);
 	deal(hand, 5);
 

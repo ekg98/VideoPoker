@@ -20,8 +20,8 @@ int main()
 	};
 
 	char *value[] = {
-		"",
-		"",
+		"",		/* [0] not used currently */
+		"",		/* [1] reserved for low ace */
 		"2",
 		"3",
 		"4",
@@ -34,7 +34,7 @@ int main()
 		"J",
 		"Q",
 		"K",
-		"A"
+		"A"		/* [14] high ace */
 	};
 
 	srand(time(NULL));	/* seed the random number generator.  Need to break this out at a later date for more randomness */
@@ -52,6 +52,7 @@ int main()
 	}
 
 	printf("\nisflush returns: %d\n", isflush(hand, 5));
+	printf("isstraight returns: %d\n", isstraight(hand, 5));
 
 	return 0;
 }

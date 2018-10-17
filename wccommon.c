@@ -50,3 +50,12 @@ int isstraight(struct card *hand, int size)
 
 	return 0;				/* no sequence found */
 }
+
+/* isstraightflush:  Checks to see if a structure contains a straight flush.  Returns 1 if its a straight flush or 0 if none was detected. */
+int isstraightflush(struct card *hand, int size)
+{
+	if(isstraight(hand, size) && isflush(hand, size))
+		return 1;
+	else
+		return 0;
+}

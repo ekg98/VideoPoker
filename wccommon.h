@@ -2,3 +2,4 @@
 
 int isflush(struct card *, int);
 int isstraight(struct card *, int);
+int isstraightflush(struct card *, int);

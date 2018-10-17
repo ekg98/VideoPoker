@@ -53,6 +53,7 @@ int main()
 
 	printf("\nisflush returns: %d\n", isflush(hand, 5));
 	printf("isstraight returns: %d\n", isstraight(hand, 5));
+	printf("isstraightflush returns: %d\n", isstraightflush(hand, 5));
 
 	return 0;
 }

@@ -59,3 +59,68 @@ int isstraightflush(struct card *hand, int size)
 	else
 		return 0;
 }
+
+/* isfourkind:  Checks to see if a structure contains four of a kind.  Returns 1 if it contains four of a kind.  0 if none was detected. */
+int isfourkind(struct card *hand, int size)
+{
+	int i;
+	int table[15];
+
+	for(i = 0; i < 15; i++)
+		table[i] = 0;
+
+	for(i = 0; i < size; i++)
+		table[hand[i].value] += 1;
+
+	for(i = 0; i < 15; i++)
+	{
+		if(table[i] == 4)
+			return 1;
+	}
+
+	return 0;
+}
+
+/* isthreekind:  Checks to see if a structure contains three of a kind.  Returns 1 if it contains three of a kind.  0 if none was detected. */
+int isthreekind(struct card *hand, int size)
+{
+	int i;
+	int table[15];
+
+	for(i = 0; i < 15; i++)
+		table[i] = 0;
+
+	for(i = 0; i < size; i++)
+		table[hand[i].value] += 1;
+
+	for(i = 0; i < 15; i++)
+	{
+		if(table[i] == 3)
+			return 1;
+	}
+	return 0;
+}
+
+/* ispair:  Checks to see if a structure contains a pair.  Returns number of pairs if it contains a pair.  0 if none was detected. */
+int ispair(struct card *hand, int size)
+{
+	int i, pairCounter = 0;
+	int table[15];
+
+	for(i = 0; i < 15; i++)
+		table[i] = 0;
+
+	for(i = 0; i < size; i++)
+		table[hand[i].value] += 1;
+
+	for(i = 0; i < 15; i++)
+	{
+		if(table[i] == 2)
+			pairCounter += 1;
+	}
+	
+	if(pairCounter >= 1)
+		return pairCounter;
+	else
+		return 0;
+}

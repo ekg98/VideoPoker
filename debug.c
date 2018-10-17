@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "cards.h"
+#include "wccommon.h"
 
 int main()
 {
@@ -49,6 +50,8 @@ int main()
 		if(hand[i].hold == NO)
 			printf("UNHELD\n", hand[i].hold);
 	}
+
+	printf("\nisflush returns: %d\n", isflush(hand, 5));
 
 	return 0;
 }

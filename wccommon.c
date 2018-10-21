@@ -154,3 +154,24 @@ int isjackorbetter(struct card *hand, int size)
 
 	return 0;
 }
+
+/* isroyalflush:  Checks to see if a structure contains a royal flush.  Returns 1 if it contains a royal flush.  0 if none was detected. */
+int isroyalflush(struct card *hand, int size)
+{
+	int i, isRoyal = NO;
+	int table[15];
+
+	for(i = 0; i < 15; i++)
+		table[i] = 0;
+
+	for(i = 0; i < size; i++)
+		table[hand[i].value] += 1;
+
+	if(table[10] == 1 && table[11] == 1 && table[12] == 1 && table[13] == 1 && table[14] == 1)
+		isRoyal = YES;
+
+	if(isRoyal == YES && isflush(hand, size))
+		return 1;
+	else
+		return 0;
+}

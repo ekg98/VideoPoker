@@ -52,6 +52,7 @@ int main()
 	}
 
 	printf("\n");
+	printf("isroyalflush returns: %d\n", isroyalflush(hand, 5));
 	printf("isstraightflush returns: %d\n", isstraightflush(hand, 5));
 	printf("isfourkind returns: %d\n", isfourkind(hand, 5));
 	printf("isfullhouse returns: %d\n", isfullhouse(hand, 5));

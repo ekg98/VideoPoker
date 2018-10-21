@@ -124,3 +124,33 @@ int ispair(struct card *hand, int size)
 	else
 		return 0;
 }
+
+/* isfullhouse:  Checks to see if a structure contains a full house.  Returns 1 if it contains a full house.  0 if none was detected. */
+int isfullhouse(struct card *hand, int size)
+{
+	if(isthreekind(hand, size) && ispair(hand, size))
+		return 1;
+	else
+		return 0;
+}
+
+/* isjackorbetter:  Checks to see if a structure contains a jack or better.  Returns 1 if it contains a jack or better.  0 if none was detected. */
+int isjackorbetter(struct card *hand, int size)
+{
+	int i;
+	int table[15];
+
+	for(i = 0; i < 15; i++)
+		table[i] = 0;
+
+	for(i = 0; i < size; i++)
+		table[hand[i].value] += 1;
+
+	for(i = 11; i < 15; i++)
+	{
+		if(table[i] >= 1)
+			return 1;
+	}
+
+	return 0;
+}

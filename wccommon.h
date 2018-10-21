@@ -6,3 +6,5 @@ int isstraightflush(struct card *, int);
 int isfourkind(struct card *, int);
 int isthreekind(struct card *, int);
 int ispair(struct card *, int);
+int isfullhouse(struct card *, int);
+int isjackorbetter(struct card *, int);

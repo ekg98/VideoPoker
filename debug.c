@@ -51,12 +51,14 @@ int main()
 			printf("UNHELD\n", hand[i].hold);
 	}
 
-	printf("\nisflush returns: %d\n", isflush(hand, 5));
-	printf("isstraight returns: %d\n", isstraight(hand, 5));
+	printf("\n");
 	printf("isstraightflush returns: %d\n", isstraightflush(hand, 5));
 	printf("isfourkind returns: %d\n", isfourkind(hand, 5));
+	printf("isfullhouse returns: %d\n", isfullhouse(hand, 5));
+	printf("isflush returns: %d\n", isflush(hand, 5));
+	printf("isstraight returns: %d\n", isstraight(hand, 5));
 	printf("isthreekind returns: %d\n", isthreekind(hand, 5));
 	printf("ispair returns: %d\n", ispair(hand, 5));
-
+	printf("isjackorbetter returns: %d\n", isjackorbetter(hand, 5));
 	return 0;
 }

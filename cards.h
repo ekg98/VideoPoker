@@ -1,5 +1,6 @@
 /* cards.h:  Contains function prototypes and variables for a video poker game */
 
+/* Card information */
 struct card {
 	int value;
 	int suit;

@@ -6,19 +6,25 @@
 #include <stdio.h>
 #include "cards.h"
 #include "wccommon.h"
+#include "sdlcards.h"
 
 /* global constants aka defines */
 #define WINDOW_WIDTH  1920
 #define WINDOW_HEIGHT 1200
+#define CARD_WIDTH  350
+#define CARD_HEIGHT 500
 
 /* function prototypes */
 int initsdl(void);
 void closesdl(void);
+int loadDeck(void);
+void closeDeck(void);
 
 /* global vpoker variables */
 SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
+struct cardImage DeckImages[4];
 SDL_Event event;
 
 /* main program */
@@ -42,6 +48,7 @@ int main()
   return 0;
 }
 
+/* initsdl:  Start up SDL */
 int initsdl(void)
 {
   int imageFlags = IMG_INIT_PNG;
@@ -84,11 +91,16 @@ int initsdl(void)
     return 1;
   }
 
+  loadDeck();
+
   return 0;
 }
 
+/* closesdl:  Shut down SDL */
 void closesdl(void)
 {
+  closeDeck();
+
   SDL_DestroyRenderer(mainWindowRenderer);
   mainWindowRenderer = NULL;
 
@@ -100,4 +112,28 @@ void closesdl(void)
 
   IMG_Quit();
   SDL_Quit();
+}
+
+/* loadDeck:  Load deck of card images into memory. */
+int loadDeck(void)
+{
+  int suit, i;
+
+  for(suit = 0; suit < 4; suit++)
+  {
+    for(i = 0; i < 15; i++)
+      DeckImages[suit].card[i] = NULL;
+  }
+}
+
+/* closeDeck:  Free the images that were loaded for the deck of cards */
+void closeDeck(void)
+{
+  int suit, i;
+
+  for(suit = 0; suit < 4; suit++)
+  {
+    for(i = 0; i < 15; i++)
+      SDL_DestroyTexture(DeckImages[suit].card[i]);
+  }
 }

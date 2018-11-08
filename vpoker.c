@@ -2,11 +2,10 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include "cards.h"
 #include "wccommon.h"
-#include "sdlcards.h"
+/*#include "sdlcards.h"*/
 
 /* global constants aka defines */
 #define WINDOW_WIDTH  1920
@@ -24,7 +23,7 @@ void closeDeck(void);
 SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
-struct cardImage DeckImages[4];
+/*struct cardImage DeckImages[4];*/
 SDL_Event event;
 
 /* main program */
@@ -91,7 +90,9 @@ int initsdl(void)
     return 1;
   }
 
-  loadDeck();
+  /* Error checking for loading the texture deck */
+  /*if(loadDeck())
+    return 1;*/
 
   return 0;
 }
@@ -117,23 +118,73 @@ void closesdl(void)
 /* loadDeck:  Load deck of card images into memory. */
 int loadDeck(void)
 {
+/*
   int suit, i;
+  SDL_Surface *tempsurface = NULL;
+  SDL_Surface *cards[4];
+*/
+  /* load the cards into memory for manipulation */
+/*
+  cards[0] = IMG_Load("images/cardh.png");
+  cards[1] = IMG_Load("images/cardc.png");
+  cards[2] = IMG_Load("images/cards.png");
+  cards[3] = IMG_Load("images/cardd.png");
+*/
+  /* Error loading card images */
+  /*
+  for(suit = 0; suit < 4; suit++)
+  {
+    if(cards[suit] == NULL)
+    {
+      printf("SDL could not load images: %s", IMG_GetError());
+      return 1;
+    }
+  }
+  */
 
+  /* convert the surface to comply with the screen */
+/*
+  for(suit = 0; suit < 4; suit++)
+  {
+    tempsurface = SDL_ConvertSurface(cards[suit], mainWindowSurface->format, 0);
+    SDL_FreeSurface(cards[suit]);
+    cards[suit] = tempsurface;
+    SDL_FreeSurface(tempsurface);
+  }
+*/
+  /* Null the whole texture deck */
+/*
   for(suit = 0; suit < 4; suit++)
   {
     for(i = 0; i < 15; i++)
       DeckImages[suit].card[i] = NULL;
   }
+*/
+  /* free the function local surfaces */
+  /*for(suit = 0; suit < 4; suit++)
+  {
+    SDL_FreeSurface(cards[suit]);
+    cards[suit] = NULL;
+  }
+  SDL_FreeSurface(tempsurface);
+  tempsurface = NULL;
+
+  return 0;
+  */
 }
 
 /* closeDeck:  Free the images that were loaded for the deck of cards */
 void closeDeck(void)
 {
+/*
   int suit, i;
-
+*/
+  /* Destroy the whole deck */
+/*
   for(suit = 0; suit < 4; suit++)
   {
     for(i = 0; i < 15; i++)
       SDL_DestroyTexture(DeckImages[suit].card[i]);
   }
+  */
 }

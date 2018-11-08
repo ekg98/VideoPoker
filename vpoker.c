@@ -100,7 +100,7 @@ int initsdl(void)
 /* closesdl:  Shut down SDL */
 void closesdl(void)
 {
-  closeDeck();
+  /*closeDeck();*/
 
   SDL_DestroyRenderer(mainWindowRenderer);
   mainWindowRenderer = NULL;

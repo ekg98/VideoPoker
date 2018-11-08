@@ -1,13 +1,13 @@
 # Makefile for Video Poker project
 
 vpoker : vpoker.o cards.o wccommon.o
-	gcc -o vpoker vpoker.o cards.o wccommon.o -lSDL2 -lSDL2_image -lSDL2_ttf
+	gcc -o vpoker vpoker.o cards.o wccommon.o -lSDL2 -lSDL2_image 
 
 vpokerdebug : debug.o cards.o wccommon.o
 	gcc -o vpokerdebug debug.o cards.o wccommon.o
 
 vpoker.o : vpoker.c cards.h wccommon.h sdlcards.h
-	gcc -c vpoker.c -lSDL2 -lSDL2_image -lSDL2_ttf
+	gcc -c vpoker.c -lSDL2 -lSDL2_image 
 
 debug.o : debug.c cards.h wccommon.h
 	gcc -c debug.c

@@ -23,7 +23,8 @@ void closeDeck(void);
 SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
-struct cardImage DeckImages[4];
+SDL_Texture *DeckTextures[4];
+struct cardSuit cardSuitImage[4]; /* structure containing array of SDL_Texture */
 SDL_Event event;
 
 /* main program */
@@ -39,7 +40,6 @@ int main()
       while(event.type != SDL_QUIT)
       {
 
-        SDL_RenderCopy(mainWindowRenderer, DeckImages[0].card[0], NULL, NULL);
         SDL_RenderPresent(mainWindowRenderer);
         SDL_PollEvent(&event);
       }
@@ -119,9 +119,8 @@ int loadDeck(void)
 {
 
   int suit, i;
-  SDL_Texture *tempTexture = NULL;
   SDL_Surface *cards[4];
-  SDL_Texture *suitTexture[4];
+
 
   /* load the cards into memory for manipulation */
 
@@ -146,31 +145,23 @@ int loadDeck(void)
 
   for(suit = 0; suit < 4; suit++)
   {
-    tempTexture = SDL_CreateTextureFromSurface(mainWindowRenderer,cards[suit]);
-    suitTexture[suit] = tempTexture;
+    DeckTextures[suit] = SDL_CreateTextureFromSurface(mainWindowRenderer,cards[suit]);
   }
 
   /* Null the whole texture deck */
 
-  for(suit = 0; suit < 4; suit++)
+  /*for(suit = 0; suit < 4; suit++)
   {
     for(i = 0; i < 15; i++)
       DeckImages[suit].card[i] = NULL;
-  }
+  }*/
 
-  DeckImages[0].card[0] = suitTexture[0];
   /* free the function local surfaces */
   for(suit = 0; suit < 4; suit++)
   {
     SDL_FreeSurface(cards[suit]);
     cards[suit] = NULL;
-
-    /*SDL_DestroyTexture(suitTexture[suit]);
-    suitTexture[suit] = NULL;*/
   }
-
-  SDL_DestroyTexture(tempTexture);
-  tempTexture = NULL;
 
   return 0;
 
@@ -183,11 +174,10 @@ void closeDeck(void)
   int suit, i;
 
   /* Destroy the whole deck */
-
   for(suit = 0; suit < 4; suit++)
   {
-    for(i = 0; i < 15; i++)
-      SDL_DestroyTexture(DeckImages[suit].card[i]);
+    SDL_DestroyTexture(DeckTextures[suit]);
+    DeckTextures[suit] = NULL;
   }
 
 }

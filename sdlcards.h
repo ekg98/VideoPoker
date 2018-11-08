@@ -1,5 +1,5 @@
-/* Suit of card images */
+/* Suit of card image coordinates */
 
-struct cardImage {
-	SDL_Texture *card[15];
+struct cardSuit {
+	SDL_Rect *card[15];
 };

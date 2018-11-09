@@ -24,7 +24,7 @@ SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[4];
-struct cardSuit cardSuitImage[4]; /* structure containing array of SDL_Texture */
+struct cardSuitCoordinates cardCoordinates[4]; /* structure containing array of SDL_Texture */
 SDL_Event event;
 
 /* main program */
@@ -125,9 +125,9 @@ int loadDeck(void)
   /* load the cards into memory for manipulation */
 
   cards[0] = IMG_Load("images/cardh.png");
-  cards[1] = IMG_Load("images/cardc.png");
-  cards[2] = IMG_Load("images/cards.png");
-  cards[3] = IMG_Load("images/cardd.png");
+  cards[1] = IMG_Load("images/cardd.png");
+  cards[2] = IMG_Load("images/cardc.png");
+  cards[3] = IMG_Load("images/cards.png");
 
   /* Error loading card images */
 
@@ -140,21 +140,29 @@ int loadDeck(void)
     }
   }
 
+  	/* Null the whole deck texture array */
+	for(suit = 0; suit < 4; suit++)
+	{
+		DeckTextures[suit] = NULL;
+	}
 
   /* convert the surface to comply with the screen */
 
   for(suit = 0; suit < 4; suit++)
   {
-    DeckTextures[suit] = SDL_CreateTextureFromSurface(mainWindowRenderer,cards[suit]);
+    DeckTextures[suit] = SDL_CreateTextureFromSurface(mainWindowRenderer, cards[suit]);
   }
 
-  /* Null the whole texture deck */
+  /* Error check to see if deck texture was loaded into memory */
 
-  /*for(suit = 0; suit < 4; suit++)
+  for(suit = 0; suit < 4; suit++)
   {
-    for(i = 0; i < 15; i++)
-      DeckImages[suit].card[i] = NULL;
-  }*/
+  	if(DeckTextures[suit] == NULL)
+	{
+		printf("SDL could not load deck textures: %s\n", SDL_GetError());
+		return 1;
+	}
+  }
 
   /* free the function local surfaces */
   for(suit = 0; suit < 4; suit++)

@@ -1,5 +1,6 @@
 /* Suit of card image coordinates */
 
-struct cardSuit {
-	SDL_Rect *card[15];
+struct cardSuitCoordinates {
+	SDL_Rect *source[15];
+	SDL_Rect *dest[15];
 };

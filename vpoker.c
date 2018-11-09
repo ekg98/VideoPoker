@@ -23,8 +23,9 @@ void closeDeck(void);
 SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
-SDL_Texture *DeckTextures[4];
-struct cardSuitCoordinates cardCoordinates[4]; /* structure containing array of SDL_Texture */
+SDL_Texture *DeckTextures[4];	/* Array of pointers to the deck textures */
+struct cardSuitCoordinates cardCoordinates[4]; /* structure containing array of SDL_Rect */
+SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
 SDL_Event event;
 
 /* main program */
@@ -121,16 +122,13 @@ int loadDeck(void)
   int suit, i;
   SDL_Surface *cards[4];
 
-
   /* load the cards into memory for manipulation */
-
   cards[0] = IMG_Load("images/cardh.png");
   cards[1] = IMG_Load("images/cardd.png");
   cards[2] = IMG_Load("images/cardc.png");
   cards[3] = IMG_Load("images/cards.png");
 
   /* Error loading card images */
-
   for(suit = 0; suit < 4; suit++)
   {
     if(cards[suit] == NULL)
@@ -147,14 +145,12 @@ int loadDeck(void)
 	}
 
   /* convert the surface to comply with the screen */
-
   for(suit = 0; suit < 4; suit++)
   {
     DeckTextures[suit] = SDL_CreateTextureFromSurface(mainWindowRenderer, cards[suit]);
   }
 
   /* Error check to see if deck texture was loaded into memory */
-
   for(suit = 0; suit < 4; suit++)
   {
   	if(DeckTextures[suit] == NULL)
@@ -170,6 +166,25 @@ int loadDeck(void)
     SDL_FreeSurface(cards[suit]);
     cards[suit] = NULL;
   }
+
+	/* create output render coordinates dependent on screen resolution */
+	for(i = 0; i < 5; i++)
+	{
+		cardDest[i].x = WINDOW_HEIGHT / 2;
+		cardDest[i].y = (WINDOW_WIDTH / 5) * (i + 1);
+		cardDest[i].w = (WINDOW_WIDTH / 1920) * CARD_WIDTH;
+		cardDest[i].h = (WINDOW_HEIGHT / 1200) * CARD_HEIGHT;
+	}
+
+	/* create coordinates for the cards from the image deck textures */
+	for(suit = 0; suit < 4; suit++)
+		for(i = 0; i < 15; i++)
+		{
+			cardCoordinates[suit].source[i].x = 0;
+			cardCoordinates[suit].source[i].y = CARD_WIDTH * i;
+			cardCoordinates[suit],source[i].w = CARD_WIDTH;
+			cardCoordinates[suit].source[i].h = CARD_HEIGHT;
+		}
 
   return 0;
 

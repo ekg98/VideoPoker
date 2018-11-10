@@ -44,11 +44,11 @@ int main()
 	inithand(hand, 5);
 	deal(hand , 5);
 
-	for(i = 0; i < 5; i++)
-		SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].value], &cardDest[i]);
-
 	SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);
     	SDL_RenderClear(mainWindowRenderer);
+
+	for(i = 0; i < 5; i++)
+		SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].value], &cardDest[i]);
 
       while(event.type != SDL_QUIT)
       {
@@ -195,7 +195,7 @@ int loadDeck(void)
 		{
 			cardCoordinates[suit].source[i].x = 0;
 			cardCoordinates[suit].source[i].y = CARD_WIDTH * i;
-			cardCoordinates[suit],source[i].w = CARD_WIDTH;
+			cardCoordinates[suit].source[i].w = CARD_WIDTH;
 			cardCoordinates[suit].source[i].h = CARD_HEIGHT;
 		}
 

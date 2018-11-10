@@ -39,7 +39,7 @@ int main()
   else
   {
     	int i;
-	  
+
 	srand(time(NULL));
 	inithand(hand, 5);
 	deal(hand , 5);
@@ -183,8 +183,8 @@ int loadDeck(void)
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
-		cardDest[i].x = WINDOW_HEIGHT / 2;
-		cardDest[i].y = (((WINDOW_WIDTH / 5) * (i + 1)) - CARD_WIDTH);
+		cardDest[i].x = (((WINDOW_WIDTH / 5) * (i + 1)) - CARD_WIDTH);
+		cardDest[i].y = WINDOW_HEIGHT / 2;
 		cardDest[i].w = (WINDOW_WIDTH / 1920) * CARD_WIDTH;
 		cardDest[i].h = (WINDOW_HEIGHT / 1200) * CARD_HEIGHT;
 	}
@@ -193,8 +193,8 @@ int loadDeck(void)
 	for(suit = 0; suit < 4; suit++)
 		for(i = 0; i < 15; i++)
 		{
-			cardCoordinates[suit].source[i].x = 0;
-			cardCoordinates[suit].source[i].y = CARD_WIDTH * i;
+			cardCoordinates[suit].source[i].x = CARD_WIDTH * i;
+			cardCoordinates[suit].source[i].y = 0;
 			cardCoordinates[suit].source[i].w = CARD_WIDTH;
 			cardCoordinates[suit].source[i].h = CARD_HEIGHT;
 		}

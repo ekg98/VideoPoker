@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "cards.h"
 #include "wccommon.h"
 #include "sdlcards.h"
@@ -27,6 +29,7 @@ SDL_Texture *DeckTextures[4];	/* Array of pointers to the deck textures */
 struct cardSuitCoordinates cardCoordinates[4]; /* structure containing array of SDL_Rect */
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
 SDL_Event event;
+struct card hand[5];
 
 /* main program */
 int main()
@@ -35,8 +38,17 @@ int main()
     return 1;
   else
   {
-    SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);
-    SDL_RenderClear(mainWindowRenderer);
+    	int i;
+	  
+	srand(time(NULL));
+	inithand(hand, 5);
+	deal(hand , 5);
+
+	for(i = 0; i < 5; i++)
+		SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].value], &cardDest[i]);
+
+	SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);
+    	SDL_RenderClear(mainWindowRenderer);
 
       while(event.type != SDL_QUIT)
       {

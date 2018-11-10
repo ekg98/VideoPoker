@@ -184,7 +184,7 @@ int loadDeck(void)
 	for(i = 0; i < 5; i++)
 	{
 		cardDest[i].x = WINDOW_HEIGHT / 2;
-		cardDest[i].y = (WINDOW_WIDTH / 5) * (i + 1);
+		cardDest[i].y = (((WINDOW_WIDTH / 5) * (i + 1)) - CARD_WIDTH);
 		cardDest[i].w = (WINDOW_WIDTH / 1920) * CARD_WIDTH;
 		cardDest[i].h = (WINDOW_HEIGHT / 1200) * CARD_HEIGHT;
 	}

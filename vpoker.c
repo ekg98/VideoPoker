@@ -26,7 +26,7 @@ SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
-struct cardSuitCoordinates cardCoordinates[4]; /* structure containing array of SDL_Rect */
+struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
 SDL_Event event;
 struct card hand[5];
@@ -48,7 +48,7 @@ int main()
     	SDL_RenderClear(mainWindowRenderer);
 
 	for(i = 0; i < 5; i++)
-		SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].value], &cardDest[i]);
+		SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
 
       while(event.type != SDL_QUIT)
       {
@@ -190,7 +190,7 @@ int loadDeck(void)
 	}
 
 	/* create coordinates for the cards from the image deck textures */
-	for(suit = 0; suit < 4; suit++)
+	for(suit = 1; suit < 5; suit++)
 		for(i = 0; i < 15; i++)
 		{
 			cardCoordinates[suit].source[i].x = CARD_WIDTH * i;

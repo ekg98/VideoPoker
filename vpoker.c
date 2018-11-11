@@ -131,7 +131,7 @@ void closesdl(void)
 int loadDeck(void)
 {
 
-  int suit, i;
+  int suit, i, spaceWidth = 0, intervalAdjustment = 0;
   SDL_Surface *cards[5];
 
   /* load the cards into memory for manipulation */
@@ -180,6 +180,9 @@ int loadDeck(void)
     cards[suit] = NULL;
   }
 
+        spaceWidth = (WINDOW_HEIGHT / 5) - CARD_WIDTH;
+        intervalAdjustment = spaceWidth / 6;
+
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
@@ -190,6 +193,7 @@ int loadDeck(void)
 	}
 
 	/* create coordinates for the cards from the image deck textures */
+        /* first set element of the structure is ignored */
 	for(suit = 1; suit < 5; suit++)
 		for(i = 0; i < 15; i++)
 		{
@@ -210,7 +214,7 @@ void closeDeck(void)
   int suit, i;
 
   /* Destroy the whole deck */
-  for(suit = 0; suit < 4; suit++)
+  for(suit = 0; suit < 5; suit++)
   {
     SDL_DestroyTexture(DeckTextures[suit]);
     DeckTextures[suit] = NULL;

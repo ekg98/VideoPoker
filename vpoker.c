@@ -189,7 +189,8 @@ int loadDeck(void)
 	cardResWidthCorrected = (WINDOW_WIDTH / 1920.0) * CARD_WIDTH;
 	cardResHeightCorrected = (WINDOW_HEIGHT / 1200.0) * CARD_HEIGHT;
 
-	resCorrectedSpaceWidth = (WINDOW_WIDTH / 5.0) - cardResWidthCorrected;
+	/* calculate width of a single space on either side of a card */
+	resCorrectedSpaceWidth = (WINDOW_WIDTH - (cardResWidthCorrected * 5));
 	resCorrectedInterval = resCorrectedSpaceWidth / 6.0;
 
 	printf("RCSW = %f\n", resCorrectedSpaceWidth);

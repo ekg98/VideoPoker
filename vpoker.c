@@ -136,8 +136,9 @@ int loadDeck(void)
 	float resCorrectedInterval = 0.0;
 	float cardResHeightCorrected = 0.0;
 	float cardResWidthCorrected = 0.0;
-	float cardXCenter = 0.0;
+	float cardXEdge = 0.0;
 	float cardHalf = 0.0;
+	float edgeToCenter = 0.0;
 	SDL_Surface *cards[5];
 
 	/* load the cards into memory for manipulation */
@@ -190,23 +191,14 @@ int loadDeck(void)
 	cardResWidthCorrected = (WINDOW_WIDTH / 1920.0) * CARD_WIDTH;
 	cardResHeightCorrected = (WINDOW_HEIGHT / 1200.0) * CARD_HEIGHT;
 	cardHalf = cardResWidthCorrected / 2;
-	cardXCenter = ((WINDOW_WIDTH / 5.0) / 2);
+	edgeToCenter = (WINDOW_WIDTH / 5.0) / 2;
 
-
-	/* calculate width of a single space on either side of a card */
-	resCorrectedSpaceWidth = (WINDOW_WIDTH - (cardResWidthCorrected * 5));
-	resCorrectedInterval = resCorrectedSpaceWidth / 6.0;
-
-
-	printf("RCSW = %f\n", resCorrectedSpaceWidth);
-	printf("RCI  = %f\n", resCorrectedInterval);
-
-	/* (((WINDOW_WIDTH / 5) * (i + 1)) - cardResWidthCorrected) - resCorrectedInterval */
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
+		cardXEdge = (((WINDOW_WIDTH / 5.0) * (i + 1)));
 
-		cardDest[i].x = (cardXCenter - cardHalf) * (i + 1);
+		cardDest[i].x = (cardXEdge - edgeToCenter) - cardHalf;
 		cardDest[i].y = WINDOW_HEIGHT / 2;
 		cardDest[i].w = cardResWidthCorrected;
 		cardDest[i].h = cardResHeightCorrected;

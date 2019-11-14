@@ -1,4 +1,4 @@
-/* Suit of card image coordinates */
+/* Deck of card image coordinates */
 
 struct cardSuitCoordinates {
 	SDL_Rect source[15];

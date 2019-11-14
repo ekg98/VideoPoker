@@ -6,13 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "cards.h"
 #include "wccommon.h"
 #include "sdlcards.h"
+#include "sdlbuttons.h"
 
 /* Window resolutions and card resolutions - Must be floating point */
 #define WINDOW_WIDTH  1920.0
-#define WINDOW_HEIGHT 1200.0
+#define WINDOW_HEIGHT 1080.0
 #define CARD_WIDTH  350.0
 #define CARD_HEIGHT 500.0
 
@@ -33,32 +35,41 @@ SDL_Event event;
 struct card hand[5];
 
 /* main program */
-int main()
+int main(int argc, char *argv[])
 {
-        if(initsdl())  /* initialize sdl */
-                return 1;
-        else
-        {
-    	         int i;
+	if(argc > 1)
+	{
+		fprintf(stderr, "\nArguments not supported yet!\n");
+		return 1;
+	}
+	else
+	{
+        	if(initsdl())  /* initialize sdl */
+                	return 1;
+        	else
+        	{
+    	         	int i;
 
-                srand(time(NULL));
-                inithand(hand, 5);
-                deal(hand , 5);
+                	srand(time(NULL));
+                	inithand(hand, 5);
+                	deal(hand , 5);
 
-                SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);
-                SDL_RenderClear(mainWindowRenderer);
+                	SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
+                	SDL_RenderClear(mainWindowRenderer);
 
-		for(i = 0; i < 5; i++)
-			SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
+			for(i = 0; i < 5; i++)
+				SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
 
-		while(event.type != SDL_QUIT)
-		{
-	        	SDL_RenderPresent(mainWindowRenderer);
-        		SDL_PollEvent(&event);
+			while(event.type != SDL_QUIT)
+			{
+	        		SDL_RenderPresent(mainWindowRenderer);
+        			SDL_PollEvent(&event);
+			}
 		}
+
+		closesdl(); /* shut down sdl */
 	}
 
-	closesdl(); /* shut down sdl */
 	return 0;
 }
 

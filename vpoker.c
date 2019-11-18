@@ -23,24 +23,56 @@ int initsdl(void);
 void closesdl(void);
 int loadDeck(void);
 void closeDeck(void);
+void loadButtons(void);
+void closeButtons(void);
 
 /* global vpoker variables */
 SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
+SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
+struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
+SDL_Rect buttonDest[8]; // Destination for the buttons on the screen.  Dependant on screen resolution
 SDL_Event event;
 struct card hand[5];
 
 /* main program */
 int main(int argc, char *argv[])
 {
+
 	if(argc > 1)
 	{
-		fprintf(stderr, "\nArguments not supported yet!\n");
-		return 1;
+
+		// parse the argumenmt line for available options
+		for(int argCounter = 1; argCounter < argc; argCounter++)
+		{
+			if(*(argv[argCounter]) == '-')
+			{
+
+				// argv is a pointer.  We can increment pointers
+				while(*(argv[argCounter])++ != '\0')
+				{
+					switch(*argv[argCounter])
+					{
+						case 'h':
+							printf("help menu.\n");
+							return 0;
+							break;
+						default:
+							printf("Invalid argument(s)\n");
+							return 0;
+							break;
+					}
+				}
+
+
+			}
+		}
+
+		return 0;
 	}
 	else
 	{
@@ -244,4 +276,16 @@ void closeDeck(void)
 		SDL_DestroyTexture(DeckTextures[suit]);
     		DeckTextures[suit] = NULL;
   	}
+}
+
+// loadButtons: Load the buttons into memory
+void loadButtons(void)
+{
+
+}
+
+// closeButtons: Free the images used for the buttons from memory
+void closeButtons(void)
+{
+
 }

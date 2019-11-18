@@ -42,7 +42,7 @@ struct card hand[5];
 /* main program */
 int main(int argc, char *argv[])
 {
-
+	// checks to see if there are any arguments available
 	if(argc > 1)
 	{
 
@@ -58,12 +58,25 @@ int main(int argc, char *argv[])
 					switch(*argv[argCounter])
 					{
 						case 'h':
-							printf("help menu.\n");
+							printf("Video Poker - A copy of a vegas poker game.\n");
+							printf("arguments:\n");
+							printf("\t-h  This menu.\n");
+							printf("\t-r  Adjust screen resolution\n");
 							return 0;
+							break;
+						case 'r':
+							if((argc - 1) > argCounter)
+							{
+								// finish this  error checking for resolution modification
+								printf("%s\n", argv[++argCounter]);
+								printf("%d %d\n", argc, argCounter);
+							}
+							else
+								return 1;
 							break;
 						default:
 							printf("Invalid argument(s)\n");
-							return 0;
+							return 1;
 							break;
 					}
 				}
@@ -74,33 +87,32 @@ int main(int argc, char *argv[])
 
 		return 0;
 	}
-	else
-	{
-        	if(initsdl())  /* initialize sdl */
-                	return 1;
-        	else
-        	{
-    	         	int i;
 
-                	srand(time(NULL));
-                	inithand(hand, 5);
-                	deal(hand , 5);
+	// start the game here
+        if(initsdl())  /* initialize sdl */
+        	return 1;
+        else
+        {
+    	       	int i;
 
-                	SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
-                	SDL_RenderClear(mainWindowRenderer);
+        	srand(time(NULL));
+        	inithand(hand, 5);
+        	deal(hand , 5);
 
-			for(i = 0; i < 5; i++)
-				SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
+        	SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
+        	SDL_RenderClear(mainWindowRenderer);
 
-			while(event.type != SDL_QUIT)
-			{
-	        		SDL_RenderPresent(mainWindowRenderer);
-        			SDL_PollEvent(&event);
-			}
+		for(i = 0; i < 5; i++)
+			SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
+
+		while(event.type != SDL_QUIT)
+		{
+	       		SDL_RenderPresent(mainWindowRenderer);
+        		SDL_PollEvent(&event);
 		}
-
-		closesdl(); /* shut down sdl */
 	}
+
+	closesdl(); /* shut down sdl */
 
 	return 0;
 }

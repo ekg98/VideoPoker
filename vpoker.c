@@ -13,8 +13,8 @@
 #include "sdlbuttons.h"
 
 /* Window resolutions and card resolutions - Must be floating point */
-#define WINDOW_WIDTH  1920.0
-#define WINDOW_HEIGHT 1080.0
+#define DEFAULT_WINDOW_WIDTH  1920.0
+#define DEFAULT_WINDOW_HEIGHT 1080.0
 #define CARD_WIDTH  350.0
 #define CARD_HEIGHT 500.0
 
@@ -39,6 +39,10 @@ SDL_Rect buttonDest[8]; // Destination for the buttons on the screen.  Dependant
 SDL_Event event;
 struct card hand[5];
 
+// resolution variables
+int intWindowWidth = DEFAULT_WINDOW_WIDTH;
+int intWindowHeight = DEFAULT_WINDOW_HEIGHT;
+
 /* main program */
 int main(int argc, char *argv[])
 {
@@ -52,8 +56,8 @@ int main(int argc, char *argv[])
 			if(*(argv[argCounter]) == '-')
 			{
 
-				// argv is a pointer.  We can increment pointers
-				while(*(argv[argCounter])++ != '\0')
+				// argv is a pointer.  We can increment pointers.  Checks argCounter to see if its out of bounds otherwise it will result in checking last argument twice
+				while(argCounter < argc && *(argv[argCounter])++ != '\0')
 				{
 					switch(*argv[argCounter])
 					{
@@ -67,14 +71,63 @@ int main(int argc, char *argv[])
 						case 'r':
 							if((argc - 1) > argCounter)
 							{
-								// finish this  error checking for resolution modification
-								printf("%s\n", argv[++argCounter]);
-								printf("%d %d\n", argc, argCounter);
+								argCounter++;
+
+								// 1080p
+								if(strcmp(argv[argCounter], "1920x1080") == 0)
+								{
+									intWindowWidth = 1920;
+									intWindowHeight = 1080;
+									argCounter++;
+								}
+								// 720p
+								else if(strcmp(argv[argCounter], "1280x720") == 0)
+								{
+									intWindowWidth = 1280;
+									intWindowHeight = 720;
+									argCounter++;
+								}
+								// 1280x1024 SuperXGA
+								else if(strcmp(argv[argCounter], "1280x1024") == 0)
+								{
+									intWindowWidth = 1280;
+									intWindowHeight = 1024;
+									argCounter++;
+								}
+								// 1024x768 XGA
+								else if(strcmp(argv[argCounter], "1024x768") == 0)
+								{
+									intWindowWidth = 1024;
+									intWindowHeight = 768;
+									argCounter++;
+								}
+								// 800x600 SVGA
+								else if(strcmp(argv[argCounter], "800x600") == 0)
+								{
+									intWindowWidth = 800;
+									intWindowHeight = 600;
+									argCounter++;
+								}
+								// 640x480 VGA
+								else if(strcmp(argv[argCounter], "640x480") == 0)
+								{
+									intWindowWidth = 640;
+									intWindowHeight = 480;
+									argCounter++;
+								}
+								else
+								{
+									fprintf(stderr, "Invalid resolution requested.\n");
+									exit(1);
+								}
+
+								break;
 							}
 							else
 								return 1;
 							break;
 						default:
+							printf("%d\n", argCounter);
 							printf("Invalid argument(s)\n");
 							return 1;
 							break;
@@ -85,7 +138,7 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		return 0;
+
 	}
 
 	// start the game here
@@ -135,7 +188,7 @@ int initsdl(void)
 			return 1;
 		}
 		else
-			mainWindow = SDL_CreateWindow("Video Poker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+			mainWindow = SDL_CreateWindow("Video Poker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, intWindowWidth, intWindowHeight, SDL_WINDOW_SHOWN);
 	}
 
 	if(mainWindow == NULL)
@@ -243,18 +296,18 @@ int loadDeck(void)
   	}
 
 	/* calculate the cards width and height corrected for set screen resolution */
-	cardResWidthCorrected = (WINDOW_WIDTH / 1920.0) * CARD_WIDTH;
-	cardResHeightCorrected = (WINDOW_HEIGHT / 1200.0) * CARD_HEIGHT;
+	cardResWidthCorrected = (intWindowWidth / 1920.0) * CARD_WIDTH;
+	cardResHeightCorrected = (intWindowHeight / 1200.0) * CARD_HEIGHT;
 	cardHalf = cardResWidthCorrected / 2;
-	edgeToCenter = (WINDOW_WIDTH / 5.0) / 2;
+	edgeToCenter = (intWindowWidth / 5.0) / 2;
 
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
-		cardXEdge = (((WINDOW_WIDTH / 5.0) * (i + 1)));
+		cardXEdge = (((intWindowWidth / 5.0) * (i + 1)));
 
 		cardDest[i].x = (cardXEdge - edgeToCenter) - cardHalf;
-		cardDest[i].y = WINDOW_HEIGHT / 2;
+		cardDest[i].y = intWindowHeight/ 2;
 		cardDest[i].w = cardResWidthCorrected;
 		cardDest[i].h = cardResHeightCorrected;
 

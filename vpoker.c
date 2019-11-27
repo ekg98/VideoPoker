@@ -18,6 +18,9 @@
 #define CARD_WIDTH  350.0
 #define CARD_HEIGHT 500.0
 
+#define	TRUE	1
+#define	FALSE	0
+
 /* function prototypes */
 int initsdl(void);
 void closesdl(void);
@@ -151,7 +154,7 @@ int main(int argc, char *argv[])
         else
         {
     	       	int i;
-
+		int returnPressed = FALSE;
         	srand(time(NULL));
         	inithand(hand, 5);
         	deal(hand , 5);
@@ -163,8 +166,14 @@ int main(int argc, char *argv[])
 			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
 			// keyboard logic
-			if(currentKeyStates[SDL_SCANCODE_RETURN])
+			if(returnPressed == FALSE && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
+			{
+				returnPressed = TRUE;
 				deal(hand, 5);
+			}
+
+			if(returnPressed == TRUE && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
+				returnPressed = FALSE;
 
 			if(currentKeyStates[SDL_SCANCODE_1])
 				hand[0].hold = YES;

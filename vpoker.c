@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stdbool.h>
 #include "cards.h"
 #include "wccommon.h"
 #include "sdlcards.h"
@@ -154,7 +155,8 @@ int main(int argc, char *argv[])
         else
         {
     	       	int i;
-		int returnPressed = FALSE;
+		bool returnPressed = false;
+		bool onePressed = false;
         	srand(time(NULL));
         	inithand(hand, 5);
         	deal(hand , 5);
@@ -166,17 +168,27 @@ int main(int argc, char *argv[])
 			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
 			// keyboard logic
-			if(returnPressed == FALSE && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
+			if(returnPressed == false && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
 			{
-				returnPressed = TRUE;
+				returnPressed = true;
 				deal(hand, 5);
 			}
 
-			if(returnPressed == TRUE && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
-				returnPressed = FALSE;
+			if(returnPressed == true && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
+				returnPressed = false;
 
-			if(currentKeyStates[SDL_SCANCODE_1])
+
+			if(onePressed == false && event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)
+			{
 				hand[0].hold = YES;
+				onePressed = true;
+			}
+
+			if(onePressed == true && event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_RELEASED)
+			{
+				onePressed = false;
+			}
+
 
 			if(currentKeyStates[SDL_SCANCODE_2])
 				hand[1].hold = YES;

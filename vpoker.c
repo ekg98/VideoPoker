@@ -46,6 +46,10 @@ int intWindowHeight = DEFAULT_WINDOW_HEIGHT;
 /* main program */
 int main(int argc, char *argv[])
 {
+
+	// main variables
+
+
 	// checks to see if there are any arguments available
 	if(argc > 1)
 	{
@@ -152,16 +156,40 @@ int main(int argc, char *argv[])
         	inithand(hand, 5);
         	deal(hand , 5);
 
-        	SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
-        	SDL_RenderClear(mainWindowRenderer);
-
-		for(i = 0; i < 5; i++)
-			SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
-
 		while(event.type != SDL_QUIT)
 		{
-	       		SDL_RenderPresent(mainWindowRenderer);
+			// poll for events, mouse ,or keyboard input
         		SDL_PollEvent(&event);
+			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+			// keyboard logic
+			if(currentKeyStates[SDL_SCANCODE_RETURN])
+				deal(hand, 5);
+
+			if(currentKeyStates[SDL_SCANCODE_1])
+				hand[0].hold = YES;
+
+			if(currentKeyStates[SDL_SCANCODE_2])
+				hand[1].hold = YES;
+
+			if(currentKeyStates[SDL_SCANCODE_3])
+				hand[2].hold = YES;
+
+			if(currentKeyStates[SDL_SCANCODE_4])
+				hand[3].hold = YES;
+
+			if(currentKeyStates[SDL_SCANCODE_5])
+				hand[4].hold = YES;
+
+			// draw images
+			SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
+	        	SDL_RenderClear(mainWindowRenderer);
+
+			for(i = 0; i < 5; i++)
+				SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
+
+			// update the screen
+			SDL_RenderPresent(mainWindowRenderer);
 		}
 	}
 

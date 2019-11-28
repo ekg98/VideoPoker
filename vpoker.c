@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
         {
     	       	int i;
 		bool returnPressed = false;
-		bool onePressed = false;
+		bool onePrevHeld, twoPrevHeld, threePrevHeld, fourPrevHeld, fivePrevHeld = false;
         	srand(time(NULL));
         	inithand(hand, 5);
         	deal(hand , 5);
@@ -177,30 +177,80 @@ int main(int argc, char *argv[])
 			if(returnPressed == true && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
 				returnPressed = false;
 
-
-			if(onePressed == false && event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)
+			// first card hold logic
+			if(event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)
 			{
-				hand[0].hold = YES;
-				onePressed = true;
+				if(onePrevHeld == false)
+				{
+					hand[0].hold = YES;
+					onePrevHeld = true;
+				}
+				else
+				{
+					hand[0].hold = NO;
+					onePrevHeld = false;
+				}
 			}
 
-			if(onePressed == true && event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_RELEASED)
+			// second card hold logic
+			if(event.key.keysym.scancode == SDL_SCANCODE_2 && event.key.state == SDL_PRESSED)
 			{
-				onePressed = false;
+				if(twoPrevHeld == false)
+				{
+					hand[1].hold = YES;
+					twoPrevHeld = true;
+				}
+				else
+				{
+					hand[1].hold = NO;
+					twoPrevHeld = false;
+				}
 			}
 
+			// third card hold logic
+			if(event.key.keysym.scancode == SDL_SCANCODE_3 && event.key.state == SDL_PRESSED)
+			{
+				if(threePrevHeld == false)
+				{
+					hand[2].hold = YES;
+					threePrevHeld = true;
+				}
+				else
+				{
+					hand[2].hold = NO;
+					threePrevHeld = false;
+				}
+			}
 
-			if(currentKeyStates[SDL_SCANCODE_2])
-				hand[1].hold = YES;
+			// fourth card hold logic
+			if(event.key.keysym.scancode == SDL_SCANCODE_4 && event.key.state == SDL_PRESSED)
+			{
+				if(fourPrevHeld == false)
+				{
+					hand[3].hold = YES;
+					fourPrevHeld = true;
+				}
+				else
+				{
+					hand[3].hold = NO;
+					fourPrevHeld = false;
+				}
+			}
 
-			if(currentKeyStates[SDL_SCANCODE_3])
-				hand[2].hold = YES;
-
-			if(currentKeyStates[SDL_SCANCODE_4])
-				hand[3].hold = YES;
-
-			if(currentKeyStates[SDL_SCANCODE_5])
-				hand[4].hold = YES;
+			// fifth card hold logic
+			if(event.key.keysym.scancode == SDL_SCANCODE_5 && event.key.state == SDL_PRESSED)
+			{
+				if(fivePrevHeld == false)
+				{
+					hand[4].hold = YES;
+					fivePrevHeld = true;
+				}
+				else
+				{
+					hand[4].hold = NO;
+					fivePrevHeld = false;
+				}
+			}
 
 			// draw images
 			SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color

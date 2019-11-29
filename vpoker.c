@@ -155,27 +155,40 @@ int main(int argc, char *argv[])
         else
         {
     	       	int i;
-		bool returnPressed = false;
-		bool onePrevHeld, twoPrevHeld, threePrevHeld, fourPrevHeld, fivePrevHeld = false;
+		bool returnPrevPressed, onePrevHeld, twoPrevHeld, threePrevHeld, fourPrevHeld, fivePrevHeld = false;
+		bool firstDeal = true;
         	srand(time(NULL));
         	inithand(hand, 5);
-        	deal(hand , 5);
+        	//deal(hand , 5);
 
 		while(event.type != SDL_QUIT)
 		{
 			// poll for events, mouse ,or keyboard input
         		SDL_PollEvent(&event);
-			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
-			// keyboard logic
-			if(returnPressed == false && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
+			// deal keyboard logic
+			if(event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
 			{
-				returnPressed = true;
-				deal(hand, 5);
+				// first deal
+				if(firstDeal == true && returnPrevPressed == false)
+				{
+					unhold(hand, 5);
+					deal(hand, 5);
+					firstDeal = false;
+					returnPrevPressed = true;
+					printf("Good Luck!\n");
+				}
+				if(firstDeal == false && returnPrevPressed == false)
+				{
+					deal(hand, 5);
+					firstDeal = true;
+					returnPrevPressed = true;
+					printf("Game Over!\n");
+				}
 			}
 
-			if(returnPressed == true && event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
-				returnPressed = false;
+			if(event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
+				returnPrevPressed = false;
 
 			// first card hold logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)

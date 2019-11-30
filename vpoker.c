@@ -29,6 +29,8 @@ int loadDeck(void);
 void closeDeck(void);
 void loadButtons(void);
 void closeButtons(void);
+int loadFont(void);
+void closeText(void);
 
 /* global vpoker variables */
 SDL_Window *mainWindow = NULL;
@@ -36,6 +38,10 @@ SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
+TTF_Font *holdText = NULL;	// ttf text containing hold flag
+SDL_Texture *holdTexture = NULL;	// texture holding the hold text
+SDL_Rect holdSource;
+SDL_Rect holdDest;
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -272,11 +278,15 @@ int main(int argc, char *argv[])
 			for(i = 0; i < 5; i++)
 				SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
 
+			SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest);
+
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);
 		}
 	}
 
+	closeDeck();
+	closeText();
 	closesdl(); /* shut down sdl */
 
 	return 0;
@@ -329,6 +339,15 @@ int initsdl(void)
 	if(loadDeck())
 		return 1;
 
+	if(TTF_Init() == -1)
+	{
+		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+		return 1;
+	}
+
+	if(loadFont())
+		return 1;
+
 	return 0;
 }
 
@@ -337,12 +356,15 @@ void closesdl(void)
 {
 	closeDeck();
 
+
+
 	SDL_DestroyRenderer(mainWindowRenderer);
 	mainWindowRenderer = NULL;
 
 	SDL_DestroyWindow(mainWindow);
 	mainWindow = NULL;
 
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -465,4 +487,48 @@ void loadButtons(void)
 void closeButtons(void)
 {
 
+}
+
+// close any open ttf text
+void closeText(void)
+{
+	TTF_CloseFont(holdText);
+	holdText = NULL;
+
+	SDL_DestroyTexture(holdTexture);
+}
+
+int loadFont(void)
+{
+	// pointer to open text file
+	holdText = TTF_OpenFont("fonts/OneSlot.ttf", 32);
+
+	if(holdText == NULL)
+	{
+		fprintf(stderr, "Failed to load fonts, %s\n", TTF_GetError());
+		return 1;
+	}
+
+	SDL_Color holdColor = {255, 255, 255};
+	SDL_Surface *holdSurface = TTF_RenderText_Solid(holdText, "HOLD", holdColor);
+
+	if(holdSurface == NULL)
+		return 1;
+
+	holdTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, holdSurface);
+
+	if(holdTexture == NULL)
+		return 1;
+
+	holdDest.w = holdSurface->w;
+	holdDest.h = holdSurface->h;
+
+	holdDest.x = 0;
+	holdDest.y = 0;
+
+
+
+	SDL_FreeSurface(holdSurface);
+
+	return 0;
 }

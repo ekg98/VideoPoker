@@ -41,7 +41,7 @@ SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
 TTF_Font *holdText = NULL;	// ttf text containing hold flag
 SDL_Texture *holdTexture = NULL;	// texture holding the hold text
 SDL_Rect holdSource;
-SDL_Rect holdDest;
+SDL_Rect holdDest[5];
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -278,7 +278,21 @@ int main(int argc, char *argv[])
 			for(i = 0; i < 5; i++)
 				SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
 
-			SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest);
+			if(hand[0].hold == YES)
+				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[0]);
+
+			if(hand[1].hold == YES)
+				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[1]);
+
+			if(hand[2].hold == YES)
+				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[2]);
+
+			if(hand[3].hold == YES)
+				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[3]);
+
+			if(hand[4].hold == YES)
+				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[4]);
+
 
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);
@@ -520,13 +534,35 @@ int loadFont(void)
 	if(holdTexture == NULL)
 		return 1;
 
-	holdDest.w = holdSurface->w;
-	holdDest.h = holdSurface->h;
+	holdDest[0].w = holdSurface->w;
+	holdDest[0].h = holdSurface->h;
 
-	holdDest.x = 0;
-	holdDest.y = 0;
+	holdDest[1].w = holdSurface->w;
+	holdDest[1].h = holdSurface->h;
 
+	holdDest[2].w = holdSurface->w;
+	holdDest[2].h = holdSurface->h;
 
+	holdDest[3].w = holdSurface->w;
+	holdDest[3].h = holdSurface->h;
+
+	holdDest[4].w = holdSurface->w;
+	holdDest[4].h = holdSurface->h;
+
+	holdDest[0].x = 0;
+	holdDest[0].y = 0;
+
+	holdDest[1].x = holdSurface->w * 1 + 10;
+	holdDest[1].y = 0;
+
+	holdDest[2].x = holdSurface->w * 2 + 20;
+	holdDest[2].y = 0;
+
+	holdDest[3].x = holdSurface->w * 3 + 30;
+	holdDest[3].y = 0;
+
+	holdDest[4].x = holdSurface->w * 4 + 40;
+	holdDest[4].y = 0;
 
 	SDL_FreeSurface(holdSurface);
 

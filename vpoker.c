@@ -175,17 +175,27 @@ int main(int argc, char *argv[])
 			// deal keyboard logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
 			{
-				// first deal
+				// first deal.  Unhold all cards and reset hold key states
 				if(firstDeal == true && returnPrevPressed == false)
 				{
+					// reset hold key states
+					onePrevHeld = false;
+					twoPrevHeld = false;
+					threePrevHeld = false;
+					fourPrevHeld = false;
+					fivePrevHeld = false;
+
+					// unhold and deal cards
 					unhold(hand, 5);
 					deal(hand, 5);
 					firstDeal = false;
 					returnPrevPressed = true;
 					printf("Good Luck!\n");
 				}
+				// second deal
 				if(firstDeal == false && returnPrevPressed == false)
 				{
+					// deal cards that are not held
 					deal(hand, 5);
 					firstDeal = true;
 					returnPrevPressed = true;

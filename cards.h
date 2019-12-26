@@ -4,12 +4,12 @@
 struct card {
 	int value;
 	int suit;
-	int hold;
+	int held;
 };
 
 void deal(struct card *, int);
-void unhold(struct card *, int);
-void hold(struct card *, int);
+void unheld(struct card *, int);
+void held(struct card *, int);
 int inithand(struct card *, int);
 
 enum { HEARTS, DIAMONDS, CLUBS, SPADES, YES, NO };

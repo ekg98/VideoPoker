@@ -38,10 +38,10 @@ SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
-TTF_Font *holdText = NULL;	// ttf text containing hold flag
-SDL_Texture *holdTexture = NULL;	// texture holding the hold text
-SDL_Rect holdSource;
-SDL_Rect holdDest[5];
+TTF_Font *heldText = NULL;	// ttf text containing held flag
+SDL_Texture *heldTexture = NULL;	// texture helding the held text
+SDL_Rect heldSource;
+SDL_Rect heldDest[5];
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -165,7 +165,6 @@ int main(int argc, char *argv[])
 		bool firstDeal = true;
         	srand(time(NULL));
         	inithand(hand, 5);
-        	//deal(hand , 5);
 
 		while(event.type != SDL_QUIT)
 		{
@@ -175,18 +174,18 @@ int main(int argc, char *argv[])
 			// deal keyboard logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
 			{
-				// first deal.  Unhold all cards and reset hold key states
+				// first deal.  Unheld all cards and reset held key states
 				if(firstDeal == true && returnPrevPressed == false)
 				{
-					// reset hold key states
+					// reset held key states
 					onePrevHeld = false;
 					twoPrevHeld = false;
 					threePrevHeld = false;
 					fourPrevHeld = false;
 					fivePrevHeld = false;
 
-					// unhold and deal cards
-					unhold(hand, 5);
+					// unheld and deal cards
+					unheld(hand, 5);
 					deal(hand, 5);
 					firstDeal = false;
 					returnPrevPressed = true;
@@ -206,77 +205,77 @@ int main(int argc, char *argv[])
 			if(event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
 				returnPrevPressed = false;
 
-			// first card hold logic
+			// first card held logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)
 			{
 				if(onePrevHeld == false)
 				{
-					hand[0].hold = YES;
+					hand[0].held = YES;
 					onePrevHeld = true;
 				}
 				else
 				{
-					hand[0].hold = NO;
+					hand[0].held = NO;
 					onePrevHeld = false;
 				}
 			}
 
-			// second card hold logic
+			// second card held logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_2 && event.key.state == SDL_PRESSED)
 			{
 				if(twoPrevHeld == false)
 				{
-					hand[1].hold = YES;
+					hand[1].held = YES;
 					twoPrevHeld = true;
 				}
 				else
 				{
-					hand[1].hold = NO;
+					hand[1].held = NO;
 					twoPrevHeld = false;
 				}
 			}
 
-			// third card hold logic
+			// third card held logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_3 && event.key.state == SDL_PRESSED)
 			{
 				if(threePrevHeld == false)
 				{
-					hand[2].hold = YES;
+					hand[2].held = YES;
 					threePrevHeld = true;
 				}
 				else
 				{
-					hand[2].hold = NO;
+					hand[2].held = NO;
 					threePrevHeld = false;
 				}
 			}
 
-			// fourth card hold logic
+			// fourth card held logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_4 && event.key.state == SDL_PRESSED)
 			{
 				if(fourPrevHeld == false)
 				{
-					hand[3].hold = YES;
+					hand[3].held = YES;
 					fourPrevHeld = true;
 				}
 				else
 				{
-					hand[3].hold = NO;
+					hand[3].held = NO;
 					fourPrevHeld = false;
 				}
 			}
 
-			// fifth card hold logic
+			// fifth card held logic
 			if(event.key.keysym.scancode == SDL_SCANCODE_5 && event.key.state == SDL_PRESSED)
 			{
 				if(fivePrevHeld == false)
 				{
-					hand[4].hold = YES;
+					hand[4].held = YES;
 					fivePrevHeld = true;
 				}
 				else
 				{
-					hand[4].hold = NO;
+					hand[4].held = NO;
 					fivePrevHeld = false;
 				}
 			}
@@ -288,20 +287,20 @@ int main(int argc, char *argv[])
 			for(i = 0; i < 5; i++)
 				SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
 
-			if(hand[0].hold == YES)
-				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[0]);
+			if(hand[0].held == YES)
+				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[0]);
 
-			if(hand[1].hold == YES)
-				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[1]);
+			if(hand[1].held == YES)
+				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[1]);
 
-			if(hand[2].hold == YES)
-				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[2]);
+			if(hand[2].held == YES)
+				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[2]);
 
-			if(hand[3].hold == YES)
-				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[3]);
+			if(hand[3].held == YES)
+				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[3]);
 
-			if(hand[4].hold == YES)
-				SDL_RenderCopy(mainWindowRenderer, holdTexture, NULL, &holdDest[4]);
+			if(hand[4].held == YES)
+				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
 
 
 			// update the screen
@@ -462,7 +461,7 @@ int loadDeck(void)
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
-		cardXEdge = (((intWindowWidth / 5.0) * (i + 1)));
+		cardXEdge = (((intWindowWidth / 5.0) * (i + 1.0)));
 
 		cardDest[i].x = (cardXEdge - edgeToCenter) - cardHalf;
 		cardDest[i].y = intWindowHeight/ 2;
@@ -516,65 +515,69 @@ void closeButtons(void)
 // close any open ttf text
 void closeText(void)
 {
-	TTF_CloseFont(holdText);
-	holdText = NULL;
+	TTF_CloseFont(heldText);
+	heldText = NULL;
 
-	SDL_DestroyTexture(holdTexture);
+	SDL_DestroyTexture(heldTexture);
 }
 
 int loadFont(void)
 {
 	// pointer to open text file
-	holdText = TTF_OpenFont("fonts/OneSlot.ttf", 32);
+	heldText = TTF_OpenFont("fonts/OneSlot.ttf", 40);
 
-	if(holdText == NULL)
+	if(heldText == NULL)
 	{
 		fprintf(stderr, "Failed to load fonts, %s\n", TTF_GetError());
 		return 1;
 	}
 
-	SDL_Color holdColor = {255, 255, 255};
-	SDL_Surface *holdSurface = TTF_RenderText_Solid(holdText, "HOLD", holdColor);
+	SDL_Color heldColor = {255, 255, 255};
+	SDL_Surface *heldSurface = TTF_RenderText_Solid(heldText, "HELD", heldColor);
 
-	if(holdSurface == NULL)
+	if(heldSurface == NULL)
 		return 1;
 
-	holdTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, holdSurface);
+	heldTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, heldSurface);
 
-	if(holdTexture == NULL)
+	// if was able to create a valid held text.  Then plan logic to place it on the screen
+	if(heldTexture == NULL)
 		return 1;
+	else
+	{
+		float heldTextWidth = heldSurface->w;
+		float heldTextHeight = heldSurface->h;
 
-	holdDest[0].w = holdSurface->w;
-	holdDest[0].h = holdSurface->h;
+		float correctedHeldTextWidth;
+	 	float correctedHeldTextHeight;
+		float heldTextXEdge;
+		float edgeToCenter;
+		float heldTextHalf;
 
-	holdDest[1].w = holdSurface->w;
-	holdDest[1].h = holdSurface->h;
+		// corrects initial size for the screen resolution being used
+		correctedHeldTextWidth = (intWindowWidth / 1920.0) * heldTextWidth;
+		correctedHeldTextHeight = (intWindowHeight / 1200.0) * heldTextHeight;
 
-	holdDest[2].w = holdSurface->w;
-	holdDest[2].h = holdSurface->h;
+		edgeToCenter = (intWindowWidth / 5) / 2;
+		heldTextHalf = correctedHeldTextWidth / 2;
 
-	holdDest[3].w = holdSurface->w;
-	holdDest[3].h = holdSurface->h;
+		for(int i = 0; i < 5; i++)
+		{
+			heldTextXEdge = (intWindowWidth / 5.0) * (i + 1.0);
 
-	holdDest[4].w = holdSurface->w;
-	holdDest[4].h = holdSurface->h;
+			heldDest[i].w = correctedHeldTextWidth;
+			heldDest[i].h = correctedHeldTextHeight;
+			heldDest[i].y = intWindowHeight / 2.2;
+			heldDest[i].x = (heldTextXEdge - edgeToCenter) - heldTextHalf;
+		}
 
-	holdDest[0].x = 0;
-	holdDest[0].y = 0;
 
-	holdDest[1].x = holdSurface->w * 1 + 10;
-	holdDest[1].y = 0;
+		// x is across.  y is down. 2.2 is a test value
 
-	holdDest[2].x = holdSurface->w * 2 + 20;
-	holdDest[2].y = 0;
 
-	holdDest[3].x = holdSurface->w * 3 + 30;
-	holdDest[3].y = 0;
+	}
 
-	holdDest[4].x = holdSurface->w * 4 + 40;
-	holdDest[4].y = 0;
-
-	SDL_FreeSurface(holdSurface);
+	SDL_FreeSurface(heldSurface);
 
 	return 0;
 }

@@ -452,9 +452,9 @@ int loadDeck(void)
     		cards[suit] = NULL;
   	}
 
-	/* calculate the cards width and height corrected for set screen resolution */
-	cardResWidthCorrected = (intWindowWidth / 1920.0) * CARD_WIDTH;
-	cardResHeightCorrected = (intWindowHeight / 1200.0) * CARD_HEIGHT;
+	/* calculate the cards width and height corrected for set screen resolution.  0.7 is a correction factor since cards are made for 1920x1080 resolution */
+	cardResWidthCorrected = ((intWindowWidth / 1920.0) * CARD_WIDTH) * 0.7;
+	cardResHeightCorrected = ((intWindowHeight / 1200.0) * CARD_HEIGHT) * 0.7;
 	cardHalf = cardResWidthCorrected / 2;
 	edgeToCenter = (intWindowWidth / 5.0) / 2;
 

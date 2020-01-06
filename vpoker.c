@@ -18,6 +18,7 @@
 #define DEFAULT_WINDOW_HEIGHT 1080.0
 #define CARD_WIDTH  350.0
 #define CARD_HEIGHT 500.0
+#define	SPACING_MULTIPLIER	7	// multiplier to determine spacing between the cards.  intWindowWidth / SPACING_MULTIPLIER
 
 #define	TRUE	1
 #define	FALSE	0
@@ -395,7 +396,6 @@ void closesdl(void)
 /* loadDeck:  Load deck of card images into memory. */
 int loadDeck(void)
 {
-
 	int suit, i, spaceWidth = 0;
 	float resCorrectedSpaceWidth = 0.0;
 	float resCorrectedInterval = 0.0;
@@ -404,6 +404,7 @@ int loadDeck(void)
 	float cardXEdge = 0.0;
 	float cardHalf = 0.0;
 	float edgeToCenter = 0.0;
+	float spacingDistance = 0.0;
 	SDL_Surface *cards[5];
 
 	/* load the cards into memory for manipulation */
@@ -457,22 +458,29 @@ int loadDeck(void)
 	cardResHeightCorrected = ((intWindowHeight / 1200.0) * CARD_HEIGHT) * 0.7;
 	cardHalf = cardResWidthCorrected / 2;
 	edgeToCenter = (intWindowWidth / 5.0) / 2;
+	spacingDistance = intWindowWidth / SPACING_MULTIPLIER;
 
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
-		cardXEdge = (((intWindowWidth / 5.0) * (i + 1.0)));
+		//cardXEdge = (((intWindowWidth / 5.0) * (i + 1.0)));
 
-		cardDest[i].x = (cardXEdge - edgeToCenter) - cardHalf;
+		//cardDest[i].x = (cardXEdge - edgeToCenter) - cardHalf;
 		cardDest[i].y = intWindowHeight/ 2;
 		cardDest[i].w = cardResWidthCorrected;
 		cardDest[i].h = cardResHeightCorrected;
 
-		printf("\tcardDest[%d].x = %d\n", i, cardDest[i].x);
-		printf("cardDest[%d].y = %d\n", i, cardDest[i].y);
+		//printf("\tcardDest[%d].x = %d\n", i, cardDest[i].x);
+		//printf("cardDest[%d].y = %d\n", i, cardDest[i].y);
 		printf("cardDest[%d].w = %d\n", i, cardDest[i].w);
 		printf("cardDest[%d].h = %d\n", i, cardDest[i].h);
 	}
+
+	cardDest[0].x = ((intWindowWidth / 2) - cardHalf) - (spacingDistance * 2);
+	cardDest[1].x = ((intWindowWidth / 2) - cardHalf) - (spacingDistance * 1);
+	cardDest[2].x = (intWindowWidth / 2) - cardHalf;
+	cardDest[3].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 1);
+	cardDest[4].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 2);
 
 	/* create coordinates for the cards from the image deck textures */
         /* first set element of the structure is ignored */
@@ -553,6 +561,7 @@ int loadFont(void)
 		float heldTextXEdge;
 		float edgeToCenter;
 		float heldTextHalf;
+		float spacingDistance = 0.0;
 
 		// corrects initial size for the screen resolution being used
 		correctedHeldTextWidth = (intWindowWidth / 1920.0) * heldTextWidth;
@@ -561,6 +570,8 @@ int loadFont(void)
 		edgeToCenter = (intWindowWidth / 5) / 2;
 		heldTextHalf = correctedHeldTextWidth / 2;
 
+		spacingDistance = intWindowWidth / SPACING_MULTIPLIER;
+
 		for(int i = 0; i < 5; i++)
 		{
 			heldTextXEdge = (intWindowWidth / 5.0) * (i + 1.0);
@@ -568,11 +579,15 @@ int loadFont(void)
 			heldDest[i].w = correctedHeldTextWidth;
 			heldDest[i].h = correctedHeldTextHeight;
 			heldDest[i].y = intWindowHeight / 2.2;
-			heldDest[i].x = (heldTextXEdge - edgeToCenter) - heldTextHalf;
+			//heldDest[i].x = (heldTextXEdge - edgeToCenter) - heldTextHalf;
 		}
 
+		heldDest[0].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 2);
+		heldDest[1].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 1);
+		heldDest[2].x = (intWindowWidth / 2) - heldTextHalf;
+		heldDest[3].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 1);
+		heldDest[4].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 2);
 
-		// x is across.  y is down. 2.2 is a test value
 
 
 	}

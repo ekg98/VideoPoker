@@ -15,7 +15,7 @@ debug.o : debug.c cards.h wccommon.h
 cards.o : cards.c cards.h
 	gcc -c cards.c
 
-wccommon.o : wccommon.c cards.h
+wccommon.o : wccommon.c cards.h wccommon.h
 	gcc -c wccommon.c
 
 sdlfonts.o : sdlfonts.c sdlfonts.h

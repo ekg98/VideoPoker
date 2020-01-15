@@ -61,5 +61,10 @@ int main()
 	printf("isthreekind returns: %d\n", isthreekind(hand, 5));
 	printf("ispair returns: %d\n", ispair(hand, 5));
 	printf("isjackorbetter returns: %d\n", isjackorbetter(hand, 5));
+
+	char *winningString = NULL;
+	printf("%s\n", (winningString = jacksOrBetterWinCheck(hand)));
+	free(winningString);
+
 	return 0;
 }

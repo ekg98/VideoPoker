@@ -1,5 +1,8 @@
 /* wccommon.c:  Winning Check Common functions.  This file contains common functions used to determine winners in a game of video poker */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "cards.h"
 
 /* isflush:  Checks to see if a structure contains flush.  Returns the suit value of a flush or 0 if no flush was detected. */
@@ -17,7 +20,7 @@ int isflush(struct card *hand, int size)
 			return 0;			/* if the current suit being checked was not equal to the last then return 0 */
 	}
 
-	return prevCardSuit;	
+	return prevCardSuit;
 }
 
 /* isstraight:  Checks to see if a structure contains a straight.  Returns 1 if its a straight or 0 if no straight was detected. */
@@ -118,7 +121,7 @@ int ispair(struct card *hand, int size)
 		if(table[i] == 2)
 			pairCounter += 1;
 	}
-	
+
 	if(pairCounter >= 1)
 		return pairCounter;
 	else
@@ -174,4 +177,64 @@ int isroyalflush(struct card *hand, int size)
 		return 1;
 	else
 		return 0;
+}
+
+char *jacksOrBetterWinCheck(struct card *hand)
+{
+	int stringSize = 0;
+	char *returnString = NULL;
+
+	// royal flush check
+	if(isroyalflush(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Royal Flush")))
+			strcpy(returnString, "Royal Flush");
+	}
+	else if(isstraightflush(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Straight Flush")))
+			strcpy(returnString, "Straight Flush");
+	}
+	else if(isfourkind(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Four of a Kind")))
+			strcpy(returnString, "Four of a Kind");
+	}
+	else if(isfullhouse(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Full House")))
+			strcpy(returnString, "Full House");
+	}
+	else if(isflush(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Flush")))
+			strcpy(returnString, "Flush");
+	}
+	else if(isstraight(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Straight")))
+			strcpy(returnString, "Straight");
+	}
+	else if(isthreekind(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Three of a Kind")))
+			strcpy(returnString, "Three of a Kind");
+	}
+	else if(ispair(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Two Pair")))
+			strcpy(returnString, "Two Pair");
+	}
+	if(isjackorbetter(hand, 5))
+	{
+		if(returnString = (char *) malloc(sizeof("Jacks or Better")))
+			strcpy(returnString, "Jacks or Better");
+	}
+	else if(returnString == NULL)
+	{
+		if(returnString = (char *) malloc(sizeof("Game Over")))
+			strcpy(returnString, "Game Over");
+	}
+
+	return returnString;
 }

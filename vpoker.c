@@ -19,7 +19,6 @@
 #define DEFAULT_WINDOW_HEIGHT 1080.0
 #define CARD_WIDTH  350.0
 #define CARD_HEIGHT 500.0
-#define	SPACING_MULTIPLIER	7	// multiplier to determine spacing between the cards.  intWindowWidth / SPACING_MULTIPLIER
 
 #define	TRUE	1
 #define	FALSE	0
@@ -40,8 +39,7 @@ SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
 SDL_Texture *heldTexture = NULL;	// texture helding the held text
-SDL_Rect heldSource;
-SDL_Rect heldDest[5];
+SDL_Rect heldDest[5];	// Destination for the held text on the screen.  Dependant on screen resolution.
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -160,7 +158,7 @@ int main(int argc, char *argv[])
         	return 1;
         else
         {
-    	       	int i;
+    	       	int i = 0;
 		bool returnPrevPressed, onePrevHeld, twoPrevHeld, threePrevHeld, fourPrevHeld, fivePrevHeld = false;
 		bool firstDeal = true;
         	srand(time(NULL));
@@ -458,7 +456,7 @@ int loadDeck(void)
 
 	// card spacing calculations
 	cardHalf = cardResWidthCorrected / 2;
-	spacingDistance = intWindowWidth / SPACING_MULTIPLIER;
+	spacingDistance = intWindowWidth / 7;
 
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)

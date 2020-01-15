@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include "cards.h"
 #include "wccommon.h"
+#include "sdlfonts.h"
 #include "sdlcards.h"
 #include "sdlbuttons.h"
 
@@ -30,8 +31,7 @@ int loadDeck(void);
 void closeDeck(void);
 void loadButtons(void);
 void closeButtons(void);
-int loadFont(void);
-void closeText(void);
+
 
 /* global vpoker variables */
 SDL_Window *mainWindow = NULL;
@@ -39,7 +39,6 @@ SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
-TTF_Font *heldText = NULL;	// ttf text containing held flag
 SDL_Texture *heldTexture = NULL;	// texture helding the held text
 SDL_Rect heldSource;
 SDL_Rect heldDest[5];
@@ -456,24 +455,17 @@ int loadDeck(void)
 	/* calculate the cards width and height corrected for set screen resolution.  0.7 is a correction factor since cards are made for 1920x1080 resolution */
 	cardResWidthCorrected = ((intWindowWidth / 1920.0) * CARD_WIDTH) * 0.7;
 	cardResHeightCorrected = ((intWindowHeight / 1200.0) * CARD_HEIGHT) * 0.7;
+
+	// card spacing calculations
 	cardHalf = cardResWidthCorrected / 2;
-	edgeToCenter = (intWindowWidth / 5.0) / 2;
 	spacingDistance = intWindowWidth / SPACING_MULTIPLIER;
 
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
-		//cardXEdge = (((intWindowWidth / 5.0) * (i + 1.0)));
-
-		//cardDest[i].x = (cardXEdge - edgeToCenter) - cardHalf;
 		cardDest[i].y = intWindowHeight/ 2;
 		cardDest[i].w = cardResWidthCorrected;
 		cardDest[i].h = cardResHeightCorrected;
-
-		//printf("\tcardDest[%d].x = %d\n", i, cardDest[i].x);
-		//printf("cardDest[%d].y = %d\n", i, cardDest[i].y);
-		printf("cardDest[%d].w = %d\n", i, cardDest[i].w);
-		printf("cardDest[%d].h = %d\n", i, cardDest[i].h);
 	}
 
 	cardDest[0].x = ((intWindowWidth / 2) - cardHalf) - (spacingDistance * 2);
@@ -518,81 +510,4 @@ void loadButtons(void)
 void closeButtons(void)
 {
 
-}
-
-// close any open ttf text
-void closeText(void)
-{
-	TTF_CloseFont(heldText);
-	heldText = NULL;
-
-	SDL_DestroyTexture(heldTexture);
-}
-
-int loadFont(void)
-{
-	// pointer to open text file
-	heldText = TTF_OpenFont("fonts/OneSlot.ttf", 40);
-
-	if(heldText == NULL)
-	{
-		fprintf(stderr, "Failed to load fonts, %s\n", TTF_GetError());
-		return 1;
-	}
-
-	SDL_Color heldColor = {255, 255, 255};
-	SDL_Surface *heldSurface = TTF_RenderText_Solid(heldText, "HELD", heldColor);
-
-	if(heldSurface == NULL)
-		return 1;
-
-	heldTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, heldSurface);
-
-	// if was able to create a valid held text.  Then plan logic to place it on the screen
-	if(heldTexture == NULL)
-		return 1;
-	else
-	{
-		float heldTextWidth = heldSurface->w;
-		float heldTextHeight = heldSurface->h;
-
-		float correctedHeldTextWidth;
-	 	float correctedHeldTextHeight;
-		float heldTextXEdge;
-		float edgeToCenter;
-		float heldTextHalf;
-		float spacingDistance = 0.0;
-
-		// corrects initial size for the screen resolution being used
-		correctedHeldTextWidth = (intWindowWidth / 1920.0) * heldTextWidth;
-		correctedHeldTextHeight = (intWindowHeight / 1200.0) * heldTextHeight;
-
-		edgeToCenter = (intWindowWidth / 5) / 2;
-		heldTextHalf = correctedHeldTextWidth / 2;
-
-		spacingDistance = intWindowWidth / SPACING_MULTIPLIER;
-
-		for(int i = 0; i < 5; i++)
-		{
-			heldTextXEdge = (intWindowWidth / 5.0) * (i + 1.0);
-
-			heldDest[i].w = correctedHeldTextWidth;
-			heldDest[i].h = correctedHeldTextHeight;
-			heldDest[i].y = intWindowHeight / 2.2;
-			//heldDest[i].x = (heldTextXEdge - edgeToCenter) - heldTextHalf;
-		}
-
-		heldDest[0].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 2);
-		heldDest[1].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 1);
-		heldDest[2].x = (intWindowWidth / 2) - heldTextHalf;
-		heldDest[3].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 1);
-		heldDest[4].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 2);
-
-
-
-	}
-
-	SDL_FreeSurface(heldSurface);
-
-	return 0;
 }

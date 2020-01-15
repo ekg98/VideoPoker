@@ -1,12 +1,12 @@
 # Makefile for Video Poker project
 
-vpoker : vpoker.o cards.o wccommon.o
-	gcc -o vpoker vpoker.o cards.o wccommon.o -lSDL2 -lSDL2_image -lSDL2_ttf
+vpoker : vpoker.o cards.o wccommon.o sdlfonts.o
+	gcc -o vpoker vpoker.o cards.o wccommon.o sdlfonts.o -lSDL2 -lSDL2_image -lSDL2_ttf
 
 vpokerdebug : debug.o cards.o wccommon.o
 	gcc -o vpokerdebug debug.o cards.o wccommon.o
 
-vpoker.o : vpoker.c cards.h wccommon.h sdlcards.h
+vpoker.o : vpoker.c cards.h wccommon.h sdlcards.h sdlfonts.h
 	gcc -c vpoker.c -lSDL2 -lSDL2_image -lSDL2_ttf
 
 debug.o : debug.c cards.h wccommon.h
@@ -18,8 +18,11 @@ cards.o : cards.c cards.h
 wccommon.o : wccommon.c cards.h
 	gcc -c wccommon.c
 
+sdlfonts.o : sdlfonts.c sdlfonts.h
+	gcc -c sdlfonts.c
+
 clean :
-	rm vpoker vpoker.o cards.o wccommon.o
+	rm vpoker vpoker.o cards.o wccommon.o sdlfonts.o
 
 cleandebug :
 	rm vpokerdebug debug.o cards.o wccommon.o

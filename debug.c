@@ -45,10 +45,10 @@ int main()
 	for(i = 0; i < 5; i++)
 	{
 		printf("%s\t%s \t\t", value[hand[i].value], suit[hand[i].suit]);
-		if(hand[i].hold == YES)
-			printf("HELD\n", hand[i].hold);
-		if(hand[i].hold == NO)
-			printf("UNHELD\n", hand[i].hold);
+		if(hand[i].held == YES)
+			printf("HELD\n");
+		if(hand[i].held == NO)
+			printf("UNHELD\n");
 	}
 
 	printf("\n");

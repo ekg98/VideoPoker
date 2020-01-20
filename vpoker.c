@@ -302,8 +302,9 @@ int main(int argc, char *argv[])
 			if(hand[4].held == YES)
 				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
 
-			gameStatus(hand, &gameStatusDest);
-			SDL_RenderCopy(mainWindowRenderer, gameStatusTexture, NULL, &gameStatusDest);	
+			// gameStatus returns true on failure.  When no win is detected.  NULL causes problems with ttf render.
+			if(!gameStatus(hand, &gameStatusDest))
+				SDL_RenderCopy(mainWindowRenderer, gameStatusTexture, NULL, &gameStatusDest);
 
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);

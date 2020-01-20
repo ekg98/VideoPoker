@@ -88,18 +88,20 @@ int isfourkind(struct card *hand, int size)
 /* isthreekind:  Checks to see if a structure contains three of a kind.  Returns 1 if it contains three of a kind.  0 if none was detected. */
 int isthreekind(struct card *hand, int size)
 {
-	int i;
+	int intCounter = 0;
 	int table[15];
+	int tableCounter = 0;
 
-	for(i = 0; i < 15; i++)
-		table[i] = 0;
+	// initializing lookup table
+	for(intCounter = 0; intCounter < 15; intCounter++)
+		table[intCounter] = 0;
 
-	for(i = 0; i < size; i++)
-		table[hand[i].value] += 1;
+	for(intCounter = 0; intCounter < size; intCounter++)
+		table[hand[intCounter].value] += 1;
 
-	for(i = 0; i < 15; i++)
+	for(intCounter = 0; intCounter < 15; intCounter++)
 	{
-		if(table[i] == 3)
+		if(table[intCounter] == 3)
 			return 1;
 	}
 	return 0;
@@ -226,15 +228,15 @@ char *jacksOrBetterWinCheck(struct card *hand)
 		if(returnString = (char *) malloc(sizeof("Two Pair")))
 			strcpy(returnString, "Two Pair");
 	}
-	if(isjackorbetter(hand, 5))
+	else if(isjackorbetter(hand, 5))
 	{
 		if(returnString = (char *) malloc(sizeof("Jacks or Better")))
 			strcpy(returnString, "Jacks or Better");
 	}
 	else if(returnString == NULL)
 	{
-		if(returnString = (char *) malloc(sizeof("Game Over")))
-			strcpy(returnString, "Game Over");
+		if(returnString = (char *) malloc(sizeof(char)))
+			*returnString = '\0';
 	}
 
 	return returnString;

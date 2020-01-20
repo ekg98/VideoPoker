@@ -97,11 +97,19 @@ bool gameStatus(struct card *hand, SDL_Rect *gameStatusDest)
 {
 	char *winningString = NULL;
 	SDL_Color gameStatusColor = {255, 255, 255};
-	SDL_Surface *gameStatusSurface = TTF_RenderText_Solid(mainText, (winningString = jacksOrBetterWinCheck(hand)), gameStatusColor);
+
+	// when finding null return true
+	winningString = jacksOrBetterWinCheck(hand);
+
+	if(*winningString == '\0')
+		return true;
+
+	SDL_Surface *gameStatusSurface = TTF_RenderText_Solid(mainText, winningString, gameStatusColor);
+
 
 	if(gameStatusSurface == NULL)
 	{
-		fprintf(stderr, "Could not render gameStatusTexture.");
+		fprintf(stderr, "Could not render gameStatusTexture.\n");
 		return true;
 	}
 

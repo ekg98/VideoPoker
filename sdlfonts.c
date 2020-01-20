@@ -3,6 +3,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <stdbool.h>
+#include "cards.h"
+#include "wccommon.h"
+
 
 #define SPACING_MULTIPLIER	7	// spacing multiplier for distance between cards.
 
@@ -10,23 +14,24 @@ extern SDL_Renderer *mainWindowRenderer;
 extern int intWindowWidth;
 extern int intWindowHeight;
 extern SDL_Texture *heldTexture;
+extern SDL_Texture *gameStatusTexture;
 extern SDL_Rect heldDest[5];
 
-TTF_Font *heldText;
+TTF_Font *mainText;
 
-int loadFont(void)
+int loadFonts(void)
 {
 	// pointer to open text file
-	heldText = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+	mainText = TTF_OpenFont("fonts/OneSlot.ttf", 40);
 
-	if(heldText == NULL)
+	if(mainText == NULL)
 	{
-		fprintf(stderr, "Failed to load fonts, %s\n", TTF_GetError());
+		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
 		return 1;
 	}
 
 	SDL_Color heldColor = {255, 255, 255};
-	SDL_Surface *heldSurface = TTF_RenderText_Solid(heldText, "HELD", heldColor);
+	SDL_Surface *heldSurface = TTF_RenderText_Solid(mainText, "HELD", heldColor);
 
 	if(heldSurface == NULL)
 		return 1;
@@ -81,8 +86,45 @@ int loadFont(void)
 // close any open ttf text
 void closeText(void)
 {
-	TTF_CloseFont(heldText);
-	heldText = NULL;
+	TTF_CloseFont(mainText);
+	mainText = NULL;
 
 	SDL_DestroyTexture(heldTexture);
+	SDL_DestroyTexture(gameStatusTexture);
+}
+
+bool gameStatus(struct card *hand, SDL_Rect *gameStatusDest)
+{
+	char *winningString = NULL;
+	SDL_Color gameStatusColor = {255, 255, 255};
+	SDL_Surface *gameStatusSurface = TTF_RenderText_Solid(mainText, (winningString = jacksOrBetterWinCheck(hand)), gameStatusColor);
+
+	if(gameStatusSurface == NULL)
+	{
+		fprintf(stderr, "Could not render gameStatusTexture.");
+		return true;
+	}
+
+	gameStatusTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusSurface);
+
+	float gameStatusTextWidth = gameStatusSurface->w;
+	float gameStatusTextHeight = gameStatusSurface->h;
+
+	float correctedGameStatusTextHeight = 0.0;
+	float correctedGameStatusTextWidth = 0.0;
+
+	// corrects initial size for the screen resolution being used
+	correctedGameStatusTextWidth = (intWindowWidth / 1920.0) * gameStatusTextWidth;
+	correctedGameStatusTextHeight = (intWindowHeight / 1200.0) * gameStatusTextHeight;
+
+	gameStatusDest->h = correctedGameStatusTextHeight;
+	gameStatusDest->w = correctedGameStatusTextWidth;
+
+	gameStatusDest->y = intWindowHeight / 2.4;
+	gameStatusDest->x = (intWindowWidth / 2) - (correctedGameStatusTextWidth / 2);
+
+	jacksOrBetterWinCheckFree(winningString);
+	SDL_FreeSurface(gameStatusSurface);
+
+	return false;
 }

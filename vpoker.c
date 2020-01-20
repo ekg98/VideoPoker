@@ -39,7 +39,9 @@ SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
 SDL_Texture *heldTexture = NULL;	// texture helding the held text
+SDL_Texture *gameStatusTexture = NULL;
 SDL_Rect heldDest[5];	// Destination for the held text on the screen.  Dependant on screen resolution.
+SDL_Rect gameStatusDest;
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -300,6 +302,8 @@ int main(int argc, char *argv[])
 			if(hand[4].held == YES)
 				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
 
+			gameStatus(hand, &gameStatusDest);
+			SDL_RenderCopy(mainWindowRenderer, gameStatusTexture, NULL, &gameStatusDest);	
 
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);
@@ -320,14 +324,14 @@ int initsdl(void)
 
 	if(SDL_Init(SDL_INIT_VIDEO))
 	{
-		printf("SDL unable to initialize: %s", SDL_GetError());
+		fprintf(stderr, "SDL unable to initialize: %s", SDL_GetError());
 		return 1;
 	}
 	else
 	{
 		if((IMG_Init(imageFlags) & imageFlags) != imageFlags)
 		{
-			printf("SDL unable to initialize IMG_Init: %s", IMG_GetError());
+			fprintf(stderr, "SDL unable to initialize IMG_Init: %s", IMG_GetError());
 			return 1;
 		}
 		else
@@ -336,7 +340,7 @@ int initsdl(void)
 
 	if(mainWindow == NULL)
 	{
-		printf("Window could not be created: %s", SDL_GetError());
+		fprintf(stderr, "Window could not be created: %s", SDL_GetError());
 		return 1;
 	}
 	else
@@ -344,7 +348,7 @@ int initsdl(void)
 
 	if(mainWindowSurface == NULL)
 	{
-		printf("Window surface could not be created: %s", SDL_GetError());
+		fprintf(stderr, "Window surface could not be created: %s", SDL_GetError());
 		return 1;
 	}
 	else
@@ -352,7 +356,7 @@ int initsdl(void)
 
 	if(mainWindowRenderer == NULL)
 	{
-		printf("SDL could not create renderer: %s", SDL_GetError());
+		fprintf(stderr, "SDL could not create renderer: %s", SDL_GetError());
  	return 1;
 	}
 
@@ -362,12 +366,15 @@ int initsdl(void)
 
 	if(TTF_Init() == -1)
 	{
-		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+		fprintf(stderr, "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 		return 1;
 	}
 
-	if(loadFont())
+	if(loadFonts())
+	{
+		fprintf(stderr, "Failure to load game fonts.");
 		return 1;
+	}
 
 	return 0;
 }

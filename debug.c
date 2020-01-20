@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "cards.h"
 #include "wccommon.h"
 
@@ -64,7 +65,7 @@ int main()
 
 	char *winningString = NULL;
 	printf("%s\n", (winningString = jacksOrBetterWinCheck(hand)));
-	free(winningString);
+	jacksOrBetterWinCheckFree(winningString);
 
 	return 0;
 }

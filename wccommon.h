@@ -10,3 +10,4 @@ int isfullhouse(struct card *, int);
 int isjackorbetter(struct card *, int);
 int isroyalflush(struct card *, int);
 char *jacksOrBetterWinCheck(struct card *);
+bool jacksOrBetterWinCheckFree(char *);

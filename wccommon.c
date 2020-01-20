@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "cards.h"
 
 /* isflush:  Checks to see if a structure contains flush.  Returns the suit value of a flush or 0 if no flush was detected. */
@@ -220,7 +221,7 @@ char *jacksOrBetterWinCheck(struct card *hand)
 		if(returnString = (char *) malloc(sizeof("Three of a Kind")))
 			strcpy(returnString, "Three of a Kind");
 	}
-	else if(ispair(hand, 5))
+	else if(ispair(hand, 5) == 2)
 	{
 		if(returnString = (char *) malloc(sizeof("Two Pair")))
 			strcpy(returnString, "Two Pair");
@@ -237,4 +238,19 @@ char *jacksOrBetterWinCheck(struct card *hand)
 	}
 
 	return returnString;
+}
+
+// jacksOrBetterWinCheckFree:  Frees pointer allocated by jacksOrBetterWinCheck
+bool jacksOrBetterWinCheckFree(char *returnString)
+{
+	bool failStatus = true;
+
+	if(returnString != NULL)
+	{
+		free(returnString);
+		returnString = NULL;
+		failStatus = false;
+	}
+
+	return failStatus;
 }

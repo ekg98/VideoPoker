@@ -39,9 +39,8 @@ SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
 SDL_Texture *heldTexture = NULL;	// texture helding the held text
-SDL_Texture *gameStatusTexture = NULL;
 SDL_Rect heldDest[5];	// Destination for the held text on the screen.  Dependant on screen resolution.
-SDL_Rect gameStatusDest;
+SDL_Rect gameStatusDest; // Destination coordinates for gameStatusTexture
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -58,7 +57,7 @@ int main(int argc, char *argv[])
 {
 
 	// main variables
-
+	SDL_Texture *gameStatusTexture = NULL;	//gameStatusTexture.  Texture holding game winning status text bar.
 
 	// checks to see if there are any arguments available
 	if(argc > 1)
@@ -302,9 +301,12 @@ int main(int argc, char *argv[])
 			if(hand[4].held == YES)
 				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
 
-			// gameStatus returns true on failure.  When no win is detected.  NULL causes problems with ttf render.
-			if(!gameStatus(hand, &gameStatusDest))
+			// gameStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
+			if(!gameStatus(hand, &gameStatusDest, &gameStatusTexture))
 				SDL_RenderCopy(mainWindowRenderer, gameStatusTexture, NULL, &gameStatusDest);
+
+			if(gameStatusTexture == NULL)
+				printf("gameStatusTexture == NULL\n");
 
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);
@@ -312,7 +314,7 @@ int main(int argc, char *argv[])
 	}
 
 	closeDeck();
-	closeText();
+	closeText(&gameStatusTexture);
 	closesdl(); /* shut down sdl */
 
 	return 0;

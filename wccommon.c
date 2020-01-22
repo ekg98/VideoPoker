@@ -233,11 +233,6 @@ char *jacksOrBetterWinCheck(struct card *hand)
 		if(returnString = (char *) malloc(sizeof("Jacks or Better")))
 			strcpy(returnString, "Jacks or Better");
 	}
-	else if(returnString == NULL)
-	{
-		if(returnString = (char *) malloc(sizeof(char)))
-			*returnString = '\0';
-	}
 
 	return returnString;
 }

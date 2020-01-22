@@ -14,7 +14,7 @@ extern SDL_Renderer *mainWindowRenderer;
 extern int intWindowWidth;
 extern int intWindowHeight;
 extern SDL_Texture *heldTexture;
-extern SDL_Texture *gameStatusTexture;
+//extern SDL_Texture *gameStatusTexture;
 extern SDL_Rect heldDest[5];
 
 TTF_Font *mainText;
@@ -84,16 +84,19 @@ int loadFonts(void)
 }
 
 // close any open ttf text
-void closeText(void)
+void closeText(SDL_Texture **gameStatusTexture)
 {
 	TTF_CloseFont(mainText);
 	mainText = NULL;
 
 	SDL_DestroyTexture(heldTexture);
-	SDL_DestroyTexture(gameStatusTexture);
+	heldTexture = NULL;
+
+	SDL_DestroyTexture(*gameStatusTexture);
+	gameStatusTexture = NULL;
 }
 
-bool gameStatus(struct card *hand, SDL_Rect *gameStatusDest)
+bool gameStatus(struct card *hand, SDL_Rect *gameStatusDest, SDL_Texture **gameStatusTexture)
 {
 	char *winningString = NULL;
 	SDL_Color gameStatusColor = {255, 255, 255};
@@ -101,7 +104,8 @@ bool gameStatus(struct card *hand, SDL_Rect *gameStatusDest)
 	// when finding null return true
 	winningString = jacksOrBetterWinCheck(hand);
 
-	if(*winningString == '\0')
+	// TTF_RenderText_solid cannot accept NULL.  This ends execution of this function if a winning hand was not found.
+	if(winningString == NULL)
 		return true;
 
 	SDL_Surface *gameStatusSurface = TTF_RenderText_Solid(mainText, winningString, gameStatusColor);
@@ -113,7 +117,10 @@ bool gameStatus(struct card *hand, SDL_Rect *gameStatusDest)
 		return true;
 	}
 
-	gameStatusTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusSurface);
+	*gameStatusTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusSurface);
+
+	if(gameStatusTexture == NULL)
+		return true;
 
 	float gameStatusTextWidth = gameStatusSurface->w;
 	float gameStatusTextHeight = gameStatusSurface->h;

@@ -56,6 +56,9 @@ int main(int argc, char *argv[])
 
 	// main variables
 	SDL_Texture *gameStatusTexture = NULL;	//gameStatusTexture.  Texture holding game winning status text bar.
+	SDL_Texture *gameTypeTextTexture = NULL;	//gameTypeTexture.  Texture holding game type texture.
+
+	SDL_Rect gameTypeTextDest;
 
 	// checks to see if there are any arguments available
 	if(argc > 1)
@@ -161,6 +164,7 @@ int main(int argc, char *argv[])
 		bool returnPrevPressed, onePrevHeld, twoPrevHeld, threePrevHeld, fourPrevHeld, fivePrevHeld = false;
 		bool firstDeal = true;
 		bool heldEnabled = false;
+		enum gametype gameType = JACKS_OR_BETTER;
         	srand(time(NULL));
         	inithand(hand, 5);
 
@@ -303,9 +307,11 @@ int main(int argc, char *argv[])
 				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
 
 			// gameStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
-			if(!gameStatus(hand, &gameStatusDest, &gameStatusTexture))
+			if(!gameStatusWinText(hand, &gameStatusDest, &gameStatusTexture))
 				SDL_RenderCopy(mainWindowRenderer, gameStatusTexture, NULL, &gameStatusDest);
 
+			if(!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture))
+				SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
 
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);
@@ -313,7 +319,7 @@ int main(int argc, char *argv[])
 	}
 
 	closeDeck();
-	closeText(&heldTexture, &gameStatusTexture);
+	closeText(&heldTexture, &gameStatusTexture, &gameTypeTextTexture);
 	closesdl(); /* shut down sdl */
 
 	return 0;

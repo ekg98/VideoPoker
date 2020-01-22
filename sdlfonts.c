@@ -82,7 +82,7 @@ int loadFonts(void)
 }
 
 // close any open ttf text
-void closeText(SDL_Texture **heldTexture, SDL_Texture **gameStatusTexture, SDL_Texture **gameTypeTextTexture)
+void closeText(SDL_Texture **heldTexture, SDL_Texture **gameStatusWinTextTexture, SDL_Texture **gameTypeTextTexture, SDL_Texture **gameOverTextTexture)
 {
 	TTF_CloseFont(mainText);
 	mainText = NULL;
@@ -90,17 +90,20 @@ void closeText(SDL_Texture **heldTexture, SDL_Texture **gameStatusTexture, SDL_T
 	SDL_DestroyTexture(*heldTexture);
 	heldTexture = NULL;
 
-	SDL_DestroyTexture(*gameStatusTexture);
-	gameStatusTexture = NULL;
+	SDL_DestroyTexture(*gameStatusWinTextTexture);
+	gameStatusWinTextTexture = NULL;
 
 	SDL_DestroyTexture(*gameTypeTextTexture);
 	gameTypeTextTexture = NULL;
+
+	SDL_DestroyTexture(*gameOverTextTexture);
+	gameOverTextTexture = NULL;
 }
 
-bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusDest, SDL_Texture **gameStatusTexture)
+bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_Texture **gameStatusWinTextTexture)
 {
 	char *winningString = NULL;
-	SDL_Color gameStatusColor = {255, 255, 255};
+	SDL_Color gameStatusWinTextColor = {255, 255, 255};
 
 	// when finding null return true
 	winningString = jacksOrBetterWinCheck(hand);
@@ -109,69 +112,70 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusDest, SDL_Texture 
 	if(winningString == NULL)
 		return true;
 
-	SDL_Surface *gameStatusSurface = TTF_RenderText_Solid(mainText, winningString, gameStatusColor);
+	SDL_Surface *gameStatusWinTextSurface = TTF_RenderText_Solid(mainText, winningString, gameStatusWinTextColor);
 
 
-	if(gameStatusSurface == NULL)
+	if(gameStatusWinTextSurface == NULL)
 	{
-		fprintf(stderr, "Could not render gameStatusTexture.\n");
+		fprintf(stderr, "Could not render gameStatusWinTextTexture.\n");
 		return true;
 	}
 
-	*gameStatusTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusSurface);
+	*gameStatusWinTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusWinTextSurface);
 
-	if(gameStatusTexture == NULL)
+	if(gameStatusWinTextTexture == NULL)
 		return true;
 
-	float gameStatusTextWidth = gameStatusSurface->w;
-	float gameStatusTextHeight = gameStatusSurface->h;
+	float gameStatusWinTextWidth = gameStatusWinTextSurface->w;
+	float gameStatusWinTextHeight = gameStatusWinTextSurface->h;
 
-	float correctedGameStatusTextHeight = 0.0;
-	float correctedGameStatusTextWidth = 0.0;
+	float correctedGameStatusWinTextHeight = 0.0;
+	float correctedGameStatusWinTextWidth = 0.0;
 
 	// corrects initial size for the screen resolution being used
-	correctedGameStatusTextWidth = (intWindowWidth / 1920.0) * gameStatusTextWidth;
-	correctedGameStatusTextHeight = (intWindowHeight / 1200.0) * gameStatusTextHeight;
+	correctedGameStatusWinTextWidth = (intWindowWidth / 1920.0) * gameStatusWinTextWidth;
+	correctedGameStatusWinTextHeight = (intWindowHeight / 1200.0) * gameStatusWinTextHeight;
 
-	gameStatusDest->h = correctedGameStatusTextHeight;
-	gameStatusDest->w = correctedGameStatusTextWidth;
+	gameStatusWinTextDest->h = correctedGameStatusWinTextHeight;
+	gameStatusWinTextDest->w = correctedGameStatusWinTextWidth;
 
-	gameStatusDest->y = intWindowHeight / 2.4;
-	gameStatusDest->x = (intWindowWidth / 2) - (correctedGameStatusTextWidth / 2);
+	gameStatusWinTextDest->y = intWindowHeight / 2.4;
+	gameStatusWinTextDest->x = (intWindowWidth / 2) - (correctedGameStatusWinTextWidth / 2);
 
 	jacksOrBetterWinCheckFree(winningString);
-	SDL_FreeSurface(gameStatusSurface);
+	SDL_FreeSurface(gameStatusWinTextSurface);
 
 	return false;
 }
 
+//gameTypeText: Function is responsible for displaying the text in the lower left corner of screen for type of game being played
 bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Texture **gameTypeTextTexture)
 {
-	char *gameTypeString = NULL;
+	char *gameTypeTextString = NULL;
 
 	SDL_Color gameTypeTextColor = {255, 255, 255};
 
 	switch(gameName)
 	{
 		case JACKS_OR_BETTER:
-			gameTypeString = (char *) malloc(sizeof("JACKS OR BETTER"));
+			gameTypeTextString = (char *) malloc(sizeof("JACKS OR BETTER"));
 
-			if(gameTypeString == NULL)
+			if(gameTypeTextString == NULL)
 				return true;
 			else
-				strcpy(gameTypeString, "JACKS OR BETTER");
+				strcpy(gameTypeTextString, "JACKS OR BETTER");
 			break;
 		case DUCES_WILD:
-			gameTypeString = (char *) malloc(sizeof("DUCES WILD"));
+			gameTypeTextString = (char *) malloc(sizeof("DUCES WILD"));
 
-			if(gameTypeString == NULL)
+			if(gameTypeTextString == NULL)
 				return true;
 			else
-				strcpy(gameTypeString, "DUCES WILD");
+				strcpy(gameTypeTextString, "DUCES WILD");
 			break;
 	}
 
-	SDL_Surface *gameTypeTextSurface = TTF_RenderText_Solid(mainText, gameTypeString, gameTypeTextColor);
+	SDL_Surface *gameTypeTextSurface = TTF_RenderText_Solid(mainText, gameTypeTextString, gameTypeTextColor);
 
 	if(gameTypeTextSurface == NULL)
 	{
@@ -201,7 +205,63 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Textur
 	gameTypeTextDest->x = 0;
 
 	SDL_FreeSurface(gameTypeTextSurface);
-	free(gameTypeString);
+	free(gameTypeTextString);
+
+	return false;
+}
+
+bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameOverTextTexture)
+{
+	char *gameOverTextString = NULL;
+
+	SDL_Color gameOverTextColor = {255, 255, 255};
+
+	switch(gameOver)
+	{
+		case true:
+			gameOverTextString = (char *) malloc(sizeof("GAME OVER"));
+
+			if(gameOverTextString == NULL)
+				return true;
+			else
+				strcpy(gameOverTextString, "GAME OVER");
+			break;
+		case false:
+			return true;
+			break;
+	}
+
+	SDL_Surface *gameOverTextSurface = TTF_RenderText_Solid(mainText, gameOverTextString, gameOverTextColor);
+
+	if(gameOverTextSurface == NULL)
+	{
+		fprintf(stderr, "Could not render gameOverTextSurface.\n");
+		return true;
+	}
+
+	*gameOverTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameOverTextSurface);
+
+	if(gameOverTextTexture == NULL)
+		return true;
+
+	float gameOverTextWidth = gameOverTextSurface->w;
+	float gameOverTextHeight = gameOverTextSurface->h;
+
+	float correctedGameOverTextHeight = 0.0;
+	float correctedGameOverTextWidth = 0.0;
+
+	// corrects initial size for the screen resolution being used
+	correctedGameOverTextWidth = (intWindowWidth / 1920.0) * gameOverTextWidth;
+	correctedGameOverTextHeight = (intWindowHeight / 1200.0) * gameOverTextHeight;
+
+	gameOverTextDest->h = correctedGameOverTextHeight;
+	gameOverTextDest->w = correctedGameOverTextWidth;
+
+	gameOverTextDest->y = intWindowHeight - correctedGameOverTextHeight;
+	gameOverTextDest->x = intWindowWidth / 1.8;
+
+	SDL_FreeSurface(gameOverTextSurface);
+	free(gameOverTextString);
 
 	return false;
 }

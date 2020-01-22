@@ -38,7 +38,6 @@ SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
 SDL_Texture *heldTexture = NULL;	// texture helding the held text
 SDL_Rect heldDest[5];	// Destination for the held text on the screen.  Dependant on screen resolution.
-SDL_Rect gameStatusDest; // Destination coordinates for gameStatusTexture
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -55,10 +54,13 @@ int main(int argc, char *argv[])
 {
 
 	// main variables
-	SDL_Texture *gameStatusTexture = NULL;	//gameStatusTexture.  Texture holding game winning status text bar.
+	SDL_Texture *gameStatusWinTextTexture = NULL;	//gameStatusTexture.  Texture holding game winning status text bar.
 	SDL_Texture *gameTypeTextTexture = NULL;	//gameTypeTexture.  Texture holding game type texture.
+	SDL_Texture *gameOverTextTexture = NULL;
 
+	SDL_Rect gameStatusWinTextDest; // Destination coordinates for gameStatusTexture
 	SDL_Rect gameTypeTextDest;
+	SDL_Rect gameOverTextDest;
 
 	// checks to see if there are any arguments available
 	if(argc > 1)
@@ -164,7 +166,9 @@ int main(int argc, char *argv[])
 		bool returnPrevPressed, onePrevHeld, twoPrevHeld, threePrevHeld, fourPrevHeld, fivePrevHeld = false;
 		bool firstDeal = true;
 		bool heldEnabled = false;
+
 		enum gametype gameType = JACKS_OR_BETTER;
+		
         	srand(time(NULL));
         	inithand(hand, 5);
 
@@ -306,12 +310,18 @@ int main(int argc, char *argv[])
 			if(hand[4].held == YES)
 				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
 
-			// gameStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
-			if(!gameStatusWinText(hand, &gameStatusDest, &gameStatusTexture))
-				SDL_RenderCopy(mainWindowRenderer, gameStatusTexture, NULL, &gameStatusDest);
+			// gameWinTextStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
+			if(!gameStatusWinText(hand, &gameStatusWinTextDest, &gameStatusWinTextTexture))
+				SDL_RenderCopy(mainWindowRenderer, gameStatusWinTextTexture, NULL, &gameStatusWinTextDest);
 
+			// gameTypeText: returns true on failure.  Displays game type text in lower left corner
 			if(!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture))
 				SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
+
+			//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
+			if(!gameOverText(firstDeal, &gameOverTextDest, &gameOverTextTexture))
+				SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
+
 
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);
@@ -319,7 +329,7 @@ int main(int argc, char *argv[])
 	}
 
 	closeDeck();
-	closeText(&heldTexture, &gameStatusTexture, &gameTypeTextTexture);
+	closeText(&heldTexture, &gameStatusWinTextTexture, &gameTypeTextTexture, &gameOverTextTexture);
 	closesdl(); /* shut down sdl */
 
 	return 0;

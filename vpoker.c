@@ -3,12 +3,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <stdbool.h>
-#include "cards.h"
+#include "common.h"
 #include "wccommon.h"
 #include "sdlfonts.h"
 #include "sdlcards.h"
@@ -162,6 +160,7 @@ int main(int argc, char *argv[])
     	       	int i = 0;
 		bool returnPrevPressed, onePrevHeld, twoPrevHeld, threePrevHeld, fourPrevHeld, fivePrevHeld = false;
 		bool firstDeal = true;
+		bool heldEnabled = false;
         	srand(time(NULL));
         	inithand(hand, 5);
 
@@ -182,6 +181,7 @@ int main(int argc, char *argv[])
 					threePrevHeld = false;
 					fourPrevHeld = false;
 					fivePrevHeld = false;
+					heldEnabled = true;
 
 					// unheld and deal cards
 					unheld(hand, 5);
@@ -197,6 +197,7 @@ int main(int argc, char *argv[])
 					deal(hand, 5);
 					firstDeal = true;
 					returnPrevPressed = true;
+					heldEnabled = false;
 					printf("Game Over!\n");
 				}
 			}
@@ -205,7 +206,7 @@ int main(int argc, char *argv[])
 				returnPrevPressed = false;
 
 			// first card held logic
-			if(event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)
+			if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)
 			{
 				if(onePrevHeld == false)
 				{
@@ -220,7 +221,7 @@ int main(int argc, char *argv[])
 			}
 
 			// second card held logic
-			if(event.key.keysym.scancode == SDL_SCANCODE_2 && event.key.state == SDL_PRESSED)
+			if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_2 && event.key.state == SDL_PRESSED)
 			{
 				if(twoPrevHeld == false)
 				{
@@ -235,7 +236,7 @@ int main(int argc, char *argv[])
 			}
 
 			// third card held logic
-			if(event.key.keysym.scancode == SDL_SCANCODE_3 && event.key.state == SDL_PRESSED)
+			if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_3 && event.key.state == SDL_PRESSED)
 			{
 				if(threePrevHeld == false)
 				{
@@ -250,7 +251,7 @@ int main(int argc, char *argv[])
 			}
 
 			// fourth card held logic
-			if(event.key.keysym.scancode == SDL_SCANCODE_4 && event.key.state == SDL_PRESSED)
+			if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_4 && event.key.state == SDL_PRESSED)
 			{
 				if(fourPrevHeld == false)
 				{
@@ -265,7 +266,7 @@ int main(int argc, char *argv[])
 			}
 
 			// fifth card held logic
-			if(event.key.keysym.scancode == SDL_SCANCODE_5 && event.key.state == SDL_PRESSED)
+			if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_5 && event.key.state == SDL_PRESSED)
 			{
 				if(fivePrevHeld == false)
 				{
@@ -305,8 +306,6 @@ int main(int argc, char *argv[])
 			if(!gameStatus(hand, &gameStatusDest, &gameStatusTexture))
 				SDL_RenderCopy(mainWindowRenderer, gameStatusTexture, NULL, &gameStatusDest);
 
-			if(gameStatusTexture == NULL)
-				printf("gameStatusTexture == NULL\n");
 
 			// update the screen
 			SDL_RenderPresent(mainWindowRenderer);
@@ -314,7 +313,7 @@ int main(int argc, char *argv[])
 	}
 
 	closeDeck();
-	closeText(&gameStatusTexture);
+	closeText(&heldTexture, &gameStatusTexture);
 	closesdl(); /* shut down sdl */
 
 	return 0;

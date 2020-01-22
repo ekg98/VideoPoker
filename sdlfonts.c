@@ -3,8 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <stdbool.h>
-#include "cards.h"
+#include "common.h"
 #include "wccommon.h"
 
 
@@ -14,7 +13,6 @@ extern SDL_Renderer *mainWindowRenderer;
 extern int intWindowWidth;
 extern int intWindowHeight;
 extern SDL_Texture *heldTexture;
-//extern SDL_Texture *gameStatusTexture;
 extern SDL_Rect heldDest[5];
 
 TTF_Font *mainText;
@@ -84,12 +82,12 @@ int loadFonts(void)
 }
 
 // close any open ttf text
-void closeText(SDL_Texture **gameStatusTexture)
+void closeText(SDL_Texture **heldTexture, SDL_Texture **gameStatusTexture)
 {
 	TTF_CloseFont(mainText);
 	mainText = NULL;
 
-	SDL_DestroyTexture(heldTexture);
+	SDL_DestroyTexture(*heldTexture);
 	heldTexture = NULL;
 
 	SDL_DestroyTexture(*gameStatusTexture);

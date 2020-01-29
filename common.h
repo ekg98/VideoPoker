@@ -19,3 +19,8 @@ enum gametype {
 		JACKS_OR_BETTER,
 		DUCES_WILD
 };
+
+enum handState {
+	SECOND_HAND,
+	FIRST_HAND 
+};

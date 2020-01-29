@@ -3,7 +3,7 @@
 #include "cards.h"
 #include "common.h"
 
-void getEvents(SDL_Event *event, struct card *hand)
+bool getEvents(SDL_Event *event, struct card *hand)
 {
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false;
 
@@ -120,4 +120,6 @@ void getEvents(SDL_Event *event, struct card *hand)
 			}
 		}
 	}
+	
+	return firstDeal;
 }

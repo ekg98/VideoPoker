@@ -170,8 +170,10 @@ int main(int argc, char *argv[])
 
 			while (event.type != SDL_QUIT)
 			{
+				bool handState = FIRST_HAND;
+
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-				getEvents(&event, hand);
+				handState = getEvents(&event, hand);
 
 				// draw images
 				SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
@@ -204,7 +206,7 @@ int main(int argc, char *argv[])
 					SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
 
 				//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
-				if (!gameOverText(true, &gameOverTextDest, &gameOverTextTexture))
+				if (!gameOverText(handState, &gameOverTextDest, &gameOverTextTexture))
 					SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
 
 

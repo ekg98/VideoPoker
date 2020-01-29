@@ -8,6 +8,8 @@
 #include "sdlfonts.h"
 #include "sdlcards.h"
 #include "sdlbuttons.h"
+#include "events.h"
+#include "cards.h"
 
 /* Window resolutions and card resolutions - Must be floating point */
 #define DEFAULT_WINDOW_WIDTH  1920.0
@@ -157,173 +159,60 @@ int main(int argc, char *argv[])
 	// start the game here
         if(initsdl())  /* initialize sdl */
         	return 1;
-        else
-        {
-    	       	int i = 0;
-		bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false;
-		bool firstDeal = true;
-		bool heldEnabled = false;
-
-		enum gametype gameType = JACKS_OR_BETTER;
-
-        	srand(time(NULL));
-        	inithand(hand, 5);
-
-		while(event.type != SDL_QUIT)
+		else
 		{
-			// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-        		while(SDL_PollEvent(&event))
+			int i = 0;
+			
+			enum gametype gameType = JACKS_OR_BETTER;
+
+			srand(time(NULL));
+			inithand(hand, 5);
+
+			while (event.type != SDL_QUIT)
 			{
-				// deal keyboard logic
-				if(event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_PRESSED)
-				{
-					// first deal.  Unheld all cards and reset held key states
-					if(firstDeal == true && returnPrevPressed == false)
-					{
-						// reset held key states
-						onePrevHeld = false;
-						twoPrevHeld = false;
-						threePrevHeld = false;
-						fourPrevHeld = false;
-						fivePrevHeld = false;
-						heldEnabled = true;
+				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
+				getEvents(&event, hand);
 
-						// unheld and deal cards
-						unheld(hand, 5);
-						deal(hand, 5);
-						firstDeal = false;
-						returnPrevPressed = true;
-						printf("Good Luck!\n");
-					}
-					// second deal
-					if(firstDeal == false && returnPrevPressed == false)
-					{
-						// deal cards that are not held
-						deal(hand, 5);
-						firstDeal = true;
-						returnPrevPressed = true;
-						heldEnabled = false;
-						printf("Game Over!\n");
-					}
-				}
+				// draw images
+				SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
+				SDL_RenderClear(mainWindowRenderer);
 
-				if(event.key.keysym.scancode == SDL_SCANCODE_RETURN && event.key.state == SDL_RELEASED)
-					returnPrevPressed = false;
+				for (i = 0; i < 5; i++)
+					SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
 
-				// first card held logic
-				if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_1 && event.key.state == SDL_PRESSED)
-				{
-					if(onePrevHeld == false)
-					{
-						hand[0].held = YES;
-						onePrevHeld = true;
-					}
-					else
-					{
-						hand[0].held = NO;
-						onePrevHeld = false;
-					}
-				}
+				if (hand[0].held == YES)
+					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[0]);
 
-				// second card held logic
-				if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_2 && event.key.state == SDL_PRESSED)
-				{
-					if(twoPrevHeld == false)
-					{
-						hand[1].held = YES;
-						twoPrevHeld = true;
-					}
-					else
-					{
-						hand[1].held = NO;
-						twoPrevHeld = false;
-					}
-				}
+				if (hand[1].held == YES)
+					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[1]);
 
-				// third card held logic
-				if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_3 && event.key.state == SDL_PRESSED)
-				{
-					if(threePrevHeld == false)
-					{
-						hand[2].held = YES;
-						threePrevHeld = true;
-					}
-					else
-					{
-						hand[2].held = NO;
-						threePrevHeld = false;
-					}
-				}
+				if (hand[2].held == YES)
+					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[2]);
 
-				// fourth card held logic
-				if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_4 && event.key.state == SDL_PRESSED)
-				{
-					if(fourPrevHeld == false)
-					{
-						hand[3].held = YES;
-						fourPrevHeld = true;
-					}
-					else
-					{
-						hand[3].held = NO;
-						fourPrevHeld = false;
-					}
-				}
+				if (hand[3].held == YES)
+					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[3]);
 
-				// fifth card held logic
-				if(heldEnabled == true && event.key.keysym.scancode == SDL_SCANCODE_5 && event.key.state == SDL_PRESSED)
-				{
-					if(fivePrevHeld == false)
-					{
-						hand[4].held = YES;
-						fivePrevHeld = true;
-					}
-					else
-					{
-						hand[4].held = NO;
-						fivePrevHeld = false;
-					}
-				}
+				if (hand[4].held == YES)
+					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
+
+				// gameWinTextStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
+				if (!gameStatusWinText(hand, &gameStatusWinTextDest, &gameStatusWinTextTexture))
+					SDL_RenderCopy(mainWindowRenderer, gameStatusWinTextTexture, NULL, &gameStatusWinTextDest);
+
+				// gameTypeText: returns true on failure.  Displays game type text in lower left corner
+				if (!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture))
+					SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
+
+				//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
+				if (!gameOverText(true, &gameOverTextDest, &gameOverTextTexture))
+					SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
+
+
+				// update the screen
+				SDL_RenderPresent(mainWindowRenderer);
 			}
-			// draw images
-			SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
-	        	SDL_RenderClear(mainWindowRenderer);
-
-			for(i = 0; i < 5; i++)
-				SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
-
-			if(hand[0].held == YES)
-				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[0]);
-
-			if(hand[1].held == YES)
-				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[1]);
-
-			if(hand[2].held == YES)
-				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[2]);
-
-			if(hand[3].held == YES)
-				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[3]);
-
-			if(hand[4].held == YES)
-				SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
-
-			// gameWinTextStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
-			if(!gameStatusWinText(hand, &gameStatusWinTextDest, &gameStatusWinTextTexture))
-				SDL_RenderCopy(mainWindowRenderer, gameStatusWinTextTexture, NULL, &gameStatusWinTextDest);
-
-			// gameTypeText: returns true on failure.  Displays game type text in lower left corner
-			if(!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture))
-				SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
-
-			//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
-			if(!gameOverText(firstDeal, &gameOverTextDest, &gameOverTextTexture))
-				SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
-
-
-			// update the screen
-			SDL_RenderPresent(mainWindowRenderer);
 		}
-	}
+	
 
 	closeDeck();
 	closeText(&heldTexture, &gameStatusWinTextTexture, &gameTypeTextTexture, &gameOverTextTexture);

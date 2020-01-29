@@ -12,4 +12,4 @@ void unheld(struct card *, int);
 void held(struct card *, int);
 int inithand(struct card *, int);
 
-enum { HEARTS, DIAMONDS, CLUBS, SPADES, YES, NO };
+enum cardsuits { HEARTS, DIAMONDS, CLUBS, SPADES, YES, NO };

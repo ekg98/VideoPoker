@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "cards.h"
+
 
 enum gametype {
 		JACKS_OR_BETTER,

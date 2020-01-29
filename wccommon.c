@@ -1,6 +1,7 @@
 /* wccommon.c:  Winning Check Common functions.  This file contains common functions used to determine winners in a game of video poker */
 
 #include "common.h"
+#include "cards.h"
 #include <stdlib.h>
 #include <string.h>
 

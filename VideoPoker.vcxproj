@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cards.c" />
+    <ClCompile Include="events.c" />
     <ClCompile Include="sdlfonts.c" />
     <ClCompile Include="vpoker.c" />
     <ClCompile Include="wccommon.c" />
@@ -131,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="cards.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="events.h" />
     <ClInclude Include="sdlbuttons.h" />
     <ClInclude Include="sdlcards.h" />
     <ClInclude Include="sdlfonts.h" />

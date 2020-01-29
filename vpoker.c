@@ -1,12 +1,9 @@
 /* Video Poker.  Simple SDL video poker prototype game my ekg98 */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include "common.h"
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "common.h"
 #include "wccommon.h"
 #include "sdlfonts.h"
 #include "sdlcards.h"
@@ -168,7 +165,7 @@ int main(int argc, char *argv[])
 		bool heldEnabled = false;
 
 		enum gametype gameType = JACKS_OR_BETTER;
-		
+
         	srand(time(NULL));
         	inithand(hand, 5);
 

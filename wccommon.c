@@ -1,8 +1,9 @@
 /* wccommon.c:  Winning Check Common functions.  This file contains common functions used to determine winners in a game of video poker */
 
+#include "common.h"
 #include <stdlib.h>
 #include <string.h>
-#include "common.h"
+
 
 /* isflush:  Checks to see if a structure contains flush.  Returns the suit value of a flush or 0 if no flush was detected. */
 int isflush(struct card *hand, int size)

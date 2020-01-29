@@ -5,14 +5,7 @@
 
 void getEvents(SDL_Event *event, struct card *hand)
 {
-	static bool returnPrevPressed = false;
-	static bool onePrevHeld = false;
-	static bool twoPrevHeld = false;
-	static bool threePrevHeld = false;
-	static bool fourPrevHeld = false;
-	static bool fivePrevHeld = false;
-	static bool firstDeal = true;
-	static bool heldEnabled = false;
+	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false;
 
 	while (SDL_PollEvent(event))
 	{

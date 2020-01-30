@@ -1,15 +1,16 @@
 /* Video Poker.  Simple SDL video poker prototype game my ekg98 */
 
-#include "common.h"
+
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include "common.h"
 #include "wccommon.h"
 #include "sdlfonts.h"
 #include "sdlcards.h"
 #include "sdlbuttons.h"
-#include "events.h"
 #include "cards.h"
+#include "events.h"
 
 /* Window resolutions and card resolutions - Must be floating point */
 #define DEFAULT_WINDOW_WIDTH  1920.0
@@ -162,7 +163,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			int i = 0;
-			
+
 			enum gametype gameType = JACKS_OR_BETTER;
 
 			srand(time(NULL));
@@ -214,7 +215,7 @@ int main(int argc, char *argv[])
 				SDL_RenderPresent(mainWindowRenderer);
 			}
 		}
-	
+
 
 	closeDeck();
 	closeText(&heldTexture, &gameStatusWinTextTexture, &gameTypeTextTexture, &gameOverTextTexture);

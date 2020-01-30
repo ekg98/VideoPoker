@@ -6,7 +6,7 @@ vpoker : vpoker.o cards.o wccommon.o sdlfonts.o
 vpokerdebug : debug.o cards.o wccommon.o
 	gcc -o vpokerdebug debug.o cards.o wccommon.o
 
-vpoker.o : vpoker.c common.h cards.h wccommon.h sdlcards.h sdlfonts.h 
+vpoker.o : vpoker.c common.h cards.h wccommon.h sdlcards.h sdlfonts.h events.h
 	gcc -c vpoker.c -lSDL2 -lSDL2_image -lSDL2_ttf
 
 debug.o : debug.c cards.h wccommon.h

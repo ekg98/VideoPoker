@@ -1,6 +1,7 @@
 // fonts.c:  SDL font functions for VideoPoker by ekg98
 
 #include "common.h"
+#include "cards.h"
 #include "wccommon.h"
 
 

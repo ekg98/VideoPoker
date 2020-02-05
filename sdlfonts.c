@@ -263,3 +263,52 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameO
 
 	return false;
 }
+
+bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTexture)
+{
+	SDL_Color gameFpsTextColor = { 255, 255, 255 };
+
+	char gameFpsTextString[9];
+
+	// limit string size to 3 digits.
+	if (fps > 1000)
+		fps = 999;
+	
+	// create string based off of fps.
+	sprintf(gameFpsTextString, "FPS: %d", fps);
+	
+	SDL_Surface* gameFpsTextSurface = TTF_RenderText_Solid(mainText, gameFpsTextString, gameFpsTextColor);
+
+	if (gameFpsTextSurface == NULL)
+	{
+		fprintf(stderr, "Could not render gameFpsTextSurface.\n");
+		return true;
+	}
+
+	*gameFpsTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameFpsTextSurface);
+
+	if (gameFpsTextTexture == NULL)
+		return true;
+
+	float gameFpsTextWidth = gameFpsTextSurface->w;
+	float gameFpsTextHeight = gameFpsTextSurface->h;
+
+	float correctedGameFpsTextHeight = 0.0;
+	float correctedGameFpsTextWidth = 0.0;
+
+	// corrects initial size for the screen resolution being used
+	correctedGameFpsTextWidth = (intWindowWidth / 1920.0) * gameFpsTextWidth;
+	correctedGameFpsTextHeight = (intWindowHeight / 1200.0) * gameFpsTextHeight;
+
+	gameFpsTextDest->h = correctedGameFpsTextHeight;
+	gameFpsTextDest->w = correctedGameFpsTextWidth;
+
+	gameFpsTextDest->y = intWindowHeight - correctedGameFpsTextHeight;
+	gameFpsTextDest->x = intWindowWidth / 2.6;
+
+	SDL_FreeSurface(gameFpsTextSurface);
+	//free(gameFpsTextString);
+
+	return false;
+}
+

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stdint.h>
 #include "common.h"
 #include "wccommon.h"
 #include "sdlfonts.h"
@@ -57,10 +58,14 @@ int main(int argc, char *argv[])
 	SDL_Texture *gameStatusWinTextTexture = NULL;	//gameStatusTexture.  Texture holding game winning status text bar.
 	SDL_Texture *gameTypeTextTexture = NULL;	//gameTypeTexture.  Texture holding game type texture.
 	SDL_Texture *gameOverTextTexture = NULL;
+	SDL_Texture* gameFpsTextTexture = NULL;
 
 	SDL_Rect gameStatusWinTextDest; // Destination coordinates for gameStatusTexture
 	SDL_Rect gameTypeTextDest;
 	SDL_Rect gameOverTextDest;
+	SDL_Rect gameFpsTextDest;
+
+	bool displayFps = false;
 
 	// checks to see if there are any arguments available
 	if(argc > 1)
@@ -82,8 +87,10 @@ int main(int argc, char *argv[])
 							printf("arguments:\n");
 							printf("\t-h  This menu.\n");
 							printf("\t-r  Adjust screen resolution\n");
+							printf("\t-f  Display framerate on screen\n");
 							return 0;
 							break;
+
 						case 'r':
 							if((argc - 1) > argCounter)
 							{
@@ -142,6 +149,12 @@ int main(int argc, char *argv[])
 							else
 								return 1;
 							break;
+
+						case 'f':
+							displayFps = true;
+							argCounter++;
+							break;
+
 						default:
 							printf("%d\n", argCounter);
 							printf("Invalid argument(s)\n");
@@ -163,6 +176,10 @@ int main(int argc, char *argv[])
 		else
 		{
 			int i = 0;
+			int frameCounter = 1;
+			int averageFps = 0;
+			uint32_t currentTimeTicks = 0;
+			uint32_t previousTimeTicks = 0;
 
 			enum gametype gameType = JACKS_OR_BETTER;
 
@@ -172,6 +189,13 @@ int main(int argc, char *argv[])
 			while (event.type != SDL_QUIT)
 			{
 				bool handState = FIRST_HAND;
+				
+				// get current ticks
+				currentTimeTicks = SDL_GetTicks();
+				
+				// calculate average fps
+				averageFps = (int) (frameCounter / (currentTimeTicks / 1000.0) );
+				printf("FPS: %d\n", averageFps);
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
 				handState = getEvents(&event, hand);
@@ -210,9 +234,15 @@ int main(int argc, char *argv[])
 				if (!gameOverText(handState, &gameOverTextDest, &gameOverTextTexture))
 					SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
 
+				//gameFpsText: returns true on failure.  Displays game fps on the screen
+				if (displayFps == true && !gameFpsText(averageFps, &gameFpsTextDest, &gameFpsTextTexture))
+					SDL_RenderCopy(mainWindowRenderer, gameFpsTextTexture, NULL, &gameFpsTextDest);
 
 				// update the screen
 				SDL_RenderPresent(mainWindowRenderer);
+
+				previousTimeTicks = currentTimeTicks;
+				frameCounter++;
 			}
 		}
 

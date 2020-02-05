@@ -139,6 +139,7 @@
     <ClInclude Include="wccommon.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Makefile" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -18,6 +18,7 @@
 #define DEFAULT_WINDOW_HEIGHT 1080.0
 #define CARD_WIDTH  350.0
 #define CARD_HEIGHT 500.0
+#define MAX_FRAMERATE	60
 
 #define	TRUE	1
 #define	FALSE	0
@@ -176,10 +177,14 @@ int main(int argc, char *argv[])
 		else
 		{
 			int i = 0;
-			int frameCounter = 1;
+
+			// timing variables
+			int frameCounter = 0;
 			int averageFps = 0;
-			uint32_t currentTimeTicks = 0;
-			uint32_t previousTimeTicks = 0;
+			uint32_t startRunTicks = 0;
+			uint32_t endRunTicks = 0;
+			int runTicks = 0;
+			float tickInterval = 1000.0 / MAX_FRAMERATE;
 
 			enum gametype gameType = JACKS_OR_BETTER;
 
@@ -191,58 +196,64 @@ int main(int argc, char *argv[])
 				bool handState = FIRST_HAND;
 				
 				// get current ticks
-				currentTimeTicks = SDL_GetTicks();
+				startRunTicks = SDL_GetTicks();
+				runTicks = runTicks + (startRunTicks - endRunTicks);
 				
 				// calculate average fps
-				averageFps = (int) (frameCounter / (currentTimeTicks / 1000.0) );
-				printf("FPS: %d\n", averageFps);
+				averageFps = (int) (frameCounter / (startRunTicks / 1000.0));
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
 				handState = getEvents(&event, hand);
 
-				// draw images
-				SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
-				SDL_RenderClear(mainWindowRenderer);
+				// frame rate limiting for display functions.  Used instead of vsync limiting
+				if (runTicks > tickInterval)
+				{
+					// draw images
+					SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
+					SDL_RenderClear(mainWindowRenderer);
 
-				for (i = 0; i < 5; i++)
-					SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
+					for (i = 0; i < 5; i++)
+						SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
 
-				if (hand[0].held == YES)
-					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[0]);
+					if (hand[0].held == YES)
+						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[0]);
 
-				if (hand[1].held == YES)
-					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[1]);
+					if (hand[1].held == YES)
+						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[1]);
 
-				if (hand[2].held == YES)
-					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[2]);
+					if (hand[2].held == YES)
+						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[2]);
 
-				if (hand[3].held == YES)
-					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[3]);
+					if (hand[3].held == YES)
+						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[3]);
 
-				if (hand[4].held == YES)
-					SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
+					if (hand[4].held == YES)
+						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
 
-				// gameWinTextStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
-				if (!gameStatusWinText(hand, &gameStatusWinTextDest, &gameStatusWinTextTexture))
-					SDL_RenderCopy(mainWindowRenderer, gameStatusWinTextTexture, NULL, &gameStatusWinTextDest);
+					// gameWinTextStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
+					if (!gameStatusWinText(hand, &gameStatusWinTextDest, &gameStatusWinTextTexture))
+						SDL_RenderCopy(mainWindowRenderer, gameStatusWinTextTexture, NULL, &gameStatusWinTextDest);
 
-				// gameTypeText: returns true on failure.  Displays game type text in lower left corner
-				if (!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture))
-					SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
+					// gameTypeText: returns true on failure.  Displays game type text in lower left corner
+					if (!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture))
+						SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
 
-				//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
-				if (!gameOverText(handState, &gameOverTextDest, &gameOverTextTexture))
-					SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
+					//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
+					if (!gameOverText(handState, &gameOverTextDest, &gameOverTextTexture))
+						SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
 
-				//gameFpsText: returns true on failure.  Displays game fps on the screen
-				if (displayFps == true && !gameFpsText(averageFps, &gameFpsTextDest, &gameFpsTextTexture))
-					SDL_RenderCopy(mainWindowRenderer, gameFpsTextTexture, NULL, &gameFpsTextDest);
+					//gameFpsText: returns true on failure.  Displays game fps on the screen
+					if (displayFps == true && !gameFpsText(averageFps, &gameFpsTextDest, &gameFpsTextTexture))
+						SDL_RenderCopy(mainWindowRenderer, gameFpsTextTexture, NULL, &gameFpsTextDest);
 
-				// update the screen
-				SDL_RenderPresent(mainWindowRenderer);
+					// update the screen
+					SDL_RenderPresent(mainWindowRenderer);
+					
+					frameCounter++;
+					runTicks = 0;
+				}
 
-				previousTimeTicks = currentTimeTicks;
-				frameCounter++;
+				endRunTicks = startRunTicks;
 			}
 		}
 
@@ -289,7 +300,7 @@ int initsdl(void)
 		return 1;
 	}
 	else
-		mainWindowRenderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		mainWindowRenderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
 
 	if(mainWindowRenderer == NULL)
 	{

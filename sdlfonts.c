@@ -60,8 +60,8 @@ int loadFonts(struct fonts *gameFonts)
 	return 0;
 }
 
-// close any open ttf text
-void closeText(struct fonts *gameFonts, SDL_Texture **heldTexture, SDL_Texture **gameStatusWinTextTexture, SDL_Texture **gameTypeTextTexture, SDL_Texture **gameOverTextTexture)
+// closeText:  close any open ttf texts
+void closeText(struct fonts *gameFonts)
 {
 	TTF_CloseFont(gameFonts->heldFont);
 	gameFonts->heldFont = NULL;
@@ -78,20 +78,23 @@ void closeText(struct fonts *gameFonts, SDL_Texture **heldTexture, SDL_Texture *
 	TTF_CloseFont(gameFonts->gameFpsFont);
 	gameFonts->gameFpsFont = NULL;
 
-	SDL_DestroyTexture(*heldTexture);
-	heldTexture = NULL;
+	SDL_DestroyTexture(gameFonts->heldTexture);
+	gameFonts->heldTexture = NULL;
 
-	SDL_DestroyTexture(*gameStatusWinTextTexture);
-	gameStatusWinTextTexture = NULL;
+	SDL_DestroyTexture(gameFonts->gameStatusWinTextTexture);
+	gameFonts->gameStatusWinTextTexture = NULL;
 
-	SDL_DestroyTexture(*gameTypeTextTexture);
-	gameTypeTextTexture = NULL;
+	SDL_DestroyTexture(gameFonts->gameTypeTextTexture);
+	gameFonts->gameTypeTextTexture = NULL;
 
-	SDL_DestroyTexture(*gameOverTextTexture);
-	gameOverTextTexture = NULL;
+	SDL_DestroyTexture(gameFonts->gameOverTextTexture);
+	gameFonts->gameOverTextTexture = NULL;
+
+	SDL_DestroyTexture(gameFonts->gameFpsTextTexture);
+	gameFonts->gameFpsTextTexture = NULL;
 }
 
-bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_Texture **gameStatusWinTextTexture, TTF_Font **gameStatusWinFont)
+bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, struct fonts *gameFonts)
 {
 	char *winningString = NULL;
 	SDL_Color gameStatusWinTextColor = {255, 255, 255};
@@ -103,7 +106,7 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_T
 	if(winningString == NULL)
 		return true;
 
-	SDL_Surface *gameStatusWinTextSurface = TTF_RenderText_Solid(*gameStatusWinFont, winningString, gameStatusWinTextColor);
+	SDL_Surface *gameStatusWinTextSurface = TTF_RenderText_Solid(gameFonts->gameStatusWinFont, winningString, gameStatusWinTextColor);
 
 
 	if(gameStatusWinTextSurface == NULL)
@@ -112,9 +115,9 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_T
 		return true;
 	}
 
-	*gameStatusWinTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusWinTextSurface);
+	gameFonts->gameStatusWinTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusWinTextSurface);
 
-	if(gameStatusWinTextTexture == NULL)
+	if(gameFonts->gameStatusWinTextTexture == NULL)
 		return true;
 
 	float gameStatusWinTextWidth = gameStatusWinTextSurface->w;
@@ -140,7 +143,7 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_T
 }
 
 //gameTypeText: Function is responsible for displaying the text in the lower left corner of screen for type of game being played
-bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Texture **gameTypeTextTexture, TTF_Font **gameTypeFont)
+bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, struct fonts *gameFonts)
 {
 	char *gameTypeTextString = NULL;
 
@@ -166,7 +169,7 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Textur
 			break;
 	}
 
-	SDL_Surface *gameTypeTextSurface = TTF_RenderText_Solid(*gameTypeFont, gameTypeTextString, gameTypeTextColor);
+	SDL_Surface *gameTypeTextSurface = TTF_RenderText_Solid(gameFonts->gameTypeFont, gameTypeTextString, gameTypeTextColor);
 
 	if(gameTypeTextSurface == NULL)
 	{
@@ -174,9 +177,9 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Textur
 		return true;
 	}
 
-	*gameTypeTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameTypeTextSurface);
+	gameFonts->gameTypeTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameTypeTextSurface);
 
-	if(gameTypeTextTexture == NULL)
+	if(gameFonts->gameTypeTextTexture == NULL)
 		return true;
 
 	float gameTypeTextWidth = gameTypeTextSurface->w;
@@ -202,7 +205,7 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Textur
 }
 
 // gameOverText:  Generates textures and locations for game over text.
-bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameOverTextTexture, TTF_Font **gameOverFont)
+bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, struct fonts *gameFonts)
 {
 	char *gameOverTextString = NULL;
 
@@ -223,7 +226,7 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameO
 			break;
 	}
 
-	SDL_Surface *gameOverTextSurface = TTF_RenderText_Solid(*gameOverFont, gameOverTextString, gameOverTextColor);
+	SDL_Surface *gameOverTextSurface = TTF_RenderText_Solid(gameFonts->gameOverFont, gameOverTextString, gameOverTextColor);
 
 	if(gameOverTextSurface == NULL)
 	{
@@ -231,9 +234,9 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameO
 		return true;
 	}
 
-	*gameOverTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameOverTextSurface);
+	gameFonts->gameOverTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameOverTextSurface);
 
-	if(gameOverTextTexture == NULL)
+	if(gameFonts->gameOverTextTexture == NULL)
 		return true;
 
 	float gameOverTextWidth = gameOverTextSurface->w;
@@ -259,7 +262,7 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameO
 }
 
 // gameFpsText: Generates textures and locations for game fps text.
-bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTexture, TTF_Font **gameFpsFont)
+bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, struct fonts *gameFonts)
 {
 	SDL_Color gameFpsTextColor = { 255, 255, 255 };
 
@@ -272,7 +275,7 @@ bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTe
 	// create string based off of fps.
 	sprintf(gameFpsTextString, "FPS: %d", fps);
 	
-	SDL_Surface* gameFpsTextSurface = TTF_RenderText_Solid(*gameFpsFont, gameFpsTextString, gameFpsTextColor);
+	SDL_Surface* gameFpsTextSurface = TTF_RenderText_Solid(gameFonts->gameFpsFont, gameFpsTextString, gameFpsTextColor);
 
 	if (gameFpsTextSurface == NULL)
 	{
@@ -280,9 +283,9 @@ bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTe
 		return true;
 	}
 
-	*gameFpsTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameFpsTextSurface);
+	gameFonts->gameFpsTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameFpsTextSurface);
 
-	if (gameFpsTextTexture == NULL)
+	if (gameFonts->gameFpsTextTexture == NULL)
 		return true;
 
 	float gameFpsTextWidth = gameFpsTextSurface->w;
@@ -307,18 +310,18 @@ bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTe
 }
 
 // gameHeldText:  Generates textures and calculations for ganme held text.
-bool gameHeldText(SDL_Rect heldDest[] ,SDL_Texture **heldTexture, TTF_Font **heldFont)
+bool gameHeldText(SDL_Rect heldDest[] , struct fonts *gameFonts)
 {
 	SDL_Color heldColor = { 255, 255, 255 };
-	SDL_Surface* heldSurface = TTF_RenderText_Solid(*heldFont, "HELD", heldColor);
+	SDL_Surface* heldSurface = TTF_RenderText_Solid(gameFonts->heldFont, "HELD", heldColor);
 
 	if (heldSurface == NULL)
 		return true;
 
-	*heldTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, heldSurface);
+	gameFonts->heldTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, heldSurface);
 
 	// if was able to create a valid held text.  Then plan logic to place it on the screen
-	if (*heldTexture == NULL)
+	if (gameFonts->heldTexture == NULL)
 		return true;
 	else
 	{

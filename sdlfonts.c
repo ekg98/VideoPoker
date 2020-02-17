@@ -3,6 +3,7 @@
 #include "common.h"
 #include "cards.h"
 #include "wccommon.h"
+#include "sdlfonts.h"
 
 
 #define SPACING_MULTIPLIER	7	// spacing multiplier for distance between cards.
@@ -13,77 +14,69 @@ extern int intWindowHeight;
 extern SDL_Texture *heldTexture;
 extern SDL_Rect heldDest[5];
 
-TTF_Font *mainText;
-
-int loadFonts(void)
+int loadFonts(struct fonts *gameFonts)
 {
-	// pointer to open text file
-	mainText = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+	// pointer to open holdFont
+	gameFonts->heldFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
 
-	if(mainText == NULL)
+	if(gameFonts->heldFont == NULL)
 	{
 		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
 		return 1;
 	}
 
-	SDL_Color heldColor = {255, 255, 255};
-	SDL_Surface *heldSurface = TTF_RenderText_Solid(mainText, "HELD", heldColor);
+	gameFonts->gameStatusWinFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
 
-	if(heldSurface == NULL)
-		return 1;
-
-	heldTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, heldSurface);
-
-	// if was able to create a valid held text.  Then plan logic to place it on the screen
-	if(heldTexture == NULL)
-		return 1;
-	else
+	if (gameFonts->gameStatusWinFont == NULL)
 	{
-		float heldTextWidth = heldSurface->w;
-		float heldTextHeight = heldSurface->h;
-
-		float correctedHeldTextWidth = 0.0;
-	 	float correctedHeldTextHeight = 0.0;
-		float heldTextHalf = 0.0;
-		float spacingDistance = 0.0;
-
-		// corrects initial size for the screen resolution being used
-		correctedHeldTextWidth = (intWindowWidth / 1920.0) * heldTextWidth;
-		correctedHeldTextHeight = (intWindowHeight / 1200.0) * heldTextHeight;
-
-		// calculations for spacing
-		heldTextHalf = correctedHeldTextWidth / 2;
-		spacingDistance = intWindowWidth / SPACING_MULTIPLIER;
-
-		// assigns text size per calulations on resoluletion.  Alignm text just above the cards in the vertical.
-		for(int i = 0; i < 5; i++)
-		{
-			heldDest[i].w = correctedHeldTextWidth;
-			heldDest[i].h = correctedHeldTextHeight;
-			heldDest[i].y = intWindowHeight / 2.2;
-		}
-
-		// Aligns the held text X.  Horzontal across the screen directly over the cards.
-		heldDest[0].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 2);
-		heldDest[1].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 1);
-		heldDest[2].x = (intWindowWidth / 2) - heldTextHalf;
-		heldDest[3].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 1);
-		heldDest[4].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 2);
-
-
-
+		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+		return 1;
 	}
 
-	SDL_FreeSurface(heldSurface);
+	gameFonts->gameTypeFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+
+	if (gameFonts->gameTypeFont == NULL)
+	{
+		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+		return 1;
+	}
+
+	gameFonts->gameOverFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+
+	if (gameFonts->gameOverFont == NULL)
+	{
+		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+		return 1;
+	}
+
+	gameFonts->gameFpsFont = TTF_OpenFont("fonts/OneSlot.ttf", 32);
+
+	if (gameFonts->gameFpsFont == NULL)
+	{
+		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+		return 1;
+	}
 
 	return 0;
 }
 
 // close any open ttf text
-void closeText(SDL_Texture **heldTexture, SDL_Texture **gameStatusWinTextTexture, SDL_Texture **gameTypeTextTexture, SDL_Texture **gameOverTextTexture)
+void closeText(struct fonts *gameFonts, SDL_Texture **heldTexture, SDL_Texture **gameStatusWinTextTexture, SDL_Texture **gameTypeTextTexture, SDL_Texture **gameOverTextTexture)
 {
-	TTF_CloseFont(mainText);
-	mainText = NULL;
+	TTF_CloseFont(gameFonts->heldFont);
+	gameFonts->heldFont = NULL;
+
+	TTF_CloseFont(gameFonts->gameStatusWinFont);
+	gameFonts->gameStatusWinFont = NULL;
+
+	TTF_CloseFont(gameFonts->gameOverFont);
+	gameFonts->gameOverFont = NULL;
+
+	TTF_CloseFont(gameFonts->gameTypeFont);
+	gameFonts->gameTypeFont = NULL;
+
+	TTF_CloseFont(gameFonts->gameFpsFont);
+	gameFonts->gameFpsFont = NULL;
 
 	SDL_DestroyTexture(*heldTexture);
 	heldTexture = NULL;
@@ -98,7 +91,7 @@ void closeText(SDL_Texture **heldTexture, SDL_Texture **gameStatusWinTextTexture
 	gameOverTextTexture = NULL;
 }
 
-bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_Texture **gameStatusWinTextTexture)
+bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_Texture **gameStatusWinTextTexture, TTF_Font **gameStatusWinFont)
 {
 	char *winningString = NULL;
 	SDL_Color gameStatusWinTextColor = {255, 255, 255};
@@ -110,7 +103,7 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_T
 	if(winningString == NULL)
 		return true;
 
-	SDL_Surface *gameStatusWinTextSurface = TTF_RenderText_Solid(mainText, winningString, gameStatusWinTextColor);
+	SDL_Surface *gameStatusWinTextSurface = TTF_RenderText_Solid(*gameStatusWinFont, winningString, gameStatusWinTextColor);
 
 
 	if(gameStatusWinTextSurface == NULL)
@@ -147,7 +140,7 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, SDL_T
 }
 
 //gameTypeText: Function is responsible for displaying the text in the lower left corner of screen for type of game being played
-bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Texture **gameTypeTextTexture)
+bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Texture **gameTypeTextTexture, TTF_Font **gameTypeFont)
 {
 	char *gameTypeTextString = NULL;
 
@@ -173,7 +166,7 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Textur
 			break;
 	}
 
-	SDL_Surface *gameTypeTextSurface = TTF_RenderText_Solid(mainText, gameTypeTextString, gameTypeTextColor);
+	SDL_Surface *gameTypeTextSurface = TTF_RenderText_Solid(*gameTypeFont, gameTypeTextString, gameTypeTextColor);
 
 	if(gameTypeTextSurface == NULL)
 	{
@@ -208,7 +201,8 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, SDL_Textur
 	return false;
 }
 
-bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameOverTextTexture)
+// gameOverText:  Generates textures and locations for game over text.
+bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameOverTextTexture, TTF_Font **gameOverFont)
 {
 	char *gameOverTextString = NULL;
 
@@ -229,7 +223,7 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameO
 			break;
 	}
 
-	SDL_Surface *gameOverTextSurface = TTF_RenderText_Solid(mainText, gameOverTextString, gameOverTextColor);
+	SDL_Surface *gameOverTextSurface = TTF_RenderText_Solid(*gameOverFont, gameOverTextString, gameOverTextColor);
 
 	if(gameOverTextSurface == NULL)
 	{
@@ -264,7 +258,8 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, SDL_Texture **gameO
 	return false;
 }
 
-bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTexture)
+// gameFpsText: Generates textures and locations for game fps text.
+bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTexture, TTF_Font **gameFpsFont)
 {
 	SDL_Color gameFpsTextColor = { 255, 255, 255 };
 
@@ -277,7 +272,7 @@ bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTe
 	// create string based off of fps.
 	sprintf(gameFpsTextString, "FPS: %d", fps);
 	
-	SDL_Surface* gameFpsTextSurface = TTF_RenderText_Solid(mainText, gameFpsTextString, gameFpsTextColor);
+	SDL_Surface* gameFpsTextSurface = TTF_RenderText_Solid(*gameFpsFont, gameFpsTextString, gameFpsTextColor);
 
 	if (gameFpsTextSurface == NULL)
 	{
@@ -307,7 +302,60 @@ bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, SDL_Texture** gameFpsTextTe
 	gameFpsTextDest->x = intWindowWidth / 2.6;
 
 	SDL_FreeSurface(gameFpsTextSurface);
-	//free(gameFpsTextString);
+
+	return false;
+}
+
+// gameHeldText:  Generates textures and calculations for ganme held text.
+bool gameHeldText(SDL_Rect heldDest[] ,SDL_Texture **heldTexture, TTF_Font **heldFont)
+{
+	SDL_Color heldColor = { 255, 255, 255 };
+	SDL_Surface* heldSurface = TTF_RenderText_Solid(*heldFont, "HELD", heldColor);
+
+	if (heldSurface == NULL)
+		return true;
+
+	*heldTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, heldSurface);
+
+	// if was able to create a valid held text.  Then plan logic to place it on the screen
+	if (*heldTexture == NULL)
+		return true;
+	else
+	{
+		float heldTextWidth = heldSurface->w;
+		float heldTextHeight = heldSurface->h;
+
+		float correctedHeldTextWidth = 0.0;
+		float correctedHeldTextHeight = 0.0;
+		float heldTextHalf = 0.0;
+		float spacingDistance = 0.0;
+
+		// corrects initial size for the screen resolution being used
+		correctedHeldTextWidth = (intWindowWidth / 1920.0) * heldTextWidth;
+		correctedHeldTextHeight = (intWindowHeight / 1200.0) * heldTextHeight;
+
+		// calculations for spacing
+		heldTextHalf = correctedHeldTextWidth / 2;
+		spacingDistance = intWindowWidth / SPACING_MULTIPLIER;
+
+		// assigns text size per calulations on resoluletion.  Alignm text just above the cards in the vertical.
+		for (int i = 0; i < 5; i++)
+		{
+			heldDest[i].w = correctedHeldTextWidth;
+			heldDest[i].h = correctedHeldTextHeight;
+			heldDest[i].y = intWindowHeight / 2.2;
+		}
+
+		// Aligns the held text X.  Horzontal across the screen directly over the cards.
+		heldDest[0].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 2);
+		heldDest[1].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 1);
+		heldDest[2].x = (intWindowWidth / 2) - heldTextHalf;
+		heldDest[3].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 1);
+		heldDest[4].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 2);
+
+	}
+
+	SDL_FreeSurface(heldSurface);
 
 	return false;
 }

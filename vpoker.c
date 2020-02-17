@@ -24,7 +24,7 @@
 #define	FALSE	0
 
 /* function prototypes */
-int initsdl(void);
+int initsdl(struct fonts *);
 void closesdl(void);
 int loadDeck(void);
 void closeDeck(void);
@@ -38,8 +38,6 @@ SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
-SDL_Texture *heldTexture = NULL;	// texture helding the held text
-SDL_Rect heldDest[5];	// Destination for the held text on the screen.  Dependant on screen resolution.
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
 struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
@@ -60,11 +58,15 @@ int main(int argc, char *argv[])
 	SDL_Texture *gameTypeTextTexture = NULL;	//gameTypeTexture.  Texture holding game type texture.
 	SDL_Texture *gameOverTextTexture = NULL;
 	SDL_Texture* gameFpsTextTexture = NULL;
+	SDL_Texture* heldTexture = NULL;	// texture helding the held text
 
 	SDL_Rect gameStatusWinTextDest; // Destination coordinates for gameStatusTexture
 	SDL_Rect gameTypeTextDest;
 	SDL_Rect gameOverTextDest;
 	SDL_Rect gameFpsTextDest;
+	SDL_Rect heldDest[5];	// Destination for the held text on the screen.  Dependant on screen resolution.
+
+	struct fonts gameFonts;
 
 	bool displayFps = false;
 
@@ -172,7 +174,7 @@ int main(int argc, char *argv[])
 	}
 
 	// start the game here
-        if(initsdl())  /* initialize sdl */
+        if(initsdl(&gameFonts))  /* initialize sdl */
         	return 1;
 		else
 		{
@@ -190,6 +192,10 @@ int main(int argc, char *argv[])
 
 			srand(time(NULL));
 			inithand(hand, 5);
+			
+			// gameHeldText:  Generates textures and calculations for game held text.
+			if (gameHeldText(&heldDest, &heldTexture, &gameFonts.heldFont))
+				return 1;
 
 			while (event.type != SDL_QUIT)
 			{
@@ -208,45 +214,44 @@ int main(int argc, char *argv[])
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
 				{
-					// draw images
-					SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);	// sets window to blue color
+					// Set background color to blue and clear the screen of previous garbage.
+					SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);
 					SDL_RenderClear(mainWindowRenderer);
 
+					// draw cards on renderer
 					for (i = 0; i < 5; i++)
 						SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
-
+					
+					// draw held text on renderer
 					if (hand[0].held == YES)
 						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[0]);
-
 					if (hand[1].held == YES)
 						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[1]);
-
 					if (hand[2].held == YES)
 						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[2]);
-
 					if (hand[3].held == YES)
 						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[3]);
-
 					if (hand[4].held == YES)
 						SDL_RenderCopy(mainWindowRenderer, heldTexture, NULL, &heldDest[4]);
+					
 
-					// gameWinTextStatus returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
-					if (!gameStatusWinText(hand, &gameStatusWinTextDest, &gameStatusWinTextTexture))
+					// gameWinTextStatus: returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
+					if (!gameStatusWinText(hand, &gameStatusWinTextDest, &gameStatusWinTextTexture, &gameFonts.gameStatusWinFont))
 						SDL_RenderCopy(mainWindowRenderer, gameStatusWinTextTexture, NULL, &gameStatusWinTextDest);
 
 					// gameTypeText: returns true on failure.  Displays game type text in lower left corner
-					if (!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture))
+					if (!gameTypeText(gameType, &gameTypeTextDest, &gameTypeTextTexture, &gameFonts.gameTypeFont))
 						SDL_RenderCopy(mainWindowRenderer, gameTypeTextTexture, NULL, &gameTypeTextDest);
 
 					//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
-					if (!gameOverText(handState, &gameOverTextDest, &gameOverTextTexture))
+					if (!gameOverText(handState, &gameOverTextDest, &gameOverTextTexture, &gameFonts.gameOverFont))
 						SDL_RenderCopy(mainWindowRenderer, gameOverTextTexture, NULL, &gameOverTextDest);
 
 					//gameFpsText: returns true on failure.  Displays game fps on the screen
-					if (displayFps == true && !gameFpsText(averageFps, &gameFpsTextDest, &gameFpsTextTexture))
+					if (displayFps == true && !gameFpsText(averageFps, &gameFpsTextDest, &gameFpsTextTexture, &gameFonts.gameFpsFont))
 						SDL_RenderCopy(mainWindowRenderer, gameFpsTextTexture, NULL, &gameFpsTextDest);
 
-					// update the screen
+					// Render the screen.
 					SDL_RenderPresent(mainWindowRenderer);
 					
 					frameCounter++;
@@ -259,14 +264,14 @@ int main(int argc, char *argv[])
 
 
 	closeDeck();
-	closeText(&heldTexture, &gameStatusWinTextTexture, &gameTypeTextTexture, &gameOverTextTexture);
+	closeText(&gameFonts, &heldTexture, &gameStatusWinTextTexture, &gameTypeTextTexture, &gameOverTextTexture);
 	closesdl(); /* shut down sdl */
 
 	return 0;
 }
 
 /* initsdl:  Start up SDL */
-int initsdl(void)
+int initsdl(struct fonts *gameFonts)
 {
 	int imageFlags = IMG_INIT_PNG;
 
@@ -318,7 +323,7 @@ int initsdl(void)
 		return 1;
 	}
 
-	if(loadFonts())
+	if(loadFonts(gameFonts))
 	{
 		fprintf(stderr, "Failure to load game fonts.");
 		return 1;
@@ -331,8 +336,6 @@ int initsdl(void)
 void closesdl(void)
 {
 	closeDeck();
-
-
 
 	SDL_DestroyRenderer(mainWindowRenderer);
 	mainWindowRenderer = NULL;

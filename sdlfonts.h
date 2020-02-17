@@ -2,28 +2,33 @@
 
 int loadFonts(struct fonts *);
 void closeText(struct fonts *);
-bool gameHeldText(SDL_Rect [], struct fonts *);
-bool gameStatusWinText(struct card *, SDL_Rect *, struct fonts *);
-bool gameTypeText(enum gametype, SDL_Rect *, struct fonts *);
-bool gameOverText(bool, SDL_Rect *, struct fonts *);
-bool gameFpsText(int, SDL_Rect*, struct fonts *);
+bool gameHeldText(struct fonts *);
+bool gameStatusWinText(struct card *, struct fonts *);
+bool gameTypeText(enum gametype, struct fonts *);
+bool gameOverText(bool, struct fonts *);
+bool gameFpsText(int, struct fonts *);
 
 // structure fonts:  Contains pointers to opened fonts.
 struct fonts {
 
 	TTF_Font* heldFont;
 	SDL_Texture* heldTexture;
+	SDL_Rect heldDest[5];
 
 	TTF_Font* gameStatusWinFont;
 	SDL_Texture* gameStatusWinTextTexture;
+	SDL_Rect gameStatusWinTextDest;
 
 	TTF_Font* gameTypeFont;
 	SDL_Texture* gameTypeTextTexture;
+	SDL_Rect gameTypeTextDest;
 
 	TTF_Font* gameOverFont;
 	SDL_Texture* gameOverTextTexture;
+	SDL_Rect gameOverTextDest;
 
 	TTF_Font* gameFpsFont;
 	SDL_Texture* gameFpsTextTexture;
+	SDL_Rect gameFpsTextDest;
 		
 };

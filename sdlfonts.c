@@ -94,7 +94,7 @@ void closeText(struct fonts *gameFonts)
 	gameFonts->gameFpsTextTexture = NULL;
 }
 
-bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, struct fonts *gameFonts)
+bool gameStatusWinText(struct card *hand, struct fonts *gameFonts)
 {
 	char *winningString = NULL;
 	SDL_Color gameStatusWinTextColor = {255, 255, 255};
@@ -130,11 +130,11 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, struc
 	correctedGameStatusWinTextWidth = (intWindowWidth / 1920.0) * gameStatusWinTextWidth;
 	correctedGameStatusWinTextHeight = (intWindowHeight / 1200.0) * gameStatusWinTextHeight;
 
-	gameStatusWinTextDest->h = correctedGameStatusWinTextHeight;
-	gameStatusWinTextDest->w = correctedGameStatusWinTextWidth;
+	gameFonts->gameStatusWinTextDest.h = correctedGameStatusWinTextHeight;
+	gameFonts->gameStatusWinTextDest.w = correctedGameStatusWinTextWidth;
 
-	gameStatusWinTextDest->y = intWindowHeight / 2.4;
-	gameStatusWinTextDest->x = (intWindowWidth / 2) - (correctedGameStatusWinTextWidth / 2);
+	gameFonts->gameStatusWinTextDest.y = intWindowHeight / 2.4;
+	gameFonts->gameStatusWinTextDest.x = (intWindowWidth / 2) - (correctedGameStatusWinTextWidth / 2);
 
 	jacksOrBetterWinCheckFree(winningString);
 	SDL_FreeSurface(gameStatusWinTextSurface);
@@ -143,7 +143,7 @@ bool gameStatusWinText(struct card *hand, SDL_Rect *gameStatusWinTextDest, struc
 }
 
 //gameTypeText: Function is responsible for displaying the text in the lower left corner of screen for type of game being played
-bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, struct fonts *gameFonts)
+bool gameTypeText(enum gametype gameName, struct fonts *gameFonts)
 {
 	char *gameTypeTextString = NULL;
 
@@ -192,11 +192,11 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, struct fon
 	correctedGameTypeTextWidth = (intWindowWidth / 1920.0) * gameTypeTextWidth;
 	correctedGameTypeTextHeight = (intWindowHeight / 1200.0) * gameTypeTextHeight;
 
-	gameTypeTextDest->h = correctedGameTypeTextHeight;
-	gameTypeTextDest->w = correctedGameTypeTextWidth;
+	gameFonts->gameTypeTextDest.h = correctedGameTypeTextHeight;
+	gameFonts->gameTypeTextDest.w = correctedGameTypeTextWidth;
 
-	gameTypeTextDest->y = intWindowHeight - correctedGameTypeTextHeight;
-	gameTypeTextDest->x = 0;
+	gameFonts->gameTypeTextDest.y = intWindowHeight - correctedGameTypeTextHeight;
+	gameFonts->gameTypeTextDest.x = 0;
 
 	SDL_FreeSurface(gameTypeTextSurface);
 	free(gameTypeTextString);
@@ -205,7 +205,7 @@ bool gameTypeText(enum gametype gameName, SDL_Rect *gameTypeTextDest, struct fon
 }
 
 // gameOverText:  Generates textures and locations for game over text.
-bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, struct fonts *gameFonts)
+bool gameOverText(bool gameOver, struct fonts *gameFonts)
 {
 	char *gameOverTextString = NULL;
 
@@ -249,11 +249,11 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, struct fonts *gameF
 	correctedGameOverTextWidth = (intWindowWidth / 1920.0) * gameOverTextWidth;
 	correctedGameOverTextHeight = (intWindowHeight / 1200.0) * gameOverTextHeight;
 
-	gameOverTextDest->h = correctedGameOverTextHeight;
-	gameOverTextDest->w = correctedGameOverTextWidth;
+	gameFonts->gameOverTextDest.h = correctedGameOverTextHeight;
+	gameFonts->gameOverTextDest.w = correctedGameOverTextWidth;
 
-	gameOverTextDest->y = intWindowHeight - correctedGameOverTextHeight;
-	gameOverTextDest->x = intWindowWidth / 1.8;
+	gameFonts->gameOverTextDest.y = intWindowHeight - correctedGameOverTextHeight;
+	gameFonts->gameOverTextDest.x = intWindowWidth / 1.8;
 
 	SDL_FreeSurface(gameOverTextSurface);
 	free(gameOverTextString);
@@ -262,7 +262,7 @@ bool gameOverText(bool gameOver, SDL_Rect *gameOverTextDest, struct fonts *gameF
 }
 
 // gameFpsText: Generates textures and locations for game fps text.
-bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, struct fonts *gameFonts)
+bool gameFpsText(int fps, struct fonts *gameFonts)
 {
 	SDL_Color gameFpsTextColor = { 255, 255, 255 };
 
@@ -298,11 +298,11 @@ bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, struct fonts *gameFonts)
 	correctedGameFpsTextWidth = (intWindowWidth / 1920.0) * gameFpsTextWidth;
 	correctedGameFpsTextHeight = (intWindowHeight / 1200.0) * gameFpsTextHeight;
 
-	gameFpsTextDest->h = correctedGameFpsTextHeight;
-	gameFpsTextDest->w = correctedGameFpsTextWidth;
+	gameFonts->gameFpsTextDest.h = correctedGameFpsTextHeight;
+	gameFonts->gameFpsTextDest.w = correctedGameFpsTextWidth;
 
-	gameFpsTextDest->y = intWindowHeight - correctedGameFpsTextHeight;
-	gameFpsTextDest->x = intWindowWidth / 2.6;
+	gameFonts->gameFpsTextDest.y = intWindowHeight - correctedGameFpsTextHeight;
+	gameFonts->gameFpsTextDest.x = intWindowWidth / 2.6;
 
 	SDL_FreeSurface(gameFpsTextSurface);
 
@@ -310,7 +310,7 @@ bool gameFpsText(int fps, SDL_Rect* gameFpsTextDest, struct fonts *gameFonts)
 }
 
 // gameHeldText:  Generates textures and calculations for ganme held text.
-bool gameHeldText(SDL_Rect heldDest[] , struct fonts *gameFonts)
+bool gameHeldText(struct fonts *gameFonts)
 {
 	SDL_Color heldColor = { 255, 255, 255 };
 	SDL_Surface* heldSurface = TTF_RenderText_Solid(gameFonts->heldFont, "HELD", heldColor);
@@ -344,17 +344,17 @@ bool gameHeldText(SDL_Rect heldDest[] , struct fonts *gameFonts)
 		// assigns text size per calulations on resoluletion.  Alignm text just above the cards in the vertical.
 		for (int i = 0; i < 5; i++)
 		{
-			heldDest[i].w = correctedHeldTextWidth;
-			heldDest[i].h = correctedHeldTextHeight;
-			heldDest[i].y = intWindowHeight / 2.2;
+			gameFonts->heldDest[i].w = correctedHeldTextWidth;
+			gameFonts->heldDest[i].h = correctedHeldTextHeight;
+			gameFonts->heldDest[i].y = intWindowHeight / 2.2;
 		}
 
 		// Aligns the held text X.  Horzontal across the screen directly over the cards.
-		heldDest[0].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 2);
-		heldDest[1].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 1);
-		heldDest[2].x = (intWindowWidth / 2) - heldTextHalf;
-		heldDest[3].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 1);
-		heldDest[4].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 2);
+		gameFonts->heldDest[0].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 2);
+		gameFonts->heldDest[1].x = ((intWindowWidth / 2) - heldTextHalf) - (spacingDistance * 1);
+		gameFonts->heldDest[2].x = (intWindowWidth / 2) - heldTextHalf;
+		gameFonts->heldDest[3].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 1);
+		gameFonts->heldDest[4].x = ((intWindowWidth / 2) - heldTextHalf) + (spacingDistance * 2);
 
 	}
 

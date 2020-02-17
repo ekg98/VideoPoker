@@ -52,15 +52,6 @@ int intWindowHeight = DEFAULT_WINDOW_HEIGHT;
 /* main program */
 int main(int argc, char *argv[])
 {
-
-	// main variables
-
-	SDL_Rect gameStatusWinTextDest; // Destination coordinates for gameStatusTexture
-	SDL_Rect gameTypeTextDest;
-	SDL_Rect gameOverTextDest;
-	SDL_Rect gameFpsTextDest;
-	SDL_Rect heldDest[5];	// Destination for the held text on the screen.  Dependant on screen resolution.
-
 	// large structure containing game font datas.
 	struct fonts gameFonts;
 
@@ -190,7 +181,7 @@ int main(int argc, char *argv[])
 			inithand(hand, 5);
 			
 			// gameHeldText:  Generates textures and calculations for game held text.
-			if (gameHeldText(&heldDest, &gameFonts))
+			if (gameHeldText(&gameFonts))
 				return 1;
 
 			while (event.type != SDL_QUIT)
@@ -220,32 +211,32 @@ int main(int argc, char *argv[])
 					
 					// draw held text on renderer
 					if (hand[0].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &heldDest[0]);
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[0]);
 					if (hand[1].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &heldDest[1]);
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[1]);
 					if (hand[2].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &heldDest[2]);
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[2]);
 					if (hand[3].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &heldDest[3]);
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[3]);
 					if (hand[4].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &heldDest[4]);
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[4]);
 					
 
 					// gameWinTextStatus: returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
-					if (!gameStatusWinText(hand, &gameStatusWinTextDest, &gameFonts))
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameStatusWinTextTexture, NULL, &gameStatusWinTextDest);
+					if (!gameStatusWinText(hand, &gameFonts))
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameStatusWinTextTexture, NULL, &gameFonts.gameStatusWinTextDest);
 
 					// gameTypeText: returns true on failure.  Displays game type text in lower left corner
-					if (!gameTypeText(gameType, &gameTypeTextDest, &gameFonts))
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameTypeTextTexture, NULL, &gameTypeTextDest);
+					if (!gameTypeText(gameType, &gameFonts))
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameTypeTextTexture, NULL, &gameFonts.gameTypeTextDest);
 
 					//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
-					if (!gameOverText(handState, &gameOverTextDest, &gameFonts))
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameOverTextTexture, NULL, &gameOverTextDest);
+					if (!gameOverText(handState, &gameFonts))
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameOverTextTexture, NULL, &gameFonts.gameOverTextDest);
 
 					//gameFpsText: returns true on failure.  Displays game fps on the screen
-					if (displayFps == true && !gameFpsText(averageFps, &gameFpsTextDest, &gameFonts))
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameFpsTextTexture, NULL, &gameFpsTextDest);
+					if (displayFps == true && !gameFpsText(averageFps, &gameFonts))
+						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameFpsTextTexture, NULL, &gameFonts.gameFpsTextDest);
 
 					// Render the screen.
 					SDL_RenderPresent(mainWindowRenderer);
@@ -442,7 +433,7 @@ int loadDeck(void)
 /* closeDeck:  Free the images that were loaded for the deck of cards */
 void closeDeck(void)
 {
-	int suit, i;
+	int suit;
 
 	/* Destroy the whole deck */
 	for(suit = 0; suit < 5; suit++)

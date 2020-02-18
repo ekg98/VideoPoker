@@ -12,12 +12,13 @@
 #include "sdlbuttons.h"
 #include "cards.h"
 #include "events.h"
+#include <float.h>
 
 /* Window resolutions and card resolutions - Must be floating point */
-#define DEFAULT_WINDOW_WIDTH  1920.0
-#define DEFAULT_WINDOW_HEIGHT 1080.0
-#define CARD_WIDTH  350.0
-#define CARD_HEIGHT 500.0
+#define DEFAULT_WINDOW_WIDTH  1920
+#define DEFAULT_WINDOW_HEIGHT 1080
+#define CARD_WIDTH  350
+#define CARD_HEIGHT 500
 #define MAX_FRAMERATE	60
 
 #define	TRUE	1
@@ -52,11 +53,15 @@ int intWindowHeight = DEFAULT_WINDOW_HEIGHT;
 /* main program */
 int main(int argc, char *argv[])
 {
+	// local main variables go here
+	bool displayFps = false;
+	float floatCredits = 0;
+
+
 	// large structure containing game font datas.
 	struct fonts gameFonts;
 
-	bool displayFps = false;
-
+	
 	// checks to see if there are any arguments available
 	if(argc > 1)
 	{
@@ -196,7 +201,7 @@ int main(int argc, char *argv[])
 				averageFps = (int) (frameCounter / (startRunTicks / 1000.0));
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-				handState = getEvents(&event, hand);
+				handState = getEvents(&event, hand, &floatCredits);
 
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
@@ -225,11 +230,7 @@ int main(int argc, char *argv[])
 					// gameWinTextStatus: returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
 					if (!gameStatusWinText(hand, &gameFonts))
 						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameStatusWinTextTexture, NULL, &gameFonts.gameStatusWinTextDest);
-
-					// gameTypeText: returns true on failure.  Displays game type text in lower left corner
-					if (!gameTypeText(gameType, &gameFonts))
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameTypeTextTexture, NULL, &gameFonts.gameTypeTextDest);
-
+										
 					//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
 					if (!gameOverText(handState, &gameFonts))
 						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameOverTextTexture, NULL, &gameFonts.gameOverTextDest);
@@ -237,6 +238,14 @@ int main(int argc, char *argv[])
 					//gameFpsText: returns true on failure.  Displays game fps on the screen
 					if (displayFps == true && !gameFpsText(averageFps, &gameFonts))
 						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameFpsTextTexture, NULL, &gameFonts.gameFpsTextDest);
+
+					// Depending on what game is being played.  Render the correct graphical selection.
+					switch (gameType)
+					{
+						case JACKS_OR_BETTER:
+							JacksOrBetterRender(hand, &gameFonts);
+							break;
+					}
 
 					// Render the screen.
 					SDL_RenderPresent(mainWindowRenderer);

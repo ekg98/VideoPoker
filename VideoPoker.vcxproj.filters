@@ -30,6 +30,9 @@
     <ClCompile Include="events.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="jobrender.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cards.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="events.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="jobrender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -90,6 +90,7 @@ void closeText(struct fonts *gameFonts)
 	SDL_DestroyTexture(gameFonts->gameOverTextTexture);
 	gameFonts->gameOverTextTexture = NULL;
 
+	// crashes on exit.  need if statement to determine if value is null before destroying
 	SDL_DestroyTexture(gameFonts->gameFpsTextTexture);
 	gameFonts->gameFpsTextTexture = NULL;
 }

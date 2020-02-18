@@ -16,6 +16,7 @@
 
 
 enum gametype {
+		MAIN_MENU,
 		JACKS_OR_BETTER,
 		DUCES_WILD
 };

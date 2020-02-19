@@ -102,7 +102,6 @@ void closeText(struct fonts *gameFonts)
 	SDL_DestroyTexture(gameFonts->gameOverTextTexture);
 	gameFonts->gameOverTextTexture = NULL;
 
-	// crashes on exit.  need if statement to determine if value is null before destroying
 	SDL_DestroyTexture(gameFonts->gameFpsTextTexture);
 	gameFonts->gameFpsTextTexture = NULL;
 }
@@ -126,6 +125,13 @@ bool gameStatusWinText(struct card *hand, struct fonts *gameFonts)
 	{
 		fprintf(stderr, "Could not render gameStatusWinTextTexture.\n");
 		return true;
+	}
+
+	// destroy old texture from previous run
+	if (gameFonts->gameStatusWinTextTexture != NULL)
+	{
+		SDL_DestroyTexture(gameFonts->gameStatusWinTextTexture);
+		gameFonts->gameStatusWinTextTexture = NULL;
 	}
 
 	gameFonts->gameStatusWinTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameStatusWinTextSurface);
@@ -190,6 +196,13 @@ bool gameTypeText(enum gametype gameName, struct fonts *gameFonts)
 		return true;
 	}
 
+	// destroy old texture from previous run
+	if (gameFonts->gameTypeTextTexture != NULL)
+	{
+		SDL_DestroyTexture(gameFonts->gameTypeTextTexture);
+		gameFonts->gameTypeTextTexture = NULL;
+	}
+
 	gameFonts->gameTypeTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameTypeTextSurface);
 
 	if(gameFonts->gameTypeTextTexture == NULL)
@@ -245,6 +258,13 @@ bool gameOverText(bool gameOver, struct fonts *gameFonts)
 	{
 		fprintf(stderr, "Could not render gameOverTextSurface.\n");
 		return true;
+	}
+
+	// destroy old texture from previous run
+	if (gameFonts->gameOverTextTexture != NULL)
+	{
+		SDL_DestroyTexture(gameFonts->gameOverTextTexture);
+		gameFonts->gameOverTextTexture = NULL;
 	}
 
 	gameFonts->gameOverTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameOverTextSurface);

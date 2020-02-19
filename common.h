@@ -25,3 +25,11 @@ enum handState {
 	SECOND_HAND,
 	FIRST_HAND 
 };
+
+enum denomtype {
+	QUARTER,
+	HALF,
+	DOLLAR,
+	FIVEDOLLAR,
+	TENDOLLAR
+};

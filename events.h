@@ -1,3 +1,4 @@
 // events.h: Header for event functions
 
-bool getEvents(SDL_Event *, struct card *, float *);
+// getEvents:  Get events depending on type of game
+bool getEvents(enum gametype, enum denomtype, SDL_Event *, struct card *, float *);

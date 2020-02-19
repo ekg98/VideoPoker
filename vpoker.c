@@ -12,7 +12,6 @@
 #include "sdlbuttons.h"
 #include "cards.h"
 #include "events.h"
-#include <float.h>
 
 /* Window resolutions and card resolutions - Must be floating point */
 #define DEFAULT_WINDOW_WIDTH  1920
@@ -52,7 +51,7 @@ int main(int argc, char *argv[])
 {
 	// local main variables go here
 	bool displayFps = false;
-	float floatCredits = 0;
+	float floatCash = 0;
 
 
 	// large structure containing game font datas.
@@ -176,7 +175,8 @@ int main(int argc, char *argv[])
 			int runTicks = 0;
 			float tickInterval = 1000.0 / MAX_FRAMERATE;
 
-			enum gametype gameType = JACKS_OR_BETTER;
+			enum gametype game = JACKS_OR_BETTER;
+			enum denomtype denom = QUARTER;
 
 			srand(time(NULL));
 			inithand(hand, 5);
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 				averageFps = (int) (frameCounter / (startRunTicks / 1000.0));
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-				handState = getEvents(&event, hand, &floatCredits);
+				handState = getEvents(game, denom, &event, hand, &floatCash);
 								
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
@@ -206,12 +206,12 @@ int main(int argc, char *argv[])
 					SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);
 					SDL_RenderClear(mainWindowRenderer);
 														
-					//gameFpsText: returns true on failure.  Displays game fps on the screen
+					//gameFpsText: returns true on failure.  Displays game fps on the screen.
 					if (displayFps == true && !gameFpsText(averageFps, &gameFonts))
 						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameFpsTextTexture, NULL, &gameFonts.gameFpsTextDest);
 														
 					// Depending on what game is being played.  Render the correct graphical selection.
-					switch (gameType)
+					switch (game)
 					{
 						case JACKS_OR_BETTER:
 							JacksOrBetterRender(hand, &gameFonts, &deckImageData, handState);

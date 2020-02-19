@@ -1,3 +1,3 @@
 // Video Poker:  Jacks or Better render header
 
-void JacksOrBetterRender(struct card *, struct fonts *);
+void JacksOrBetterRender(struct card *, struct fonts *, bool);

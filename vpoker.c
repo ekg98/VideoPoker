@@ -40,7 +40,7 @@ SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
 SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
 struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
-struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect`
+struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect
 SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
 SDL_Rect buttonDest[8]; // Destination for the buttons on the screen.  Dependant on screen resolution
 SDL_Event event;
@@ -170,8 +170,6 @@ int main(int argc, char *argv[])
         	return 1;
 		else
 		{
-			int i = 0;
-
 			// timing variables
 			int frameCounter = 0;
 			int averageFps = 0;
@@ -209,41 +207,25 @@ int main(int argc, char *argv[])
 					// Set background color to blue and clear the screen of previous garbage.
 					SDL_SetRenderDrawColor(mainWindowRenderer, 0, 0, 255, 0);
 					SDL_RenderClear(mainWindowRenderer);
-
-					// draw cards on renderer
-					for (i = 0; i < 5; i++)
-						SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[i].suit], &cardCoordinates[hand[i].suit].source[hand[i].value], &cardDest[i]);
-					
-					// draw held text on renderer
-					if (hand[0].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[0]);
-					if (hand[1].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[1]);
-					if (hand[2].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[2]);
-					if (hand[3].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[3]);
-					if (hand[4].held == YES)
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.heldTexture, NULL, &gameFonts.heldDest[4]);
-					
-
-					// gameWinTextStatus: returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
-					if (!gameStatusWinText(hand, &gameFonts))
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameStatusWinTextTexture, NULL, &gameFonts.gameStatusWinTextDest);
-										
-					//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
-					if (!gameOverText(handState, &gameFonts))
-						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameOverTextTexture, NULL, &gameFonts.gameOverTextDest);
-
+														
 					//gameFpsText: returns true on failure.  Displays game fps on the screen
 					if (displayFps == true && !gameFpsText(averageFps, &gameFonts))
 						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameFpsTextTexture, NULL, &gameFonts.gameFpsTextDest);
+
+					int intCounter = 0;
+
+					// draw cards on renderer
+					for (intCounter = 0; intCounter < 5; intCounter++)
+						SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[intCounter].suit], &cardCoordinates[hand[intCounter].suit].source[hand[intCounter].value], &cardDest[intCounter]);
+
 
 					// Depending on what game is being played.  Render the correct graphical selection.
 					switch (gameType)
 					{
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts);
+							JacksOrBetterRender(hand, &gameFonts, handState);
+							break;
+						case DUCES_WILD:
 							break;
 					}
 

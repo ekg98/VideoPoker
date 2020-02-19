@@ -2,13 +2,20 @@
 #include "common.h"
 #include "cards.h"
 #include "sdlfonts.h"
+#include "sdlcards.h"
 
 extern SDL_Renderer* mainWindowRenderer;
 
 // JacksOrBetterRender:  Renders the whole graphical selection of Jacks Or Better to the renderer
-void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, bool handState)
+void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, bool handState)
 {
-	
+
+	int intCounter = 0;
+
+	// draw cards on renderer
+	for (intCounter = 0; intCounter < 5; intCounter++)
+		SDL_RenderCopy(mainWindowRenderer, deckImageData->suitTexture[hand[intCounter].suit], &deckImageData->cardSource[hand[intCounter].suit].card[hand[intCounter].value], &deckImageData->cardDest[intCounter]);
+
 	// gameTypeText: returns true on failure.  Displays game type text in lower left corner
 	if (!gameTypeText(JACKS_OR_BETTER, gameFonts))
 		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameTypeTextTexture, NULL, &gameFonts->gameTypeTextDest);

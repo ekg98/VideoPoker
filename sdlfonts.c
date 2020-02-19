@@ -11,8 +11,6 @@
 extern SDL_Renderer *mainWindowRenderer;
 extern int intWindowWidth;
 extern int intWindowHeight;
-extern SDL_Texture *heldTexture;
-extern SDL_Rect heldDest[5];
 
 int loadFonts(struct fonts *gameFonts)
 {

@@ -25,10 +25,10 @@
 #define	FALSE	0
 
 /* function prototypes */
-int initsdl(struct fonts *);
+int initsdl(struct fonts *, struct fiveCardDeckImageData *);
 void closesdl(void);
-int loadDeck(void);
-void closeDeck(void);
+int loadDeck(struct fiveCardDeckImageData *);
+void closeDeck(struct fiveCardDeckImageData *);
 void loadButtons(void);
 void closeButtons(void);
 
@@ -37,12 +37,9 @@ void closeButtons(void);
 SDL_Window *mainWindow = NULL;
 SDL_Surface *mainWindowSurface = NULL;
 SDL_Renderer *mainWindowRenderer = NULL;
-SDL_Texture *DeckTextures[5];	/* Array of pointers to the deck textures */
-SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
-struct cardSuitCoordinates cardCoordinates[5]; /* structure containing array of SDL_Rect */
-struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect
-SDL_Rect cardDest[5];	/* Destination for the cards on the screen.  Dependent on screen resolution */
-SDL_Rect buttonDest[8]; // Destination for the buttons on the screen.  Dependant on screen resolution
+//SDL_Texture *buttonTextures[8];	// Array of pointers to button textures
+//struct buttonCoordinates buttonCoordinates[8];	// stucture containing array of SDL_Rect
+//SDL_Rect buttonDest[8]; // Destination for the buttons on the screen.  Dependant on screen resolution
 SDL_Event event;
 struct card hand[5];
 
@@ -61,6 +58,7 @@ int main(int argc, char *argv[])
 	// large structure containing game font datas.
 	struct fonts gameFonts;
 
+	struct fiveCardDeckImageData deckImageData;
 	
 	// checks to see if there are any arguments available
 	if(argc > 1)
@@ -166,7 +164,7 @@ int main(int argc, char *argv[])
 	}
 
 	// start the game here
-        if(initsdl(&gameFonts))  /* initialize sdl */
+        if(initsdl(&gameFonts, &deckImageData))  /* initialize sdl */
         	return 1;
 		else
 		{
@@ -200,7 +198,7 @@ int main(int argc, char *argv[])
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
 				handState = getEvents(&event, hand, &floatCredits);
-
+								
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
 				{
@@ -211,19 +209,12 @@ int main(int argc, char *argv[])
 					//gameFpsText: returns true on failure.  Displays game fps on the screen
 					if (displayFps == true && !gameFpsText(averageFps, &gameFonts))
 						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameFpsTextTexture, NULL, &gameFonts.gameFpsTextDest);
-
-					int intCounter = 0;
-
-					// draw cards on renderer
-					for (intCounter = 0; intCounter < 5; intCounter++)
-						SDL_RenderCopy(mainWindowRenderer, DeckTextures[hand[intCounter].suit], &cardCoordinates[hand[intCounter].suit].source[hand[intCounter].value], &cardDest[intCounter]);
-
-
+														
 					// Depending on what game is being played.  Render the correct graphical selection.
 					switch (gameType)
 					{
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, handState);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, handState);
 							break;
 						case DUCES_WILD:
 							break;
@@ -241,15 +232,15 @@ int main(int argc, char *argv[])
 		}
 
 
-	closeDeck();
+	closeDeck(&deckImageData);
 	closeText(&gameFonts);
-	closesdl(); /* shut down sdl */
+	closesdl();
 
 	return 0;
 }
 
 /* initsdl:  Start up SDL */
-int initsdl(struct fonts *gameFonts)
+int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData)
 {
 	int imageFlags = IMG_INIT_PNG;
 
@@ -292,7 +283,7 @@ int initsdl(struct fonts *gameFonts)
 	}
 
 	/* Error checking for loading the texture deck */
-	if(loadDeck())
+	if(loadDeck(deckImageData))
 		return 1;
 
 	if(TTF_Init() == -1)
@@ -313,8 +304,6 @@ int initsdl(struct fonts *gameFonts)
 /* closesdl:  Shut down SDL */
 void closesdl(void)
 {
-	closeDeck();
-
 	SDL_DestroyRenderer(mainWindowRenderer);
 	mainWindowRenderer = NULL;
 
@@ -327,7 +316,7 @@ void closesdl(void)
 }
 
 /* loadDeck:  Load deck of card images into memory. */
-int loadDeck(void)
+int loadDeck(struct fiveCardDeckImageData *deckImageData)
 {
 	int suit, i, spaceWidth = 0;
 	float resCorrectedSpaceWidth = 0.0;
@@ -360,19 +349,19 @@ int loadDeck(void)
   	/* Null the whole deck texture array */
 	for(suit = 0; suit < 5; suit++)
 	{
-		DeckTextures[suit] = NULL;
+		deckImageData->suitTexture[suit] = NULL;
 	}
 
   	/* convert the surface to comply with the screen */
   	for(suit = 1; suit < 5; suit++)
   	{
-    		DeckTextures[suit] = SDL_CreateTextureFromSurface(mainWindowRenderer, cards[suit]);
+    		deckImageData->suitTexture[suit] = SDL_CreateTextureFromSurface(mainWindowRenderer, cards[suit]);
   	}
 
   	/* Error check to see if deck texture was loaded into memory */
   	for(suit = 1; suit < 5; suit++)
   	{
-  		if(DeckTextures[suit] == NULL)
+  		if(deckImageData->suitTexture[suit] == NULL)
 		{
 			printf("SDL could not load deck textures: %s\n", SDL_GetError());
 			return 1;
@@ -397,40 +386,40 @@ int loadDeck(void)
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
 	{
-		cardDest[i].y = intWindowHeight/ 2;
-		cardDest[i].w = cardResWidthCorrected;
-		cardDest[i].h = cardResHeightCorrected;
+		deckImageData->cardDest[i].y = intWindowHeight/ 2;
+		deckImageData->cardDest[i].w = cardResWidthCorrected;
+		deckImageData->cardDest[i].h = cardResHeightCorrected;
 	}
 
-	cardDest[0].x = ((intWindowWidth / 2) - cardHalf) - (spacingDistance * 2);
-	cardDest[1].x = ((intWindowWidth / 2) - cardHalf) - (spacingDistance * 1);
-	cardDest[2].x = (intWindowWidth / 2) - cardHalf;
-	cardDest[3].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 1);
-	cardDest[4].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 2);
+	deckImageData->cardDest[0].x = ((intWindowWidth / 2) - cardHalf) - (spacingDistance * 2);
+	deckImageData->cardDest[1].x = ((intWindowWidth / 2) - cardHalf) - (spacingDistance * 1);
+	deckImageData->cardDest[2].x = (intWindowWidth / 2) - cardHalf;
+	deckImageData->cardDest[3].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 1);
+	deckImageData->cardDest[4].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 2);
 
 	/* create coordinates for the cards from the image deck textures */
         /* first set element of the structure is ignored */
 	for(suit = 1; suit < 5; suit++)
 		for(i = 0; i < 15; i++)
 		{
-			cardCoordinates[suit].source[i].x = CARD_WIDTH * i;
-			cardCoordinates[suit].source[i].y = 0;
-			cardCoordinates[suit].source[i].w = CARD_WIDTH;
-			cardCoordinates[suit].source[i].h = CARD_HEIGHT;
+			deckImageData->cardSource[suit].card[i].x = CARD_WIDTH * i;
+			deckImageData->cardSource[suit].card[i].y = 0;
+			deckImageData->cardSource[suit].card[i].w = CARD_WIDTH;
+			deckImageData->cardSource[suit].card[i].h = CARD_HEIGHT;
 		}
 	return 0;
 }
 
 /* closeDeck:  Free the images that were loaded for the deck of cards */
-void closeDeck(void)
+void closeDeck(struct fiveCardDeckImageData *deckImageData)
 {
 	int suit;
 
 	/* Destroy the whole deck */
 	for(suit = 0; suit < 5; suit++)
 	{
-		SDL_DestroyTexture(DeckTextures[suit]);
-    		DeckTextures[suit] = NULL;
+		SDL_DestroyTexture(deckImageData->suitTexture[suit]);
+    		deckImageData->suitTexture[suit] = NULL;
   	}
 }
 

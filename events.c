@@ -7,6 +7,7 @@
 bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struct card *hand, float *floatCash)
 {
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
+	static bool dealEnabled = true;
 
 	while (SDL_PollEvent(event))
 	{
@@ -18,8 +19,44 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 				// return pressed
 				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED)
 				{
+
+					// remove credits depending on type of denom used.
+					switch (denom)
+					{
+					case QUARTER:
+						if (*floatCash >= 0.25)
+							*floatCash -= 0.25;
+						else
+							dealEnabled = false;
+						break;
+					case HALF:
+						if (*floatCash >= 0.50)
+							*floatCash -= 0.50;
+						else
+							dealEnabled = false;
+						break;
+					case DOLLAR:
+						if (*floatCash >= 1.00)
+							*floatCash -= 1.00;
+						else
+							dealEnabled = false;
+						break;
+					case FIVEDOLLAR:
+						if (*floatCash >= 5.00)
+							*floatCash -= 5.00;
+						else
+							dealEnabled = false;
+						break;
+					case TENDOLLAR:
+						if (*floatCash >= 10.00)
+							*floatCash -= 10.00;
+						else
+							dealEnabled = false;
+						break;
+					}
+
 					// first deal.  Unheld all cards and reset held key states
-					if (firstDeal == true && returnPrevPressed == false)
+					if (dealEnabled == true && firstDeal == true && returnPrevPressed == false)
 					{
 						// reset held key states
 						onePrevHeld = false;

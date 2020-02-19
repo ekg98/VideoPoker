@@ -14,6 +14,13 @@ extern int intWindowHeight;
 
 int loadFonts(struct fonts *gameFonts)
 {
+	// nulling fonts
+	gameFonts->heldFont = NULL;
+	gameFonts->gameStatusWinFont = NULL;
+	gameFonts->gameTypeFont = NULL;
+	gameFonts->gameOverFont = NULL;
+	gameFonts->gameFpsFont = NULL;
+
 	// pointer to open holdFont
 	gameFonts->heldFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
 
@@ -54,6 +61,13 @@ int loadFonts(struct fonts *gameFonts)
 		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
 		return 1;
 	}
+
+	// nulling textures
+	gameFonts->heldTexture = NULL;
+	gameFonts->gameStatusWinTextTexture = NULL;
+	gameFonts->gameTypeTextTexture = NULL;
+	gameFonts->gameOverTextTexture = NULL;
+	gameFonts->gameFpsTextTexture = NULL;
 
 	return 0;
 }

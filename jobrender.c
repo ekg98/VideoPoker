@@ -16,17 +16,17 @@ void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct five
 	for (intCounter = 0; intCounter < 5; intCounter++)
 		SDL_RenderCopy(mainWindowRenderer, deckImageData->suitTexture[hand[intCounter].suit], &deckImageData->cardSource[hand[intCounter].suit].card[hand[intCounter].value], &deckImageData->cardDest[intCounter]);
 
-	// gameTypeText: returns true on failure.  Displays game type text in lower left corner
+	// gameTypeText: returns true on failure.  Displays game type text in lower left corner. has memory leak
 	if (!gameTypeText(JACKS_OR_BETTER, gameFonts))
-		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameTypeTextTexture, NULL, &gameFonts->gameTypeTextDest);
+		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameTypeTextTexture, NULL, &gameFonts->gameTypeTextDest); 
 
-	// gameWinTextStatus: returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid
+	// gameWinTextStatus: returns true on failure.  When no win is detected.  NULL causes problems with TTF_RenderText_Solid. has memory leak
 	if (!gameStatusWinText(hand, gameFonts))
 		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameStatusWinTextTexture, NULL, &gameFonts->gameStatusWinTextDest);
 
-	//gameOverText: returns true on failure.  Displays game over text in lower right section of screen
+	//gameOverText: returns true on failure.  Displays game over text in lower right section of screen. has memory leak
 	if (!gameOverText(handState, gameFonts))
-		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameOverTextTexture, NULL, &gameFonts->gameOverTextDest);
+		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameOverTextTexture, NULL, &gameFonts->gameOverTextDest); 
 
 	// draw held text on renderer
 	if (hand[0].held == YES)

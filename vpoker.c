@@ -198,7 +198,9 @@ int main(int argc, char *argv[])
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
 				handState = getEvents(game, denom, &event, hand, &floatCash);
-								
+							
+				printf("%f\n", floatCash);
+
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
 				{

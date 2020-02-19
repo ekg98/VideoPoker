@@ -9,6 +9,9 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
 	static bool dealEnabled = true;
 
+	int intBetLevel = 1;
+	float floatBet = 0.25;
+
 	while (SDL_PollEvent(event))
 	{
 		
@@ -19,40 +22,47 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 				// return pressed
 				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED)
 				{
+					
+					// check bet level and enable deal.
+					if (*floatCash >= (floatBet * intBetLevel))
+						dealEnabled = true;
 
 					// remove credits depending on type of denom used.
-					switch (denom)
+					if (firstDeal == true)
 					{
-					case QUARTER:
-						if (*floatCash >= 0.25)
-							*floatCash -= 0.25;
-						else
-							dealEnabled = false;
-						break;
-					case HALF:
-						if (*floatCash >= 0.50)
-							*floatCash -= 0.50;
-						else
-							dealEnabled = false;
-						break;
-					case DOLLAR:
-						if (*floatCash >= 1.00)
-							*floatCash -= 1.00;
-						else
-							dealEnabled = false;
-						break;
-					case FIVEDOLLAR:
-						if (*floatCash >= 5.00)
-							*floatCash -= 5.00;
-						else
-							dealEnabled = false;
-						break;
-					case TENDOLLAR:
-						if (*floatCash >= 10.00)
-							*floatCash -= 10.00;
-						else
-							dealEnabled = false;
-						break;
+						switch (denom)
+						{
+						case QUARTER:
+							if (*floatCash >= 0.25)
+								*floatCash -= 0.25;
+							else
+								dealEnabled = false;
+							break;
+						case HALF:
+							if (*floatCash >= 0.50)
+								*floatCash -= 0.50;
+							else
+								dealEnabled = false;
+							break;
+						case DOLLAR:
+							if (*floatCash >= 1.00)
+								*floatCash -= 1.00;
+							else
+								dealEnabled = false;
+							break;
+						case FIVEDOLLAR:
+							if (*floatCash >= 5.00)
+								*floatCash -= 5.00;
+							else
+								dealEnabled = false;
+							break;
+						case TENDOLLAR:
+							if (*floatCash >= 10.00)
+								*floatCash -= 10.00;
+							else
+								dealEnabled = false;
+							break;
+						}
 					}
 
 					// first deal.  Unheld all cards and reset held key states

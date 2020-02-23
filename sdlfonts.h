@@ -7,6 +7,7 @@ bool gameStatusWinText(struct card *, struct fonts *);
 bool gameTypeText(enum gametype, struct fonts *);
 bool gameOverText(bool, struct fonts *);
 bool gameFpsText(int, struct fonts *);
+bool gameCashText(float , struct fonts*);
 
 // structure fonts:  Contains pointers to opened fonts.
 struct fonts {
@@ -30,5 +31,9 @@ struct fonts {
 	TTF_Font* gameFpsFont;
 	SDL_Texture* gameFpsTextTexture;
 	SDL_Rect gameFpsTextDest;
+
+	TTF_Font* gameCashFont;
+	SDL_Texture* gameCashTextTexture;
+	SDL_Rect gameCashTextDest;
 		
 };

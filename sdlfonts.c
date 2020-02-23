@@ -20,6 +20,7 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameTypeFont = NULL;
 	gameFonts->gameOverFont = NULL;
 	gameFonts->gameFpsFont = NULL;
+	gameFonts->gameCashFont = NULL;
 
 	// pointer to open holdFont
 	gameFonts->heldFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
@@ -38,7 +39,7 @@ int loadFonts(struct fonts *gameFonts)
 		return 1;
 	}
 
-	gameFonts->gameTypeFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+	gameFonts->gameTypeFont = TTF_OpenFont("fonts/OneSlot.ttf", 26);
 
 	if (gameFonts->gameTypeFont == NULL)
 	{
@@ -46,7 +47,7 @@ int loadFonts(struct fonts *gameFonts)
 		return 1;
 	}
 
-	gameFonts->gameOverFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+	gameFonts->gameOverFont = TTF_OpenFont("fonts/OneSlot.ttf", 26);
 
 	if (gameFonts->gameOverFont == NULL)
 	{
@@ -54,9 +55,17 @@ int loadFonts(struct fonts *gameFonts)
 		return 1;
 	}
 
-	gameFonts->gameFpsFont = TTF_OpenFont("fonts/OneSlot.ttf", 32);
+	gameFonts->gameFpsFont = TTF_OpenFont("fonts/OneSlot.ttf", 26);
 
 	if (gameFonts->gameFpsFont == NULL)
+	{
+		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+		return 1;
+	}
+
+	gameFonts->gameCashFont = TTF_OpenFont("fonts/OneSlot.ttf", 72);
+
+	if (gameFonts->gameCashFont == NULL)
 	{
 		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
 		return 1;
@@ -68,6 +77,7 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameTypeTextTexture = NULL;
 	gameFonts->gameOverTextTexture = NULL;
 	gameFonts->gameFpsTextTexture = NULL;
+	gameFonts->gameCashTextTexture = NULL;
 
 	return 0;
 }
@@ -90,6 +100,9 @@ void closeText(struct fonts *gameFonts)
 	TTF_CloseFont(gameFonts->gameFpsFont);
 	gameFonts->gameFpsFont = NULL;
 
+	TTF_CloseFont(gameFonts->gameCashFont);
+	gameFonts->gameCashFont = NULL;
+
 	SDL_DestroyTexture(gameFonts->heldTexture);
 	gameFonts->heldTexture = NULL;
 
@@ -104,6 +117,9 @@ void closeText(struct fonts *gameFonts)
 
 	SDL_DestroyTexture(gameFonts->gameFpsTextTexture);
 	gameFonts->gameFpsTextTexture = NULL;
+
+	SDL_DestroyTexture(gameFonts->gameCashTextTexture);
+	gameFonts->gameCashTextTexture = NULL;
 }
 
 bool gameStatusWinText(struct card *hand, struct fonts *gameFonts)
@@ -222,7 +238,7 @@ bool gameTypeText(enum gametype gameName, struct fonts *gameFonts)
 	gameFonts->gameTypeTextDest.w = correctedGameTypeTextWidth;
 
 	gameFonts->gameTypeTextDest.y = intWindowHeight - correctedGameTypeTextHeight;
-	gameFonts->gameTypeTextDest.x = 0;
+	gameFonts->gameTypeTextDest.x = intWindowWidth / 12;
 
 	SDL_FreeSurface(gameTypeTextSurface);
 	free(gameTypeTextString);
@@ -286,7 +302,7 @@ bool gameOverText(bool gameOver, struct fonts *gameFonts)
 	gameFonts->gameOverTextDest.w = correctedGameOverTextWidth;
 
 	gameFonts->gameOverTextDest.y = intWindowHeight - correctedGameOverTextHeight;
-	gameFonts->gameOverTextDest.x = intWindowWidth / 1.8;
+	gameFonts->gameOverTextDest.x = intWindowWidth / 1.45;
 
 	SDL_FreeSurface(gameOverTextSurface);
 	free(gameOverTextString);
@@ -314,6 +330,13 @@ bool gameFpsText(int fps, struct fonts *gameFonts)
 	{
 		fprintf(stderr, "Could not render gameFpsTextSurface.\n");
 		return true;
+	}
+
+	// destroy old texture from previous run
+	if (gameFonts->gameFpsTextTexture != NULL)
+	{
+		SDL_DestroyTexture(gameFonts->gameFpsTextTexture);
+		gameFonts->gameFpsTextTexture = NULL;
 	}
 
 	gameFonts->gameFpsTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameFpsTextSurface);
@@ -396,3 +419,57 @@ bool gameHeldText(struct fonts *gameFonts)
 	return false;
 }
 
+// gameFpsText: Generates textures and locations for game fps text.
+bool gameCashText(float floatGameCash, struct fonts* gameFonts)
+{
+	SDL_Color gameCashTextColor = { 255, 255, 255 };
+
+	char gameCashTextString[15];
+		
+	// create string based off of floatCash.
+	if(floatGameCash >= 99999.99)
+		sprintf(gameCashTextString, "CASH $99999.99");
+	else
+		sprintf(gameCashTextString, "CASH $%.2f", floatGameCash);
+
+	SDL_Surface* gameCashTextSurface = TTF_RenderText_Solid(gameFonts->gameCashFont, gameCashTextString, gameCashTextColor);
+
+	if (gameCashTextSurface == NULL)
+	{
+		fprintf(stderr, "Could not render gameCashTextSurface.\n");
+		return true;
+	}
+
+	// destroy old texture from previous run
+	if (gameFonts->gameCashTextTexture != NULL)
+	{
+		SDL_DestroyTexture(gameFonts->gameCashTextTexture);
+		gameFonts->gameCashTextTexture = NULL;
+	}
+
+	gameFonts->gameCashTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameCashTextSurface);
+
+	if (gameFonts->gameCashTextTexture == NULL)
+		return true;
+
+	float gameCashTextWidth = gameCashTextSurface->w;
+	float gameCashTextHeight = gameCashTextSurface->h;
+
+	float correctedGameCashTextHeight = 0.0;
+	float correctedGameCashTextWidth = 0.0;
+
+	// corrects initial size for the screen resolution being used
+	correctedGameCashTextWidth = (intWindowWidth / 1920.0) * gameCashTextWidth;
+	correctedGameCashTextHeight = (intWindowHeight / 1200.0) * gameCashTextHeight;
+
+	gameFonts->gameCashTextDest.h = correctedGameCashTextHeight;
+	gameFonts->gameCashTextDest.w = correctedGameCashTextWidth;
+
+	// text position
+	gameFonts->gameCashTextDest.y = intWindowHeight / 1.25;
+	gameFonts->gameCashTextDest.x = intWindowWidth / 1.35;
+
+	SDL_FreeSurface(gameCashTextSurface);
+
+	return false;
+}

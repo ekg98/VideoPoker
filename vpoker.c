@@ -11,6 +11,7 @@
 #include "sdlcards.h"
 #include "sdlbuttons.h"
 #include "cards.h"
+#include "jobrender.h"
 #include "events.h"
 
 /* Window resolutions and card resolutions - Must be floating point */
@@ -51,12 +52,13 @@ int main(int argc, char *argv[])
 {
 	// local main variables go here
 	bool displayFps = false;
-	float floatCash = 0;
+	float floatGameCash = 0;
 
 
 	// large structure containing game font datas.
 	struct fonts gameFonts;
 
+	// large structure containing game deck image data for five card poker.
 	struct fiveCardDeckImageData deckImageData;
 	
 	// checks to see if there are any arguments available
@@ -197,10 +199,8 @@ int main(int argc, char *argv[])
 				averageFps = (int) (frameCounter / (startRunTicks / 1000.0));
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-				handState = getEvents(game, denom, &event, hand, &floatCash);
+				handState = getEvents(game, denom, &event, hand, &floatGameCash);
 							
-				printf("%f\n", floatCash);
-
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
 				{
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 					switch (game)
 					{
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, handState);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, handState, floatGameCash);
 							break;
 						case DUCES_WILD:
 							break;

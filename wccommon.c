@@ -190,48 +190,48 @@ char *jacksOrBetterWinCheck(struct card *hand)
 	// royal flush check
 	if(isroyalflush(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Royal Flush")))
-			strcpy(returnString, "Royal Flush");
+		if(returnString = (char *) malloc(sizeof("ROYAL FLUSH")))
+			strcpy(returnString, "ROYAL FLUSH");
 	}
 	else if(isstraightflush(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Straight Flush")))
-			strcpy(returnString, "Straight Flush");
+		if(returnString = (char *) malloc(sizeof("STRAIGHT FLUSH")))
+			strcpy(returnString, "STRAIGHT FLUSH");
 	}
 	else if(isfourkind(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Four of a Kind")))
-			strcpy(returnString, "Four of a Kind");
+		if(returnString = (char *) malloc(sizeof("FOUR OF A KIND")))
+			strcpy(returnString, "FOUR OF A KIND");
 	}
 	else if(isfullhouse(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Full House")))
-			strcpy(returnString, "Full House");
+		if(returnString = (char *) malloc(sizeof("FULL HOUSE")))
+			strcpy(returnString, "FULL HOUSE");
 	}
 	else if(isflush(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Flush")))
-			strcpy(returnString, "Flush");
+		if(returnString = (char *) malloc(sizeof("FLUSH")))
+			strcpy(returnString, "FLUSH");
 	}
 	else if(isstraight(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Straight")))
-			strcpy(returnString, "Straight");
+		if(returnString = (char *) malloc(sizeof("STRAIGHT")))
+			strcpy(returnString, "STRAIGHT");
 	}
 	else if(isthreekind(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Three of a Kind")))
-			strcpy(returnString, "Three of a Kind");
+		if(returnString = (char *) malloc(sizeof("THREE OF A KIND")))
+			strcpy(returnString, "THREE OF A KIND");
 	}
 	else if(ispair(hand, 5) == 2)
 	{
-		if(returnString = (char *) malloc(sizeof("Two Pair")))
-			strcpy(returnString, "Two Pair");
+		if(returnString = (char *) malloc(sizeof("TWO PAIR")))
+			strcpy(returnString, "TWO PAIR");
 	}
 	else if(isjackorbetter(hand, 5))
 	{
-		if(returnString = (char *) malloc(sizeof("Jacks or Better")))
-			strcpy(returnString, "Jacks or Better");
+		if(returnString = (char *) malloc(sizeof("JACKS OR BETTER")))
+			strcpy(returnString, "JACKS OR BETTER");
 	}
 
 	return returnString;

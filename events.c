@@ -11,36 +11,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 
 	static int intBetLevel = 1;
 	static float floatBet = 0.25;
-	
-	// set floatBet depending on denom value.  This ensures floatBet has the correct value to later determine if in a poker game you have enough credits to play.
-	switch (game)
-	{
-	case JACKS_OR_BETTER:
-	case DUCES_WILD:
-		switch (denom)
-		{
-		case QUARTER:
-			floatBet = 0.25;
-			break;
-		case HALF:
-			floatBet = 0.50;
-			break;
-		case DOLLAR:
-			floatBet = 1.00;
-			break;
-		case FIVEDOLLAR:
-			floatBet = 5.00;
-			break;
-		case TENDOLLAR:
-			floatBet = 10.00;
-			break;
-		default:
-			floatBet = 0.25;
-			break;
-		}
-		break;
-	}
-	
+			
 	// event loop.  Some events are always avaible.  Check bottom.
 	while (SDL_PollEvent(event))
 	{
@@ -240,6 +211,35 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 		// credit released
 		if (event->key.keysym.scancode == SDL_SCANCODE_C && event->key.state == SDL_RELEASED)
 			creditPrevPressed = false;
+
+		// set floatBet depending on denom value.  This ensures floatBet has the correct value to later determine if in a poker game you have enough credits to play.
+		switch (game)
+		{
+		case JACKS_OR_BETTER:
+		case DUCES_WILD:
+			switch (denom)
+			{
+			case QUARTER:
+				floatBet = 0.25;
+				break;
+			case HALF:
+				floatBet = 0.50;
+				break;
+			case DOLLAR:
+				floatBet = 1.00;
+				break;
+			case FIVEDOLLAR:
+				floatBet = 5.00;
+				break;
+			case TENDOLLAR:
+				floatBet = 10.00;
+				break;
+			default:
+				floatBet = 0.25;
+				break;
+			}
+			break;
+		}
 
 	}
 	

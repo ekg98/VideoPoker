@@ -9,12 +9,43 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
 	static bool dealEnabled = true;
 
-	int intBetLevel = 1;
-	float floatBet = 0.25;
-
+	static int intBetLevel = 1;
+	static float floatBet = 0.25;
+	
+	// set floatBet depending on denom value.  This ensures floatBet has the correct value to later determine if in a poker game you have enough credits to play.
+	switch (game)
+	{
+	case JACKS_OR_BETTER:
+	case DUCES_WILD:
+		switch (denom)
+		{
+		case QUARTER:
+			floatBet = 0.25;
+			break;
+		case HALF:
+			floatBet = 0.50;
+			break;
+		case DOLLAR:
+			floatBet = 1.00;
+			break;
+		case FIVEDOLLAR:
+			floatBet = 5.00;
+			break;
+		case TENDOLLAR:
+			floatBet = 10.00;
+			break;
+		default:
+			floatBet = 0.25;
+			break;
+		}
+		break;
+	}
+	
+	// event loop.  Some events are always avaible.  Check bottom.
 	while (SDL_PollEvent(event))
 	{
-		
+
+		// switch determines what game is being played and determines what it does with events.
 		switch (game)
 		{
 			case JACKS_OR_BETTER:
@@ -23,42 +54,42 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED)
 				{
 					
-					// check bet level and enable deal.
+					// Ensure that enough credits are available to deal the cards and then enable deal.
 					if (*floatCash >= (floatBet * intBetLevel))
 						dealEnabled = true;
 
-					// remove credits depending on type of denom used.
+					// remove credits depending on type of denom and bet level used.
 					if (firstDeal == true)
 					{
 						switch (denom)
 						{
 						case QUARTER:
-							if (*floatCash >= 0.25)
-								*floatCash -= 0.25;
+							if (*floatCash >= 0.25 * intBetLevel)
+								*floatCash -= 0.25 * intBetLevel;
 							else
 								dealEnabled = false;
 							break;
 						case HALF:
-							if (*floatCash >= 0.50)
-								*floatCash -= 0.50;
+							if (*floatCash >= 0.50 * intBetLevel)
+								*floatCash -= 0.50 * intBetLevel;
 							else
 								dealEnabled = false;
 							break;
 						case DOLLAR:
-							if (*floatCash >= 1.00)
-								*floatCash -= 1.00;
+							if (*floatCash >= 1.00 * intBetLevel)
+								*floatCash -= 1.00 * intBetLevel;
 							else
 								dealEnabled = false;
 							break;
 						case FIVEDOLLAR:
-							if (*floatCash >= 5.00)
-								*floatCash -= 5.00;
+							if (*floatCash >= 5.00 * intBetLevel)
+								*floatCash -= 5.00 * intBetLevel;
 							else
 								dealEnabled = false;
 							break;
 						case TENDOLLAR:
-							if (*floatCash >= 10.00)
-								*floatCash -= 10.00;
+							if (*floatCash >= 10.00 * intBetLevel)
+								*floatCash -= (10.00 * intBetLevel);
 							else
 								dealEnabled = false;
 							break;
@@ -174,40 +205,42 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 					}
 				}
 
-				// credit pushed
-				if (event->key.keysym.scancode == SDL_SCANCODE_C && event->key.state == SDL_PRESSED)
-				{
-					if (creditPrevPressed == false)
-					{
-						creditPrevPressed = true;
-
-						switch (denom)
-						{
-						case QUARTER:
-							*floatCash += 0.25;
-							break;
-						case HALF:
-							*floatCash += 0.50;
-							break;
-						case DOLLAR:
-							*floatCash += 1.00;
-							break;
-						case FIVEDOLLAR:
-							*floatCash += 5.00;
-							break;
-						case TENDOLLAR:
-							*floatCash += 10.00;
-							break;
-						}
-					}
-				}
-
-				// credit released
-				if (event->key.keysym.scancode == SDL_SCANCODE_C && event->key.state == SDL_RELEASED)
-					creditPrevPressed = false;
-
 				break;
 		}
+
+		// credits are allowed durring any time even in main menu.
+		// credit pushed
+		if (event->key.keysym.scancode == SDL_SCANCODE_C && event->key.state == SDL_PRESSED)
+		{
+			if (creditPrevPressed == false)
+			{
+				creditPrevPressed = true;
+
+				switch (denom)
+				{
+				case QUARTER:
+					*floatCash += 0.25;
+					break;
+				case HALF:
+					*floatCash += 0.50;
+					break;
+				case DOLLAR:
+					*floatCash += 1.00;
+					break;
+				case FIVEDOLLAR:
+					*floatCash += 5.00;
+					break;
+				case TENDOLLAR:
+					*floatCash += 10.00;
+					break;
+				}
+			}
+		}
+
+		// credit released
+		if (event->key.keysym.scancode == SDL_SCANCODE_C && event->key.state == SDL_RELEASED)
+			creditPrevPressed = false;
+
 	}
 	
 	return firstDeal;

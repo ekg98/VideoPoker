@@ -4,12 +4,11 @@
 #include "common.h"
 
 // getEvents:  Get events for games
-bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struct card *hand, float *floatCash)
+bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struct card *hand, float *floatCash, int *intBetLevel)
 {
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
 	static bool dealEnabled = true;
 
-	static int intBetLevel = 1;
 	static float floatBet = 0.25;
 			
 	// event loop.  Some events are always avaible.  Check bottom.
@@ -26,7 +25,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 				{
 					
 					// Ensure that enough credits are available to deal the cards and then enable deal.
-					if (*floatCash >= (floatBet * intBetLevel))
+					if (*floatCash >= (floatBet * (*intBetLevel)))
 						dealEnabled = true;
 
 					// remove credits depending on type of denom and bet level used.
@@ -35,32 +34,32 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 						switch (denom)
 						{
 						case QUARTER:
-							if (*floatCash >= 0.25 * intBetLevel)
-								*floatCash -= 0.25 * intBetLevel;
+							if (*floatCash >= 0.25 * (*intBetLevel))
+								*floatCash -= 0.25 * (*intBetLevel);
 							else
 								dealEnabled = false;
 							break;
 						case HALF:
-							if (*floatCash >= 0.50 * intBetLevel)
-								*floatCash -= 0.50 * intBetLevel;
+							if (*floatCash >= 0.50 * (*intBetLevel))
+								*floatCash -= 0.50 * (*intBetLevel);
 							else
 								dealEnabled = false;
 							break;
 						case DOLLAR:
-							if (*floatCash >= 1.00 * intBetLevel)
-								*floatCash -= 1.00 * intBetLevel;
+							if (*floatCash >= 1.00 * (*intBetLevel))
+								*floatCash -= 1.00 * (*intBetLevel);
 							else
 								dealEnabled = false;
 							break;
 						case FIVEDOLLAR:
-							if (*floatCash >= 5.00 * intBetLevel)
-								*floatCash -= 5.00 * intBetLevel;
+							if (*floatCash >= 5.00 * (*intBetLevel))
+								*floatCash -= 5.00 * (*intBetLevel);
 							else
 								dealEnabled = false;
 							break;
 						case TENDOLLAR:
-							if (*floatCash >= 10.00 * intBetLevel)
-								*floatCash -= (10.00 * intBetLevel);
+							if (*floatCash >= 10.00 * (*intBetLevel))
+								*floatCash -= (10.00 * (*intBetLevel));
 							else
 								dealEnabled = false;
 							break;

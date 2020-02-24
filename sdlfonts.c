@@ -21,6 +21,7 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameOverFont = NULL;
 	gameFonts->gameFpsFont = NULL;
 	gameFonts->gameCashFont = NULL;
+	gameFonts->gameBetLevelFont = NULL;
 
 	// pointer to open holdFont
 	gameFonts->heldFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
@@ -71,6 +72,14 @@ int loadFonts(struct fonts *gameFonts)
 		return 1;
 	}
 
+	gameFonts->gameBetLevelFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+
+	if (gameFonts->gameBetLevelFont == NULL)
+	{
+		fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+		return 1;
+	}
+
 	// nulling textures
 	gameFonts->heldTexture = NULL;
 	gameFonts->gameStatusWinTextTexture = NULL;
@@ -78,6 +87,7 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameOverTextTexture = NULL;
 	gameFonts->gameFpsTextTexture = NULL;
 	gameFonts->gameCashTextTexture = NULL;
+	gameFonts->gameBetLevelTextTexture = NULL;
 
 	return 0;
 }
@@ -103,6 +113,9 @@ void closeText(struct fonts *gameFonts)
 	TTF_CloseFont(gameFonts->gameCashFont);
 	gameFonts->gameCashFont = NULL;
 
+	TTF_CloseFont(gameFonts->gameBetLevelFont);
+	gameFonts->gameBetLevelFont = NULL;
+
 	SDL_DestroyTexture(gameFonts->heldTexture);
 	gameFonts->heldTexture = NULL;
 
@@ -120,6 +133,9 @@ void closeText(struct fonts *gameFonts)
 
 	SDL_DestroyTexture(gameFonts->gameCashTextTexture);
 	gameFonts->gameCashTextTexture = NULL;
+
+	SDL_DestroyTexture(gameFonts->gameBetLevelTextTexture);
+	gameFonts->gameBetLevelTextTexture = NULL;
 }
 
 bool gameStatusWinText(struct card *hand, struct fonts *gameFonts)
@@ -470,6 +486,60 @@ bool gameCashText(float floatGameCash, struct fonts* gameFonts)
 	gameFonts->gameCashTextDest.x = intWindowWidth / 1.35;
 
 	SDL_FreeSurface(gameCashTextSurface);
+
+	return false;
+}
+
+// gameBetLevelText:  Displays game bet level text in middle of screen below the cards.
+bool gameBetLevelText(int intBetLevel, struct fonts* gameFonts)
+{
+	SDL_Color gameBetLevelTextColor = { 255, 255, 255 };
+
+	char gameBetLevelTextString[6];
+
+	if (intBetLevel < 1 || intBetLevel > 5)
+		sprintf(gameBetLevelTextString, "0");
+	else
+		sprintf(gameBetLevelTextString, "BET %d", intBetLevel);
+
+	SDL_Surface* gameBetLevelTextSurface = TTF_RenderText_Solid(gameFonts->gameBetLevelFont, gameBetLevelTextString, gameBetLevelTextColor);
+
+	if (gameBetLevelTextSurface == NULL)
+	{
+		fprintf(stderr, "Could not render gameBetLevelTextSurface.\n");
+		return true;
+	}
+
+	// destroy old texture from previous run
+	if (gameFonts->gameBetLevelTextTexture != NULL)
+	{
+		SDL_DestroyTexture(gameFonts->gameBetLevelTextTexture);
+		gameFonts->gameBetLevelTextTexture = NULL;
+	}
+
+	gameFonts->gameBetLevelTextTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, gameBetLevelTextSurface);
+
+	if (gameFonts->gameBetLevelTextTexture == NULL)
+		return true;
+
+	float gameBetLevelTextWidth = gameBetLevelTextSurface->w;
+	float gameBetLevelTextHeight = gameBetLevelTextSurface->h;
+
+	float correctedGameBetLevelTextHeight = 0.0;
+	float correctedGameBetLevelTextWidth = 0.0;
+
+	// corrects initial size for the screen resolution being used
+	correctedGameBetLevelTextWidth = (intWindowWidth / 1920.0) * gameBetLevelTextWidth;
+	correctedGameBetLevelTextHeight = (intWindowHeight / 1200.0) * gameBetLevelTextHeight;
+
+	gameFonts->gameBetLevelTextDest.h = correctedGameBetLevelTextHeight;
+	gameFonts->gameBetLevelTextDest.w = correctedGameBetLevelTextWidth;
+
+	// text position
+	gameFonts->gameBetLevelTextDest.y = intWindowHeight / 1.25;
+	gameFonts->gameBetLevelTextDest.x = (intWindowWidth / 2) - (correctedGameBetLevelTextWidth / 2);
+
+	SDL_FreeSurface(gameBetLevelTextSurface);
 
 	return false;
 }

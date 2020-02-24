@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 	// local main variables go here
 	bool displayFps = false;
 	float floatGameCash = 0;
-
+	int intBetLevel = 1;
 
 	// large structure containing game font datas.
 	struct fonts gameFonts;
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 				averageFps = (int) (frameCounter / (startRunTicks / 1000.0));
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-				handState = getEvents(game, denom, &event, hand, &floatGameCash);
+				handState = getEvents(game, denom, &event, hand, &floatGameCash, &intBetLevel);
 							
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 					switch (game)
 					{
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, handState, floatGameCash);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, handState, floatGameCash, intBetLevel);
 							break;
 						case DUCES_WILD:
 							break;

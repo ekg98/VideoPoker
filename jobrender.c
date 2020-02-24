@@ -7,7 +7,7 @@
 extern SDL_Renderer* mainWindowRenderer;
 
 // JacksOrBetterRender:  Renders the whole graphical selection of Jacks Or Better to the renderer
-void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, bool handState, float floatGameCash)
+void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, bool handState, float floatGameCash, int intBetLevel)
 {
 
 	int intCounter = 0;
@@ -28,9 +28,13 @@ void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct five
 	if (!gameOverText(handState, gameFonts))
 		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameOverTextTexture, NULL, &gameFonts->gameOverTextDest); 
 
-	//gameOverText: returns true on failure.  Displays game over text in lower right section of screen.
+	//gameCashText: returns true on failure.  Displays game cash text in lower right section of screen.
 	if (!gameCashText(floatGameCash, gameFonts))
 		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameCashTextTexture, NULL, &gameFonts->gameCashTextDest);
+
+	//gameBetLevelText: returns true on failure.  Displays game bet level text in middle section of screen.
+	if (!gameBetLevelText(intBetLevel, gameFonts))
+		SDL_RenderCopy(mainWindowRenderer, gameFonts->gameBetLevelTextTexture, NULL, &gameFonts->gameBetLevelTextDest);
 
 	// draw held text on renderer
 	if (hand[0].held == YES)

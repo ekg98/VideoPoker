@@ -12,6 +12,7 @@
 #include "sdlbuttons.h"
 #include "cards.h"
 #include "jobrender.h"
+#include "jobpayout.h"
 #include "events.h"
 
 /* Window resolutions and card resolutions - Must be floating point */

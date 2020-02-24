@@ -2,6 +2,7 @@
 
 #include "cards.h"
 #include "common.h"
+#include "jobpayout.h"
 
 // getEvents:  Get events for games
 bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struct card *hand, float *floatCash, int *intBetLevel)
@@ -29,42 +30,42 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 					if (*floatCash >= (floatBet * (*intBetLevel)))
 						dealEnabled = true;
 
-					// remove credits depending on type of denom and bet level used.
-					if (firstDeal == true)
+					// remove credits depending on type of denom and bet level used.  ERROR here.
+					if (firstDeal == true || returnPrevPressed == false)
 					{
-						switch (denom)
-						{
-						case QUARTER:
-							if (*floatCash >= 0.25 * (*intBetLevel))
-								*floatCash -= 0.25 * (*intBetLevel);
-							else
-								dealEnabled = false;
-							break;
-						case HALF:
-							if (*floatCash >= 0.50 * (*intBetLevel))
-								*floatCash -= 0.50 * (*intBetLevel);
-							else
-								dealEnabled = false;
-							break;
-						case DOLLAR:
-							if (*floatCash >= 1.00 * (*intBetLevel))
-								*floatCash -= 1.00 * (*intBetLevel);
-							else
-								dealEnabled = false;
-							break;
-						case FIVEDOLLAR:
-							if (*floatCash >= 5.00 * (*intBetLevel))
-								*floatCash -= 5.00 * (*intBetLevel);
-							else
-								dealEnabled = false;
-							break;
-						case TENDOLLAR:
-							if (*floatCash >= 10.00 * (*intBetLevel))
-								*floatCash -= (10.00 * (*intBetLevel));
-							else
-								dealEnabled = false;
-							break;
-						}
+					switch (denom)
+					{
+					case QUARTER:
+						if (*floatCash >= 0.25 * (*intBetLevel))
+							*floatCash -= 0.25 * (*intBetLevel);
+						else
+							dealEnabled = false;
+						break;
+					case HALF:
+						if (*floatCash >= 0.50 * (*intBetLevel))
+							*floatCash -= 0.50 * (*intBetLevel);
+						else
+							dealEnabled = false;
+						break;
+					case DOLLAR:
+						if (*floatCash >= 1.00 * (*intBetLevel))
+							*floatCash -= 1.00 * (*intBetLevel);
+						else
+							dealEnabled = false;
+						break;
+					case FIVEDOLLAR:
+						if (*floatCash >= 5.00 * (*intBetLevel))
+							*floatCash -= 5.00 * (*intBetLevel);
+						else
+							dealEnabled = false;
+						break;
+					case TENDOLLAR:
+						if (*floatCash >= 10.00 * (*intBetLevel))
+							*floatCash -= (10.00 * (*intBetLevel));
+						else
+							dealEnabled = false;
+						break;
+					}
 					}
 
 					// first deal.  Unheld all cards and reset held key states
@@ -78,6 +79,8 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 						fivePrevHeld = false;
 						heldEnabled = true;
 
+						
+						
 						// unheld and deal cards
 						unheld(hand, 5);
 						deal(hand, 5);
@@ -90,6 +93,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 					{
 						// deal cards that are not held
 						deal(hand, 5);
+						JacksOrBetterPayout(hand, *intBetLevel, floatCash, denom);
 						firstDeal = true;
 						returnPrevPressed = true;
 						heldEnabled = false;

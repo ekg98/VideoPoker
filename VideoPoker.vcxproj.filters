@@ -33,6 +33,9 @@
     <ClCompile Include="jobrender.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="jobpaypout.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cards.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="jobrender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="jobpayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

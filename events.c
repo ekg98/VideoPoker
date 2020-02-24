@@ -8,6 +8,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 {
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
 	static bool dealEnabled = true;
+	static bool betPrevPressed = false;
 
 	static float floatBet = 0.25;
 			
@@ -178,8 +179,9 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 				break;
 		}
 
+		// credit logic
 		// credits are allowed durring any time even in main menu.
-		// credit pushed
+		// credit c key pressed
 		if (event->key.keysym.scancode == SDL_SCANCODE_C && event->key.state == SDL_PRESSED)
 		{
 			if (creditPrevPressed == false)
@@ -207,7 +209,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 			}
 		}
 
-		// credit released
+		// credit key released
 		if (event->key.keysym.scancode == SDL_SCANCODE_C && event->key.state == SDL_RELEASED)
 			creditPrevPressed = false;
 
@@ -239,6 +241,25 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 			}
 			break;
 		}
+
+		// bet level logic
+		// b key pressed
+		if (event->key.keysym.scancode == SDL_SCANCODE_B && event->key.state == SDL_PRESSED)
+		{
+			if (betPrevPressed == false)
+			{
+				betPrevPressed = true;
+				
+				if (*intBetLevel < 5)
+					*intBetLevel += 1;
+				else
+					*intBetLevel = 1;
+			}
+		}
+
+		// bet level key released
+		if (event->key.keysym.scancode == SDL_SCANCODE_B && event->key.state == SDL_RELEASED)
+			betPrevPressed = false;
 
 	}
 	

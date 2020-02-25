@@ -22,6 +22,30 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 		{
 			case JACKS_OR_BETTER:
 			case DUCES_WILD:
+			
+				// set floatBet depending on denom value.  This ensures floatBet has the correct value to later determine if in a poker game you have enough credits to play.
+				switch (denom)
+				{
+				case QUARTER:
+					floatBet = 0.25;
+					break;
+				case HALF:
+					floatBet = 0.50;
+					break;
+				case DOLLAR:
+					floatBet = 1.00;
+					break;
+				case FIVEDOLLAR:
+					floatBet = 5.00;
+					break;
+				case TENDOLLAR:
+					floatBet = 10.00;
+					break;
+				default:
+					floatBet = 0.25;
+					break;
+				}
+
 				// return pressed
 				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED)
 				{
@@ -29,45 +53,9 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 					// Ensure that enough credits are available to deal the cards and then enable deal.
 					if (*floatCash >= (floatBet * (*intBetLevel)))
 						dealEnabled = true;
-
-					// remove credits depending on type of denom and bet level used.  ERROR here.
-					if (firstDeal == true || returnPrevPressed == false)
-					{
-					switch (denom)
-					{
-					case QUARTER:
-						if (*floatCash >= 0.25 * (*intBetLevel))
-							*floatCash -= 0.25 * (*intBetLevel);
-						else
-							dealEnabled = false;
-						break;
-					case HALF:
-						if (*floatCash >= 0.50 * (*intBetLevel))
-							*floatCash -= 0.50 * (*intBetLevel);
-						else
-							dealEnabled = false;
-						break;
-					case DOLLAR:
-						if (*floatCash >= 1.00 * (*intBetLevel))
-							*floatCash -= 1.00 * (*intBetLevel);
-						else
-							dealEnabled = false;
-						break;
-					case FIVEDOLLAR:
-						if (*floatCash >= 5.00 * (*intBetLevel))
-							*floatCash -= 5.00 * (*intBetLevel);
-						else
-							dealEnabled = false;
-						break;
-					case TENDOLLAR:
-						if (*floatCash >= 10.00 * (*intBetLevel))
-							*floatCash -= (10.00 * (*intBetLevel));
-						else
-							dealEnabled = false;
-						break;
-					}
-					}
-
+					else
+						dealEnabled = false;
+					
 					// first deal.  Unheld all cards and reset held key states
 					if (dealEnabled == true && firstDeal == true && returnPrevPressed == false)
 					{
@@ -79,7 +67,25 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 						fivePrevHeld = false;
 						heldEnabled = true;
 
-						
+						// remove credits depending on type of denom and bet level used. 
+						switch (denom)
+						{
+						case QUARTER:
+							*floatCash -= 0.25 * (*intBetLevel);
+							break;
+						case HALF:
+							*floatCash -= 0.50 * (*intBetLevel);
+							break;
+						case DOLLAR:
+							*floatCash -= 1.00 * (*intBetLevel);
+							break;
+						case FIVEDOLLAR:
+							*floatCash -= 5.00 * (*intBetLevel);
+							break;
+						case TENDOLLAR:
+							*floatCash -= (10.00 * (*intBetLevel));
+							break;
+						}
 						
 						// unheld and deal cards
 						unheld(hand, 5);
@@ -199,30 +205,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 				if (event->key.keysym.scancode == SDL_SCANCODE_B && event->key.state == SDL_RELEASED)
 					betPrevPressed = false;
 
-				// set floatBet depending on denom value.  This ensures floatBet has the correct value to later determine if in a poker game you have enough credits to play.
-				switch (denom)
-				{
-					case QUARTER:
-						floatBet = 0.25;
-						break;
-					case HALF:
-						floatBet = 0.50;
-						break;
-					case DOLLAR:
-						floatBet = 1.00;
-						break;
-					case FIVEDOLLAR:
-						floatBet = 5.00;
-						break;
-					case TENDOLLAR:
-						floatBet = 10.00;
-						break;
-					default:
-						floatBet = 0.25;
-						break;
-				}			
-
-				break;
+			break;
 		}
 
 		// credit logic

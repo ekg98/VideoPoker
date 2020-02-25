@@ -131,6 +131,15 @@ int ispair(struct card *hand, int size)
 		return 0;
 }
 
+// istwopair: Checks to see if a structure contains two pair.  Returns the 1 if it contains two pair.  0 if none was detected
+int istwopair(struct card *hand, int size)
+{
+	if (ispair(hand, size) == 2)
+		return 1;
+	else
+		return 0;
+}
+
 /* isfullhouse:  Checks to see if a structure contains a full house.  Returns 1 if it contains a full house.  0 if none was detected. */
 int isfullhouse(struct card *hand, int size)
 {
@@ -140,21 +149,23 @@ int isfullhouse(struct card *hand, int size)
 		return 0;
 }
 
-/* isjackorbetter:  Checks to see if a structure contains a jack or better.  Returns 1 if it contains a jack or better.  0 if none was detected. */
-int isjackorbetter(struct card *hand, int size)
+/* isjacksorbetterpair:  Checks to see if a structure contains a jack or better.  Returns 1 if it contains a jack or better.  0 if none was detected. */
+int isjacksorbetterpair(struct card *hand, int size)
 {
 	int i;
 	int table[15];
 
+	// initialize table to all zeros
 	for(i = 0; i < 15; i++)
 		table[i] = 0;
 
+	// tally the cards in the hand to the locations in the table
 	for(i = 0; i < size; i++)
 		table[hand[i].value] += 1;
 
 	for(i = 11; i < 15; i++)
 	{
-		if(table[i] >= 1)
+		if(table[i] == 2)
 			return 1;
 	}
 
@@ -223,12 +234,12 @@ char *jacksOrBetterWinCheck(struct card *hand)
 		if(returnString = (char *) malloc(sizeof("THREE OF A KIND")))
 			strcpy(returnString, "THREE OF A KIND");
 	}
-	else if(ispair(hand, 5) == 2)
+	else if(istwopair(hand, 5))
 	{
 		if(returnString = (char *) malloc(sizeof("TWO PAIR")))
 			strcpy(returnString, "TWO PAIR");
 	}
-	else if(isjackorbetter(hand, 5))
+	else if(isjacksorbetterpair(hand, 5))
 	{
 		if(returnString = (char *) malloc(sizeof("JACKS OR BETTER")))
 			strcpy(returnString, "JACKS OR BETTER");

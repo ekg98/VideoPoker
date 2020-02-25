@@ -71,12 +71,12 @@ void JacksOrBetterPayout(struct card *hand, int intBetLevel, float *floatGameCas
 	{
 		*floatGameCash += intJacksOrBetterPayoutTable[6][intBetLevel - 1] * floatDenomMultiplier;
 	}
-	else if (ispair(hand, 5) == 2)
+	else if (istwopair(hand, 5))
 	{
 		*floatGameCash += intJacksOrBetterPayoutTable[7][intBetLevel - 1] * floatDenomMultiplier;
 	}
-	/*else if (isjackorbetter(hand, 5))
+	else if (isjacksorbetterpair(hand, 5))
 	{
 		*floatGameCash += intJacksOrBetterPayoutTable[8][intBetLevel - 1] * floatDenomMultiplier;
-	}*/
+	}
 }

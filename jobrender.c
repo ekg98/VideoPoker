@@ -3,11 +3,12 @@
 #include "cards.h"
 #include "sdlfonts.h"
 #include "sdlcards.h"
+#include "sdlbuttons.h"
 
 extern SDL_Renderer* mainWindowRenderer;
 
 // JacksOrBetterRender:  Renders the whole graphical selection of Jacks Or Better to the renderer
-void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, bool handState, float floatGameCash, int intBetLevel)
+void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameButtonImageData *gameButtonImageData, bool handState, float floatGameCash, int intBetLevel)
 {
 
 	int intCounter = 0;
@@ -48,4 +49,5 @@ void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct five
 	if (hand[4].held == YES)
 		SDL_RenderCopy(mainWindowRenderer, gameFonts->heldTexture, NULL, &gameFonts->heldDest[4]);
 
+	SDL_RenderCopy(mainWindowRenderer, gameButtonImageData->denomButtonSelectedTexture[0] , &gameButtonImageData->denomButtonSource[0], &gameButtonImageData->denomButtonDest);
 }

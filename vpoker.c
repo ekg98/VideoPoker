@@ -26,13 +26,10 @@
 #define	FALSE	0
 
 /* function prototypes */
-int initsdl(struct fonts *, struct fiveCardDeckImageData *);
+int initsdl(struct fonts *, struct fiveCardDeckImageData *, struct gameButtonImageData *);
 void closesdl(void);
 int loadDeck(struct fiveCardDeckImageData *);
 void closeDeck(struct fiveCardDeckImageData *);
-void loadButtons(void);
-void closeButtons(void);
-
 
 /* global vpoker variables */
 SDL_Window *mainWindow = NULL;
@@ -61,6 +58,9 @@ int main(int argc, char *argv[])
 
 	// large structure containing game deck image data for five card poker.
 	struct fiveCardDeckImageData deckImageData;
+
+	// large structure containing game button image data for five card poker.
+	struct gameButtonImageData gameButtonImageData;
 	
 	// checks to see if there are any arguments available
 	if(argc > 1)
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
 	}
 
 	// start the game here
-        if(initsdl(&gameFonts, &deckImageData))  /* initialize sdl */
+        if(initsdl(&gameFonts, &deckImageData, &gameButtonImageData))  /* initialize sdl */
         	return 1;
 		else
 		{
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
 					switch (game)
 					{
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, handState, floatGameCash, intBetLevel);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameButtonImageData, handState, floatGameCash, intBetLevel);
 							break;
 						case DUCES_WILD:
 							break;
@@ -237,26 +237,27 @@ int main(int argc, char *argv[])
 
 	closeDeck(&deckImageData);
 	closeText(&gameFonts);
+	closebuttons(&gameButtonImageData);
 	closesdl();
 
 	return 0;
 }
 
 /* initsdl:  Start up SDL */
-int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData)
+int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameButtonImageData *gameButtonImageData)
 {
 	int imageFlags = IMG_INIT_PNG;
 
 	if(SDL_Init(SDL_INIT_VIDEO))
 	{
-		fprintf(stderr, "SDL unable to initialize: %s", SDL_GetError());
+		fprintf(stderr, "SDL unable to initialize: %s\n", SDL_GetError());
 		return 1;
 	}
 	else
 	{
 		if((IMG_Init(imageFlags) & imageFlags) != imageFlags)
 		{
-			fprintf(stderr, "SDL unable to initialize IMG_Init: %s", IMG_GetError());
+			fprintf(stderr, "SDL unable to initialize IMG_Init: %s\n", IMG_GetError());
 			return 1;
 		}
 		else
@@ -265,7 +266,7 @@ int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData
 
 	if(mainWindow == NULL)
 	{
-		fprintf(stderr, "Window could not be created: %s", SDL_GetError());
+		fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
 		return 1;
 	}
 	else
@@ -273,7 +274,7 @@ int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData
 
 	if(mainWindowSurface == NULL)
 	{
-		fprintf(stderr, "Window surface could not be created: %s", SDL_GetError());
+		fprintf(stderr, "Window surface could not be created: %s\n", SDL_GetError());
 		return 1;
 	}
 	else
@@ -281,7 +282,7 @@ int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData
 
 	if(mainWindowRenderer == NULL)
 	{
-		fprintf(stderr, "SDL could not create renderer: %s", SDL_GetError());
+		fprintf(stderr, "SDL could not create renderer: %s\n", SDL_GetError());
  	return 1;
 	}
 
@@ -297,7 +298,13 @@ int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData
 
 	if(loadFonts(gameFonts))
 	{
-		fprintf(stderr, "Failure to load game fonts.");
+		fprintf(stderr, "Failure to load game fonts.\n");
+		return 1;
+	}
+
+	if(loadbuttons(gameButtonImageData))
+	{
+		fprintf(stderr, "Failure to load game buttons.\n");
 		return 1;
 	}
 
@@ -332,6 +339,12 @@ int loadDeck(struct fiveCardDeckImageData *deckImageData)
 	float spacingDistance = 0.0;
 	SDL_Surface *cards[5];
 
+	// null the card surfaces
+	for (suit = 0; suit < 5; suit++)
+	{
+		cards[suit] = NULL;
+	}
+
 	/* load the cards into memory for manipulation */
 	cards[0] = NULL;
 	cards[1] = IMG_Load("images/cardh.png");
@@ -344,9 +357,9 @@ int loadDeck(struct fiveCardDeckImageData *deckImageData)
 	{
 		if(cards[suit] == NULL)
  		{
-		printf("SDL could not load images: %s", IMG_GetError());
-    			return 1;
-    		}
+			printf("SDL could not load images: %s\n", IMG_GetError());
+    		return 1;
+    	}
 	}
 
   	/* Null the whole deck texture array */
@@ -384,7 +397,7 @@ int loadDeck(struct fiveCardDeckImageData *deckImageData)
 
 	// card spacing calculations
 	cardHalf = cardResWidthCorrected / 2;
-	spacingDistance = intWindowWidth / 7;
+	spacingDistance = intWindowWidth / 7.4;
 
 	/* create output render coordinates dependent on screen resolution */
 	for(i = 0; i < 5; i++)
@@ -424,16 +437,4 @@ void closeDeck(struct fiveCardDeckImageData *deckImageData)
 		SDL_DestroyTexture(deckImageData->suitTexture[suit]);
     		deckImageData->suitTexture[suit] = NULL;
   	}
-}
-
-// loadButtons: Load the buttons into memory
-void loadButtons(void)
-{
-
-}
-
-// closeButtons: Free the images used for the buttons from memory
-void closeButtons(void)
-{
-
 }

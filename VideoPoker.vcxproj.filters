@@ -36,6 +36,9 @@
     <ClCompile Include="jobpaypout.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sdlbuttons.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cards.h">

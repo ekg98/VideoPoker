@@ -127,6 +127,7 @@
     <ClCompile Include="events.c" />
     <ClCompile Include="jobpaypout.c" />
     <ClCompile Include="jobrender.c" />
+    <ClCompile Include="sdlbuttons.c" />
     <ClCompile Include="sdlfonts.c" />
     <ClCompile Include="vpoker.c" />
     <ClCompile Include="wccommon.c" />

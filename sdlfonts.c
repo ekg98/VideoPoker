@@ -5,7 +5,6 @@
 #include "wccommon.h"
 #include "sdlfonts.h"
 
-
 #define SPACING_MULTIPLIER	7	// spacing multiplier for distance between cards.
 
 extern SDL_Renderer *mainWindowRenderer;
@@ -64,7 +63,7 @@ int loadFonts(struct fonts *gameFonts)
 		return 1;
 	}
 
-	gameFonts->gameCashFont = TTF_OpenFont("fonts/OneSlot.ttf", 72);
+	gameFonts->gameCashFont = TTF_OpenFont("fonts/OneSlot.ttf", 82);
 
 	if (gameFonts->gameCashFont == NULL)
 	{

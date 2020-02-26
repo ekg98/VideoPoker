@@ -393,7 +393,7 @@ int loadDeck(struct fiveCardDeckImageData *deckImageData)
 
 	/* calculate the cards width and height corrected for set screen resolution.  0.7 is a correction factor since cards are made for 1920x1080 resolution */
 	cardResWidthCorrected = ((intWindowWidth / 1920.0) * CARD_WIDTH) * 0.7;
-	cardResHeightCorrected = ((intWindowHeight / 1200.0) * CARD_HEIGHT) * 0.7;
+	cardResHeightCorrected = ((intWindowHeight / 1200.0) * CARD_HEIGHT) * 0.72;
 
 	// card spacing calculations
 	cardHalf = cardResWidthCorrected / 2;

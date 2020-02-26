@@ -5,7 +5,7 @@
 #include "wccommon.h"
 #include "sdlfonts.h"
 
-#define SPACING_MULTIPLIER	7	// spacing multiplier for distance between cards.
+#define SPACING_MULTIPLIER	7.4	// spacing multiplier for distance between cards.
 
 extern SDL_Renderer *mainWindowRenderer;
 extern int intWindowWidth;
@@ -482,7 +482,7 @@ bool gameCashText(float floatGameCash, struct fonts* gameFonts)
 
 	// text position
 	gameFonts->gameCashTextDest.y = intWindowHeight / 1.25;
-	gameFonts->gameCashTextDest.x = intWindowWidth / 1.35;
+	gameFonts->gameCashTextDest.x = intWindowWidth / 1.30;
 
 	SDL_FreeSurface(gameCashTextSurface);
 
@@ -535,7 +535,7 @@ bool gameBetLevelText(int intBetLevel, struct fonts* gameFonts)
 	gameFonts->gameBetLevelTextDest.w = correctedGameBetLevelTextWidth;
 
 	// text position
-	gameFonts->gameBetLevelTextDest.y = intWindowHeight / 1.25;
+	gameFonts->gameBetLevelTextDest.y = intWindowHeight / 1.225;
 	gameFonts->gameBetLevelTextDest.x = (intWindowWidth / 2) - (correctedGameBetLevelTextWidth / 2);
 
 	SDL_FreeSurface(gameBetLevelTextSurface);

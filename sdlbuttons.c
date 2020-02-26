@@ -39,6 +39,9 @@ int loadbuttons(struct gameButtonImageData *gameButtonImageData)
 		return 1;
 	}
 
+	// set color key
+	SDL_SetColorKey(denomButtonSelectedSurface[0], SDL_TRUE, SDL_MapRGB(denomButtonSelectedSurface[0]->format, 255, 174, 201));
+
 	// load textures from surface
 	gameButtonImageData->denomButtonSelectedTexture[0] = SDL_CreateTextureFromSurface(mainWindowRenderer, denomButtonSelectedSurface[0]);
 
@@ -50,7 +53,7 @@ int loadbuttons(struct gameButtonImageData *gameButtonImageData)
 
 	// coordinates here
 	denomButtonResWidthCorrected = ((intWindowWidth / 1920.0) * DENOM_BUTTON_WIDTH);
-	denomButtonResHeightCorrected = ((intWindowHeight / 1200.0) * DENOM_BUTTON_HEIGHT);
+	denomButtonResHeightCorrected = ((intWindowHeight / 1280.0) * DENOM_BUTTON_HEIGHT);
 	
 	gameButtonImageData->denomButtonSource[0].x = 0;
 	gameButtonImageData->denomButtonSource[0].y = 0;

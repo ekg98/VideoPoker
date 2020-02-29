@@ -30,7 +30,7 @@ int loadbuttons(struct gameButtonImageData *gameButtonImageData)
 	}
 
 	// load the image into the surfaces
-	denomButtonSelectedSurface[0] = IMG_Load("images/denom.png");
+	denomButtonSelectedSurface[0] = IMG_Load("images/denomselected.png");
 
 	// check if denom buttons loaded properly
 	if (denomButtonSelectedSurface[0] == NULL)

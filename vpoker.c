@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
 					switch (game)
 					{
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameButtonImageData, handState, floatGameCash, intBetLevel);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameButtonImageData, handState, floatGameCash, intBetLevel, denom);
 							break;
 						case DUCES_WILD:
 							break;

@@ -8,8 +8,8 @@ struct buttonCoordinates {
 };
 
 struct gameButtonImageData {
-	SDL_Texture* denomButtonSelectedTexture[5];
-	SDL_Texture* denomButtonNotSelectedTexture[5];
+	SDL_Texture* denomButtonSelectedTexture;
+	SDL_Texture* denomButtonNotSelectedTexture;
 	SDL_Rect denomButtonSource[5];
 	SDL_Rect denomButtonDest;
 };

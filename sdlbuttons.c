@@ -29,9 +29,10 @@ int loadbuttons(struct gameButtonImageData *gameButtonImageData)
 
 	// load the image into the surfaces
 	denomButtonSelectedSurface = IMG_Load("images/denomselected.png");
+	denomButtonNotSelectedSurface = IMG_Load("images/denomnotselected.png");
 
 	// check if denom buttons loaded properly
-	if (denomButtonSelectedSurface == NULL)
+	if (denomButtonSelectedSurface == NULL || denomButtonNotSelectedSurface == NULL)
 	{
 		printf("SDL could not load images: %s\n", IMG_GetError());
 		return 1;
@@ -39,16 +40,18 @@ int loadbuttons(struct gameButtonImageData *gameButtonImageData)
 
 	// set color key
 	SDL_SetColorKey(denomButtonSelectedSurface, SDL_TRUE, SDL_MapRGB(denomButtonSelectedSurface->format, 255, 174, 201));
+	SDL_SetColorKey(denomButtonNotSelectedSurface, SDL_TRUE, SDL_MapRGB(denomButtonNotSelectedSurface->format, 255, 174, 201));
 
 	// load textures from surface
 	gameButtonImageData->denomButtonSelectedTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, denomButtonSelectedSurface);
+	gameButtonImageData->denomButtonNotSelectedTexture = SDL_CreateTextureFromSurface(mainWindowRenderer, denomButtonNotSelectedSurface);
 
-	if(gameButtonImageData->denomButtonSelectedTexture == NULL)
+	if(gameButtonImageData->denomButtonSelectedTexture == NULL || gameButtonImageData->denomButtonNotSelectedTexture == NULL)
 	{
 		printf("SDL could not load denom button textures: %s\n", SDL_GetError());
 		return 1;
 	}
-
+	
 	// coordinates here
 	denomButtonResWidthCorrected = ((intWindowWidth / 1920.0) * DENOM_BUTTON_WIDTH);
 	denomButtonResHeightCorrected = ((intWindowHeight / 1280.0) * DENOM_BUTTON_HEIGHT);
@@ -71,6 +74,9 @@ int loadbuttons(struct gameButtonImageData *gameButtonImageData)
 	// free the denom button surfaces
 	SDL_FreeSurface(denomButtonSelectedSurface);
 	denomButtonSelectedSurface = NULL;
+
+	SDL_FreeSurface(denomButtonNotSelectedSurface);
+	denomButtonNotSelectedSurface = NULL;
 
 	return 0;
 }

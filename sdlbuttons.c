@@ -7,7 +7,7 @@
 // configuration defines
 #define DENOM_BUTTON_WIDTH	200
 #define DENOM_BUTTON_HEIGHT	145
-#define POKER_CONTROL_BUTTON_WIDTH	220
+#define POKER_CONTROL_BUTTON_WIDTH	210
 #define	POKER_CONTROL_BUTTON_HEIGHT	90
 
 extern SDL_Renderer* mainWindowRenderer;
@@ -138,11 +138,21 @@ int loadpokercontrolbuttons(struct gamePokerControlButtonImageData *gamePokerCon
 		gamePokerControlButtonImageData->pokerControlButtonSource[intCounter].h = POKER_CONTROL_BUTTON_HEIGHT;
 
 		// x needs to skew for proper placement
-		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].x = 20;
 		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].y = (intWindowHeight / 1.11);
 		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].h = PokerControlButtonResHeightCorrected;
 		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].w = PokerControlButtonResWidthCorrected;
 	}
+
+	// horizontal spacing for poker control buttons.
+	int intCenterSpacing = intWindowWidth / 8.2;
+	int intButtonHalf = PokerControlButtonResWidthCorrected / 2;
+
+	gamePokerControlButtonImageData->pokerControlButtonDest[0].x = ((intWindowWidth / 2) - intButtonHalf) - (intCenterSpacing * 3);
+	gamePokerControlButtonImageData->pokerControlButtonDest[1].x = ((intWindowWidth / 2) - intButtonHalf) - (intCenterSpacing * 2);
+	gamePokerControlButtonImageData->pokerControlButtonDest[2].x = ((intWindowWidth / 2) - intButtonHalf) - (intCenterSpacing * 1);
+	gamePokerControlButtonImageData->pokerControlButtonDest[3].x = ((intWindowWidth / 2) - intButtonHalf) + (intCenterSpacing * 1);
+	gamePokerControlButtonImageData->pokerControlButtonDest[4].x = ((intWindowWidth / 2) - intButtonHalf) + (intCenterSpacing * 2);
+	gamePokerControlButtonImageData->pokerControlButtonDest[5].x = ((intWindowWidth / 2) - intButtonHalf) + (intCenterSpacing * 3);
 
 	return 0;
 }

@@ -8,7 +8,7 @@
 extern SDL_Renderer* mainWindowRenderer;
 
 // JacksOrBetterRender:  Renders the whole graphical selection of Jacks Or Better to the renderer
-void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, bool handState, float floatGameCash, int intBetLevel, enum denomtype denom)
+void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, struct gamePokerControlButtonImageData *gamePokerControlButtonImageData, bool handState, float floatGameCash, int intBetLevel, enum denomtype denom)
 {
 
 	int intCounter = 0;
@@ -51,4 +51,10 @@ void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct five
 
 	// render denom button based on denom value
 	SDL_RenderCopy(mainWindowRenderer, gameDenomButtonImageData->denomButtonSelectedTexture , &gameDenomButtonImageData->denomButtonSource[denom], &gameDenomButtonImageData->denomButtonDest);
+
+	// render poker control buttons.
+	for (intCounter = 0; intCounter < 6; intCounter++)
+	{
+		SDL_RenderCopy(mainWindowRenderer, gamePokerControlButtonImageData->pokerControlButtonTexture, &gamePokerControlButtonImageData->pokerControlButtonSource[intCounter], &gamePokerControlButtonImageData->pokerControlButtonDest[intCounter]);
+	}
 }

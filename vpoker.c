@@ -26,7 +26,7 @@
 #define	FALSE	0
 
 /* function prototypes */
-int initsdl(struct fonts *, struct fiveCardDeckImageData *, struct gameDenomButtonImageData *);
+int initsdl(struct fonts *, struct fiveCardDeckImageData *, struct gameDenomButtonImageData *, struct gamePokerControlButtonImageData *);
 void closesdl(void);
 int loadDeck(struct fiveCardDeckImageData *);
 void closeDeck(struct fiveCardDeckImageData *);
@@ -56,9 +56,12 @@ int main(int argc, char *argv[])
 	// large structure containing game deck image data for five card poker.
 	struct fiveCardDeckImageData deckImageData;
 
-	// large structure containing game button image data for five card poker.
+	// large structure containing game denom button image data for five card poker.
 	struct gameDenomButtonImageData gameDenomButtonImageData;
 	
+	// large structure containing poker control button image data.
+	struct gamePokerControlButtonImageData gamePokerControlButtonImageData;
+
 	// checks to see if there are any arguments available
 	if(argc > 1)
 	{
@@ -163,7 +166,7 @@ int main(int argc, char *argv[])
 	}
 
 	// start the game here
-        if(initsdl(&gameFonts, &deckImageData, &gameDenomButtonImageData))  /* initialize sdl */
+        if(initsdl(&gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData))  /* initialize sdl */
         	return 1;
 		else
 		{
@@ -213,11 +216,14 @@ int main(int argc, char *argv[])
 					// Depending on what game is being played.  Render the correct graphical selection.
 					switch (game)
 					{
+						case MAIN_MENU:
+							break;
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, handState, floatGameCash, intBetLevel, denom);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, floatGameCash, intBetLevel, denom);
 							break;
 						case DUCES_WILD:
 							break;
+						
 					}
 
 					// Render the screen.
@@ -235,13 +241,14 @@ int main(int argc, char *argv[])
 	closeDeck(&deckImageData);
 	closeText(&gameFonts);
 	closedenombuttons(&gameDenomButtonImageData);
+	closepokercontrolbuttons(&gamePokerControlButtonImageData);
 	closesdl();
 
 	return 0;
 }
 
 /* initsdl:  Start up SDL */
-int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData)
+int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, struct gamePokerControlButtonImageData *gamePokerControlButtonImageData)
 {
 	int imageFlags = IMG_INIT_PNG;
 
@@ -302,6 +309,12 @@ int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData
 	if(loaddenombuttons(gameDenomButtonImageData))
 	{
 		fprintf(stderr, "Failure to load game buttons.\n");
+		return 1;
+	}
+
+	if (loadpokercontrolbuttons(gamePokerControlButtonImageData))
+	{
+		fprintf(stderr, "Failure to load poker control buttons.\n");
 		return 1;
 	}
 

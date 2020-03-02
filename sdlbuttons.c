@@ -7,8 +7,8 @@
 // configuration defines
 #define DENOM_BUTTON_WIDTH	200
 #define DENOM_BUTTON_HEIGHT	145
-#define POKER_CONTROL_BUTTON_WIDTH	200
-#define	POKER_CONTROL_BUTTON_HEIGHT	100
+#define POKER_CONTROL_BUTTON_WIDTH	220
+#define	POKER_CONTROL_BUTTON_HEIGHT	90
 
 extern SDL_Renderer* mainWindowRenderer;
 extern int intWindowWidth;
@@ -106,7 +106,7 @@ int loadpokercontrolbuttons(struct gamePokerControlButtonImageData *gamePokerCon
 	// null the control button texture
 	gamePokerControlButtonImageData->pokerControlButtonTexture = NULL;
 
-	pokerControlButtonsSurface = IMG_Load("images/controlbuttons.png");
+	pokerControlButtonsSurface = IMG_Load("images/pokercontrolbuttons.png");
 
 	// check for errors in loading surface
 	if (pokerControlButtonsSurface == NULL)
@@ -137,7 +137,9 @@ int loadpokercontrolbuttons(struct gamePokerControlButtonImageData *gamePokerCon
 		gamePokerControlButtonImageData->pokerControlButtonSource[intCounter].w = POKER_CONTROL_BUTTON_WIDTH;
 		gamePokerControlButtonImageData->pokerControlButtonSource[intCounter].h = POKER_CONTROL_BUTTON_HEIGHT;
 
-		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].y = (intWindowHeight / 1.15);
+		// x needs to skew for proper placement
+		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].x = 20;
+		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].y = (intWindowHeight / 1.11);
 		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].h = PokerControlButtonResHeightCorrected;
 		gamePokerControlButtonImageData->pokerControlButtonDest[intCounter].w = PokerControlButtonResWidthCorrected;
 	}

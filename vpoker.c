@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 						case MAIN_MENU:
 							break;
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, floatGameCash, intBetLevel, commonGameStats.currentDenom);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, commonGameStats.currentGameCash, intBetLevel, commonGameStats.currentDenom);
 							break;
 						case DUCES_WILD:
 							break;

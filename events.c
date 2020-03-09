@@ -3,28 +3,42 @@
 #include "cards.h"
 #include "common.h"
 #include "jobpayout.h"
+#include "sdlbuttons.h"
+
+extern int intWindowWidth;
+extern int intWindowHeight;
 
 // getEvents:  Get events for games
-bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struct card *hand, float *floatCash, int *intBetLevel)
+bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct card *hand, int *intBetLevel, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
 	static bool dealEnabled = true;
 	static bool betPrevPressed = false;
 
+	static bool inButtonOne = false, inButtonTwo = false, inButtonThree = false, inButtonFour = false, inButtonFive = false, inButtonSix = false;
+
 	static float floatBet = 0.25;
-			
+	
+	// mouse variables		
+	float PokerControlButtonResWidthCorrected = 0.0;
+	float PokerControlButtonResHeightCorrected = 0.0;
+
+	PokerControlButtonResWidthCorrected = ((intWindowWidth / 1920.0) * POKER_CONTROL_BUTTON_WIDTH);
+	PokerControlButtonResHeightCorrected = ((intWindowHeight / 1280.0) * POKER_CONTROL_BUTTON_HEIGHT);
+
+
 	// event loop.  Some events are always avaible.  Check bottom.
 	while (SDL_PollEvent(event))
 	{
 
 		// switch determines what game is being played and determines what it does with events.
-		switch (game)
+		switch (commonGameStats->currentGame)
 		{
 			case JACKS_OR_BETTER:
 			case DUCES_WILD:
 			
 				// set floatBet depending on denom value.  This ensures floatBet has the correct value to later determine if in a poker game you have enough credits to play.
-				switch (denom)
+				switch (commonGameStats->currentDenom)
 				{
 				case QUARTER:
 					floatBet = 0.25;
@@ -46,12 +60,27 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 					break;
 				}
 
+
+
+				// mouse events
+				if (event->type == SDL_MOUSEMOTION)
+				{
+					SDL_GetMouseState(&commonGameStats->mouseX, &commonGameStats->mouseY);
+					
+					// poker control buttons
+					if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[0], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+						printf("is in button[0]\n");
+					else
+						printf("is out of button[0]\n");
+				}
+
+				// keyboard events
 				// return pressed
 				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED)
 				{
 					
 					// Ensure that enough credits are available to deal the cards and then enable deal.
-					if (*floatCash >= (floatBet * (*intBetLevel)))
+					if (commonGameStats->currentGameCash >= (floatBet * (*intBetLevel)))
 						dealEnabled = true;
 					else
 						dealEnabled = false;
@@ -68,22 +97,22 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 						heldEnabled = true;
 
 						// remove credits depending on type of denom and bet level used. 
-						switch (denom)
+						switch (commonGameStats->currentDenom)
 						{
 						case QUARTER:
-							*floatCash -= 0.25 * (*intBetLevel);
+							commonGameStats->currentGameCash -= 0.25 * (*intBetLevel);
 							break;
 						case HALF:
-							*floatCash -= 0.50 * (*intBetLevel);
+							commonGameStats->currentGameCash -= 0.50 * (*intBetLevel);
 							break;
 						case DOLLAR:
-							*floatCash -= 1.00 * (*intBetLevel);
+							commonGameStats->currentGameCash -= 1.00 * (*intBetLevel);
 							break;
 						case FIVEDOLLAR:
-							*floatCash -= 5.00 * (*intBetLevel);
+							commonGameStats->currentGameCash -= 5.00 * (*intBetLevel);
 							break;
 						case TENDOLLAR:
-							*floatCash -= (10.00 * (*intBetLevel));
+							commonGameStats->currentGameCash -= (10.00 * (*intBetLevel));
 							break;
 						}
 						
@@ -99,7 +128,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 					{
 						// deal cards that are not held
 						deal(hand, 5);
-						JacksOrBetterPayout(hand, *intBetLevel, floatCash, denom);
+						JacksOrBetterPayout(hand, *intBetLevel, &commonGameStats->currentGameCash, commonGameStats->currentDenom);
 						firstDeal = true;
 						returnPrevPressed = true;
 						heldEnabled = false;
@@ -216,7 +245,7 @@ bool getEvents(enum gametype game, enum denomtype denom, SDL_Event *event, struc
 			if (creditPrevPressed == false)
 			{
 				creditPrevPressed = true;
-				*floatCash += 0.25;
+				commonGameStats->currentGameCash += 0.25;
 			}
 		}
 

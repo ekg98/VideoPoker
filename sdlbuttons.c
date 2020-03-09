@@ -4,11 +4,7 @@
 #include "cards.h"
 #include "sdlbuttons.h"
 
-// configuration defines
-#define DENOM_BUTTON_WIDTH	200
-#define DENOM_BUTTON_HEIGHT	145
-#define POKER_CONTROL_BUTTON_WIDTH	210
-#define	POKER_CONTROL_BUTTON_HEIGHT	90
+
 
 extern SDL_Renderer* mainWindowRenderer;
 extern int intWindowWidth;
@@ -162,4 +158,18 @@ void closepokercontrolbuttons(struct gamePokerControlButtonImageData *gamePokerC
 {
 	SDL_DestroyTexture(gamePokerControlButtonImageData->pokerControlButtonTexture);
 	gamePokerControlButtonImageData->pokerControlButtonTexture = NULL;
+}
+
+// IsInButton():  Checks to see if mouse pointer is inside image coordinates.
+bool IsInButton(struct commonGameStats *commonGameStats, SDL_Rect ButtonLocation, int ButtonHeight, int ButtonWidth)
+{
+	if (commonGameStats->mouseY >= ButtonLocation.y && commonGameStats->mouseY <= (ButtonLocation.y + ButtonHeight))
+	{
+		if (commonGameStats->mouseX >= ButtonLocation.x && commonGameStats->mouseX <= (ButtonLocation.x + ButtonWidth))
+			return true;
+		else
+			return false;
+	}
+	else
+		return false;
 }

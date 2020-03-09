@@ -33,3 +33,20 @@ enum denomtype {
 	FIVEDOLLAR,
 	TENDOLLAR
 };
+
+struct commonGameStats {
+	
+	// mouse X and Y
+	int mouseX;
+	int mouseY;
+	
+	// current game being played
+	enum gametype currentGame;
+
+	// current denom being used
+	enum denomtype currentDenom;
+
+	// current currency value
+	float currentGameCash;
+
+};

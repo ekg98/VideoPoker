@@ -62,6 +62,10 @@ int main(int argc, char *argv[])
 	// large structure containing poker control button image data.
 	struct gamePokerControlButtonImageData gamePokerControlButtonImageData;
 
+	// large structure containing common game stats
+	struct commonGameStats commonGameStats;
+	
+
 	// checks to see if there are any arguments available
 	if(argc > 1)
 	{
@@ -178,8 +182,9 @@ int main(int argc, char *argv[])
 			int runTicks = 0;
 			float tickInterval = 1000.0 / MAX_FRAMERATE;
 
-			enum gametype game = JACKS_OR_BETTER;
-			enum denomtype denom = QUARTER;
+			commonGameStats.currentGameCash = 0.0;
+			commonGameStats.currentGame = JACKS_OR_BETTER;
+			commonGameStats.currentDenom = QUARTER;
 
 			srand(time(NULL));
 			inithand(hand, 5);
@@ -200,7 +205,7 @@ int main(int argc, char *argv[])
 				averageFps = (int) (frameCounter / (startRunTicks / 1000.0));
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-				handState = getEvents(game, denom, &event, hand, &floatGameCash, &intBetLevel);
+				handState = getEvents(&commonGameStats, &event, hand, &intBetLevel, &gamePokerControlButtonImageData);
 							
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
@@ -214,12 +219,12 @@ int main(int argc, char *argv[])
 						SDL_RenderCopy(mainWindowRenderer, gameFonts.gameFpsTextTexture, NULL, &gameFonts.gameFpsTextDest);
 														
 					// Depending on what game is being played.  Render the correct graphical selection.
-					switch (game)
+					switch (commonGameStats.currentGame)
 					{
 						case MAIN_MENU:
 							break;
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, floatGameCash, intBetLevel, denom);
+							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, floatGameCash, intBetLevel, commonGameStats.currentDenom);
 							break;
 						case DUCES_WILD:
 							break;

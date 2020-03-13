@@ -34,6 +34,26 @@ enum denomtype {
 	TENDOLLAR
 };
 
+enum buttonpressed {
+	NONE_PRESSED,
+	BUTTON_ZERO,
+	BUTTON_ONE,
+	BUTTON_TWO,
+	BUTTON_THREE,
+	BUTTON_FOUR,
+	BUTTON_FIVE
+};
+
+enum inbutton {
+	NONE,
+	BUTTON_ZERO,
+	BUTTON_ONE,
+	BUTTON_TWO,
+	BUTTON_THREE,
+	BUTTON_FOUR,
+	BUTTON_FIVE
+};
+
 struct commonGameStats {
 	
 	// mouse X and Y
@@ -48,5 +68,11 @@ struct commonGameStats {
 
 	// current currency value
 	float currentGameCash;
+
+	// mouse location in or out of button
+	enum inbutton inButton;
+
+	// current pressed button
+	enum buttonpressed pressedButton;
 
 };

@@ -31,6 +31,10 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 	while (SDL_PollEvent(event))
 	{
 
+		// get mouse x and y data regardless of game being played.
+		if(event->type == SDL_MOUSEMOTION)
+			SDL_GetMouseState(&commonGameStats->mouseX, &commonGameStats->mouseY);
+
 		// switch determines what game is being played and determines what it does with events.
 		switch (commonGameStats->currentGame)
 		{
@@ -60,18 +64,24 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 					break;
 				}
 
-
-
-				// mouse events
+				// mouse events for poker
 				if (event->type == SDL_MOUSEMOTION)
 				{
-					SDL_GetMouseState(&commonGameStats->mouseX, &commonGameStats->mouseY);
-					
 					// poker control buttons
 					if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[0], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
-						printf("is in button[0]\n");
+						commonGameStats->inButton = BUTTON_ZERO;
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[1], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+						commonGameStats->inButton = BUTTON_ONE;
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[2], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+						commonGameStats->inButton = BUTTON_TWO;
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[3], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+						commonGameStats->inButton = BUTTON_THREE;
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[4], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+						commonGameStats->inButton = BUTTON_FOUR;
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[5], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+						commonGameStats->inButton = BUTTON_FIVE;
 					else
-						printf("is out of button[0]\n");
+						commonGameStats->inButton = NONE;
 				}
 
 				// keyboard events

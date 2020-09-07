@@ -14,8 +14,11 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
 	static bool dealEnabled = true;
 	static bool betPrevPressed = false;
+	static bool leftMouseButtonPrevPressed = false;
 
 	static bool inButtonOne = false, inButtonTwo = false, inButtonThree = false, inButtonFour = false, inButtonFive = false, inButtonSix = false;
+
+	static bool dealRequested = false;
 
 	static float floatBet = 0.25;
 	
@@ -65,6 +68,7 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 				}
 
 				// mouse events for poker
+				// Determine if you are inside one of the buttons on the screen
 				if (event->type == SDL_MOUSEMOTION)
 				{
 					// poker control buttons
@@ -84,11 +88,26 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						commonGameStats->inButton = NONE;
 				}
 
+				// Determine what to do if you pressed a mouse button
+				if (event->button.button == SDL_BUTTON_LEFT && leftMouseButtonPrevPressed == false)
+				{
+					leftMouseButtonPrevPressed = true;
+					
+					// button five is deal button  change to a switch
+					if (commonGameStats->inButton == BUTTON_FIVE)
+					{
+						dealRequested = true;
+						printf("deal requested\n");
+					}
+				}
+
+				if (event->button.button == SDL_BUTTON_LEFT && event->type == SDL_MOUSEBUTTONUP)
+					leftMouseButtonPrevPressed = false;
+
 				// keyboard events
 				// return pressed
-				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED)
+				if (dealRequested == true || (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED))
 				{
-					
 					// Ensure that enough credits are available to deal the cards and then enable deal.
 					if (commonGameStats->currentGameCash >= (floatBet * (*intBetLevel)))
 						dealEnabled = true;
@@ -134,7 +153,7 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						printf("Good Luck!\n");
 					}
 					// second deal
-					if (firstDeal == false && returnPrevPressed == false)
+					if (firstDeal == false &&  returnPrevPressed == false)
 					{
 						// deal cards that are not held
 						deal(hand, 5);
@@ -144,6 +163,9 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						heldEnabled = false;
 						printf("Game Over!\n");
 					}
+
+					// Remove mouse deal request.
+					dealRequested = false;
 				}
 
 				// return released

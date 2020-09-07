@@ -26,6 +26,7 @@ enum handState {
 	FIRST_HAND 
 };
 
+// denomtype:  Enum for denomination types used in a video poker game.
 enum denomtype {
 	QUARTER,
 	HALF,
@@ -34,17 +35,8 @@ enum denomtype {
 	TENDOLLAR
 };
 
-enum buttonpressed {
-	NONE_PRESSED,
-	BUTTON_ZERO,
-	BUTTON_ONE,
-	BUTTON_TWO,
-	BUTTON_THREE,
-	BUTTON_FOUR,
-	BUTTON_FIVE
-};
-
-enum inbutton {
+// buttonId:  Enum for all of the associated buttons in video poker game.
+enum buttonId {
 	NONE,
 	BUTTON_ZERO,
 	BUTTON_ONE,
@@ -70,9 +62,9 @@ struct commonGameStats {
 	float currentGameCash;
 
 	// mouse location in or out of button
-	enum inbutton inButton;
+	enum buttonId inButton;
 
 	// current pressed button
-	enum buttonpressed pressedButton;
+	enum buttonId pressedButton;
 
 };

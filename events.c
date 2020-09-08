@@ -114,6 +114,7 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 					else
 						dealEnabled = false;
 					
+					printf("returnPrevPressed = %d, dealEnabled = %d, firstDeal = %d\n", returnPrevPressed, dealEnabled, firstDeal);
 					// first deal.  Unheld all cards and reset held key states
 					if (dealEnabled == true && firstDeal == true && returnPrevPressed == false)
 					{
@@ -164,8 +165,12 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						printf("Game Over!\n");
 					}
 
-					// Remove mouse deal request.
-					dealRequested = false;
+					// Remove mouse deal request and enable returnPrevPressed for second deal.
+					if (dealRequested == true)
+					{
+						dealRequested = false;
+						returnPrevPressed = false;
+					}
 				}
 
 				// return released

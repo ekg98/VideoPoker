@@ -73,17 +73,17 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 				{
 					// poker control buttons
 					if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[0], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
-						commonGameStats->inButton = BUTTON_ZERO;
-					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[1], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
 						commonGameStats->inButton = BUTTON_ONE;
-					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[2], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[1], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
 						commonGameStats->inButton = BUTTON_TWO;
-					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[3], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[2], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
 						commonGameStats->inButton = BUTTON_THREE;
-					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[4], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[3], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
 						commonGameStats->inButton = BUTTON_FOUR;
-					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[5], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[4], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
 						commonGameStats->inButton = BUTTON_FIVE;
+					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[5], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
+						commonGameStats->inButton = BUTTON_SIX;
 					else
 						commonGameStats->inButton = NONE;
 				}
@@ -93,11 +93,35 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 				{
 					leftMouseButtonPrevPressed = true;
 					
-					// button five is deal button  change to a switch
-					if (commonGameStats->inButton == BUTTON_FIVE)
+					// BUTTON_SIX is deal button
+					switch (commonGameStats->inButton)
 					{
-						dealRequested = true;
-						printf("deal requested\n");
+						case BUTTON_ONE:
+							break;
+						case BUTTON_TWO:
+							break;
+						case BUTTON_THREE:
+							break;
+						case BUTTON_FOUR:
+							break;
+						case BUTTON_FIVE:
+							break;
+						case BUTTON_SIX:
+							dealRequested = true;
+							break;
+						case CARD_ONE:
+							break;
+						case CARD_TWO:
+							break;
+						case CARD_THREE:
+							break;
+						case CARD_FOUR:
+							break;
+						case CARD_FIVE:
+							break;
+						default:
+							dealRequested = false;
+							break;
 					}
 				}
 
@@ -114,7 +138,9 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 					else
 						dealEnabled = false;
 					
+					// troubleshooting statement
 					printf("returnPrevPressed = %d, dealEnabled = %d, firstDeal = %d\n", returnPrevPressed, dealEnabled, firstDeal);
+
 					// first deal.  Unheld all cards and reset held key states
 					if (dealEnabled == true && firstDeal == true && returnPrevPressed == false)
 					{

@@ -38,12 +38,17 @@ enum denomtype {
 // buttonId:  Enum for all of the associated buttons in video poker game.
 enum buttonId {
 	NONE,
-	BUTTON_ZERO,
 	BUTTON_ONE,
 	BUTTON_TWO,
 	BUTTON_THREE,
 	BUTTON_FOUR,
-	BUTTON_FIVE
+	BUTTON_FIVE,
+	BUTTON_SIX,
+	CARD_ONE,
+	CARD_TWO,
+	CARD_THREE,
+	CARD_FOUR,
+	CARD_FIVE
 };
 
 struct commonGameStats {

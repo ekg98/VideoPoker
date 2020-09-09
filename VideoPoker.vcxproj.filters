@@ -39,6 +39,9 @@
     <ClCompile Include="sdlbuttons.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sdlvpokerstatustable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cards.h">
@@ -66,6 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="jobpayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdlvpokerstatustable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

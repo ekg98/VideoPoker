@@ -1,9 +1,11 @@
 // Video Poker:  Jacks or Better render functions
+#include <stdio.h>
 #include "common.h"
 #include "cards.h"
 #include "sdlfonts.h"
 #include "sdlcards.h"
 #include "sdlbuttons.h"
+#include "sdlvpokerstatustable.h"
 
 extern SDL_Renderer* mainWindowRenderer;
 
@@ -11,10 +13,11 @@ extern SDL_Renderer* mainWindowRenderer;
 void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, struct gamePokerControlButtonImageData *gamePokerControlButtonImageData, bool handState, float floatGameCash, int intBetLevel, enum denomtype denom)
 {
 
-	int intCounter = 0;
+	if (vPokerStatusTableRender(mainWindowRenderer, JACKS_OR_BETTER, gamePokerControlButtonImageData))
+		fprintf(stderr,"Couldn't render Status table properly.\n");
 
 	// draw cards on renderer
-	for (intCounter = 0; intCounter < 5; intCounter++)
+	for (int intCounter = 0; intCounter < 5; intCounter++)
 		SDL_RenderCopy(mainWindowRenderer, deckImageData->suitTexture[hand[intCounter].suit], &deckImageData->cardSource[hand[intCounter].suit].card[hand[intCounter].value], &deckImageData->cardDest[intCounter]);
 
 	// gameTypeText: returns true on failure.  Displays game type text in lower left corner.
@@ -53,7 +56,7 @@ void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct five
 	SDL_RenderCopy(mainWindowRenderer, gameDenomButtonImageData->denomButtonSelectedTexture , &gameDenomButtonImageData->denomButtonSource[denom], &gameDenomButtonImageData->denomButtonDest);
 
 	// render poker control buttons.
-	for (intCounter = 0; intCounter < 6; intCounter++)
+	for (int intCounter = 0; intCounter < 6; intCounter++)
 	{
 		SDL_RenderCopy(mainWindowRenderer, gamePokerControlButtonImageData->pokerControlButtonTexture, &gamePokerControlButtonImageData->pokerControlButtonSource[intCounter], &gamePokerControlButtonImageData->pokerControlButtonDest[intCounter]);
 	}

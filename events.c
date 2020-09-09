@@ -88,7 +88,7 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						commonGameStats->inButton = NONE;
 				}
 
-				// Determine what to do if you pressed a mouse button
+				// Determine what to do if you pressed a left mouse button
 				if (event->button.button == SDL_BUTTON_LEFT && leftMouseButtonPrevPressed == false)
 				{
 					leftMouseButtonPrevPressed = true;
@@ -125,12 +125,15 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 					}
 				}
 
-				if (event->button.button == SDL_BUTTON_LEFT && event->type == SDL_MOUSEBUTTONUP)
-					leftMouseButtonPrevPressed = false;
+				// Enable deal request if you pressed return
+				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && returnPrevPressed == false)
+				{
+					returnPrevPressed = true;
+					dealRequested = true;
+				}
 
-				// keyboard events
-				// return pressed
-				if (dealRequested == true || (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_PRESSED))
+				// deal request handling
+				if (dealRequested == true)
 				{
 					// Ensure that enough credits are available to deal the cards and then enable deal.
 					if (commonGameStats->currentGameCash >= (floatBet * (*intBetLevel)))
@@ -142,7 +145,7 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 					printf("returnPrevPressed = %d, dealEnabled = %d, firstDeal = %d\n", returnPrevPressed, dealEnabled, firstDeal);
 
 					// first deal.  Unheld all cards and reset held key states
-					if (dealEnabled == true && firstDeal == true && returnPrevPressed == false)
+					if (dealRequested == true && dealEnabled == true && firstDeal == true)
 					{
 						// reset held key states
 						onePrevHeld = false;
@@ -176,33 +179,23 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						unheld(hand, 5);
 						deal(hand, 5);
 						firstDeal = false;
-						returnPrevPressed = true;
+						dealRequested = false;
 						printf("Good Luck!\n");
 					}
 					// second deal
-					if (firstDeal == false &&  returnPrevPressed == false)
+					if (dealRequested == true && firstDeal == false)
 					{
 						// deal cards that are not held
 						deal(hand, 5);
 						JacksOrBetterPayout(hand, *intBetLevel, &commonGameStats->currentGameCash, commonGameStats->currentDenom);
 						firstDeal = true;
-						returnPrevPressed = true;
 						heldEnabled = false;
+						dealRequested = false;
 						printf("Game Over!\n");
 					}
 
-					// Remove mouse deal request and enable returnPrevPressed for second deal.
-					if (dealRequested == true)
-					{
-						dealRequested = false;
-						returnPrevPressed = false;
-					}
 				}
-
-				// return released
-				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_RELEASED)
-					returnPrevPressed = false;
-
+								
 				// first card held logic
 				if (heldEnabled == true && event->key.keysym.scancode == SDL_SCANCODE_1 && event->key.state == SDL_PRESSED)
 				{
@@ -292,6 +285,14 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 							*intBetLevel = 1;
 					}
 				}
+
+				// left mouse button released
+				if (event->button.button == SDL_BUTTON_LEFT && event->type == SDL_MOUSEBUTTONUP)
+					leftMouseButtonPrevPressed = false;
+
+				// return released
+				if (event->key.keysym.scancode == SDL_SCANCODE_RETURN && event->key.state == SDL_RELEASED)
+					returnPrevPressed = false;
 
 				// bet level key released
 				if (event->key.keysym.scancode == SDL_SCANCODE_B && event->key.state == SDL_RELEASED)

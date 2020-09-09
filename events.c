@@ -4,12 +4,13 @@
 #include "common.h"
 #include "jobpayout.h"
 #include "sdlbuttons.h"
+#include "sdlcards.h"
 
 extern int intWindowWidth;
 extern int intWindowHeight;
 
 // getEvents:  Get events for games
-bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct card *hand, int *intBetLevel, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct card *hand, int *intBetLevel, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData, struct fiveCardDeckImageData* gamePokerDeckImageData)
 {
 	static bool returnPrevPressed = false, onePrevHeld = false, twoPrevHeld = false, threePrevHeld = false, fourPrevHeld = false, fivePrevHeld = false, firstDeal = true ,heldEnabled = false, creditPrevPressed = false;
 	static bool dealEnabled = true;
@@ -25,10 +26,16 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 	// mouse variables		
 	float PokerControlButtonResWidthCorrected = 0.0;
 	float PokerControlButtonResHeightCorrected = 0.0;
+	float cardResWidthCorrected = 0.0;
+	float cardResHeightCorrected = 0.0;
 
+	// more bullshit needs corrected
 	PokerControlButtonResWidthCorrected = ((intWindowWidth / 1920.0) * POKER_CONTROL_BUTTON_WIDTH);
 	PokerControlButtonResHeightCorrected = ((intWindowHeight / 1280.0) * POKER_CONTROL_BUTTON_HEIGHT);
-
+	
+	// this is bullshit needs corrected
+	cardResWidthCorrected = ((intWindowWidth / 1920.0) * 350) * 0.7;
+	cardResHeightCorrected = ((intWindowHeight / 1200.0) * 500) * 0.72;
 
 	// event loop.  Some events are always avaible.  Check bottom.
 	while (SDL_PollEvent(event))
@@ -84,6 +91,16 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						commonGameStats->inButton = BUTTON_FIVE;
 					else if (IsInButton(commonGameStats, gamePokerControlButtonImageData->pokerControlButtonDest[5], PokerControlButtonResHeightCorrected, PokerControlButtonResWidthCorrected))
 						commonGameStats->inButton = BUTTON_SIX;
+					else if (IsInButton(commonGameStats, gamePokerDeckImageData->cardDest[0], cardResHeightCorrected, cardResWidthCorrected))
+						commonGameStats->inButton = CARD_ONE;
+					else if (IsInButton(commonGameStats, gamePokerDeckImageData->cardDest[1], cardResHeightCorrected, cardResWidthCorrected))
+						commonGameStats->inButton = CARD_TWO;
+					else if (IsInButton(commonGameStats, gamePokerDeckImageData->cardDest[2], cardResHeightCorrected, cardResWidthCorrected))
+						commonGameStats->inButton = CARD_THREE;
+					else if (IsInButton(commonGameStats, gamePokerDeckImageData->cardDest[3], cardResHeightCorrected, cardResWidthCorrected))
+						commonGameStats->inButton = CARD_FOUR;
+					else if (IsInButton(commonGameStats, gamePokerDeckImageData->cardDest[4], cardResHeightCorrected, cardResWidthCorrected))
+						commonGameStats->inButton = CARD_FIVE;
 					else
 						commonGameStats->inButton = NONE;
 				}
@@ -110,14 +127,79 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 							dealRequested = true;
 							break;
 						case CARD_ONE:
+							if (heldEnabled == true)
+							{
+								if (onePrevHeld == false)
+								{
+									hand[0].held = YES;
+									onePrevHeld = true;
+								}
+								else
+								{
+									hand[0].held = NO;
+									onePrevHeld = false;
+								}
+							}
 							break;
 						case CARD_TWO:
+							if (heldEnabled == true)
+							{
+								if (twoPrevHeld == false)
+								{
+									hand[1].held = YES;
+									twoPrevHeld = true;
+								}
+								else
+								{
+									hand[1].held = NO;
+									twoPrevHeld = false;
+								}
+							}
 							break;
 						case CARD_THREE:
+							if (heldEnabled == true)
+							{
+								if (threePrevHeld == false)
+								{
+									hand[2].held = YES;
+									threePrevHeld = true;
+								}
+								else
+								{
+									hand[2].held = NO;
+									threePrevHeld = false;
+								}
+							}
 							break;
 						case CARD_FOUR:
+							if (heldEnabled == true)
+							{
+								if (fourPrevHeld == false)
+								{
+									hand[3].held = YES;
+									fourPrevHeld = true;
+								}
+								else
+								{
+									hand[3].held = NO;
+									fourPrevHeld = false;
+								}
+							}
 							break;
 						case CARD_FIVE:
+							if (heldEnabled == true)
+							{
+								if (fivePrevHeld == false)
+								{
+									hand[4].held = YES;
+									fivePrevHeld = true;
+								}
+								else
+								{
+									hand[4].held = NO;
+									fivePrevHeld = false;
+								}
+							}
 							break;
 						default:
 							dealRequested = false;
@@ -141,9 +223,7 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 					else
 						dealEnabled = false;
 					
-					// troubleshooting statement
-					printf("returnPrevPressed = %d, dealEnabled = %d, firstDeal = %d\n", returnPrevPressed, dealEnabled, firstDeal);
-
+					
 					// first deal.  Unheld all cards and reset held key states
 					if (dealRequested == true && dealEnabled == true && firstDeal == true)
 					{
@@ -193,7 +273,10 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 						dealRequested = false;
 						printf("Game Over!\n");
 					}
-
+					
+					// If no condition is met for a proper deal deny the request for a deal.  This prevents automatic dealing if out of credits and the deal button was previously pressed to request a deal
+					if (dealRequested == true)
+						dealRequested = false;
 				}
 								
 				// first card held logic

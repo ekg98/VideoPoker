@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 				averageFps = (int) (frameCounter / (startRunTicks / 1000.0));
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
-				handState = getEvents(&commonGameStats, &event, hand, &intBetLevel, &gamePokerControlButtonImageData);
+				handState = getEvents(&commonGameStats, &event, hand, &intBetLevel, &gamePokerControlButtonImageData, &deckImageData);
 							
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)

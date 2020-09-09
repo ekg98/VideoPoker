@@ -34,8 +34,8 @@ bool getEvents(struct commonGameStats* commonGameStats, SDL_Event *event, struct
 	PokerControlButtonResHeightCorrected = ((intWindowHeight / 1280.0) * POKER_CONTROL_BUTTON_HEIGHT);
 	
 	// this is bullshit needs corrected
-	cardResWidthCorrected = ((intWindowWidth / 1920.0) * 350) * 0.7;
-	cardResHeightCorrected = ((intWindowHeight / 1200.0) * 500) * 0.72;
+	cardResWidthCorrected = ((intWindowWidth / 1920.0) * CARD_WIDTH) * 0.7;
+	cardResHeightCorrected = ((intWindowHeight / 1200.0) * CARD_HEIGHT) * 0.72;
 
 	// event loop.  Some events are always avaible.  Check bottom.
 	while (SDL_PollEvent(event))

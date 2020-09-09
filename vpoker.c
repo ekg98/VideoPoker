@@ -15,16 +15,6 @@
 #include "jobpayout.h"
 #include "events.h"
 
-/* Window resolutions and card resolutions - Must be floating point */
-#define DEFAULT_WINDOW_WIDTH  1920
-#define DEFAULT_WINDOW_HEIGHT 1080
-#define CARD_WIDTH  350
-#define CARD_HEIGHT 500
-#define MAX_FRAMERATE	60
-
-#define	TRUE	1
-#define	FALSE	0
-
 /* function prototypes */
 int initsdl(struct fonts *, struct fiveCardDeckImageData *, struct gameDenomButtonImageData *, struct gamePokerControlButtonImageData *);
 void closesdl(void);

@@ -14,6 +14,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+/* Window resolutions and card resolutions - Must be floating point */
+#define DEFAULT_WINDOW_WIDTH  1920
+#define DEFAULT_WINDOW_HEIGHT 1080
+#define CARD_WIDTH  350
+#define CARD_HEIGHT 500
+#define MAX_FRAMERATE	60
+
+#define	TRUE	1
+#define	FALSE	0
 
 enum gametype {
 		MAIN_MENU,

@@ -15,10 +15,10 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	SDL_Rect mainOutsideBoarder;
 	SDL_Rect mainInsideBoarder;	
 	
-	float mainBoarderHeight = intWindowHeight / 2.4;
+	int mainBoarderHeight = 500;
 	
-	// controls size of large yellow boarder
-	const float YELLOWMULTIPLIER = 0.995;
+	// Yellow boarder spacing.  This value removes (x) pixels from each side of the box.  Even numbers only.
+	int insideLargeYellowBoarderSpacing = 6;
 	
 	//  large outside black boarder
 	mainOutsideBoarder.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;
@@ -27,36 +27,30 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	mainOutsideBoarder.h = mainBoarderHeight;
 
 	// calculations for large inside yellow boarder
-	float insideYellowBoarderWidth = mainOutsideBoarder.w * YELLOWMULTIPLIER;
-	float insideYellowBoarderHeight = mainOutsideBoarder.h * YELLOWMULTIPLIER;
-	float insideYellowBoarderX = ((mainOutsideBoarder.w - insideYellowBoarderWidth) / 2) + mainOutsideBoarder.x;
-	float insideYellowBoarderY = ((mainOutsideBoarder.h - insideYellowBoarderHeight) / 2) + mainOutsideBoarder.y;
-
-	// y??? (mainBoarderHeight - (mainBoarderHeight * YELLOWMULTIPLIER))
+	int insideLargeYellowBoarderWidth = mainOutsideBoarder.w - insideLargeYellowBoarderSpacing;
+	int insideLargeYellowBoarderHeight = mainOutsideBoarder.h - insideLargeYellowBoarderSpacing;
+	int insideLargeYellowBoarderX = ((mainOutsideBoarder.w - insideLargeYellowBoarderWidth) / 2) + mainOutsideBoarder.x;
+	int insideLargeYellowBoarderY = ((mainOutsideBoarder.h - insideLargeYellowBoarderHeight) / 2) + mainOutsideBoarder.y;
 
 	// large inside yellow boarder
-	mainInsideBoarder.x = insideYellowBoarderX;
-	mainInsideBoarder.y = insideYellowBoarderY;
-	mainInsideBoarder.w = insideYellowBoarderWidth;
-	mainInsideBoarder.h = insideYellowBoarderHeight;
-
-	printf("insideYellowBoarderX = %f ", insideYellowBoarderX);
-	printf("mainOutsideBoarder.x = %d ", mainOutsideBoarder.x);
-	printf("mainInsideBoarder.x = %d\n", mainInsideBoarder.x);
-
-	//black
+	mainInsideBoarder.x = insideLargeYellowBoarderX;
+	mainInsideBoarder.y = insideLargeYellowBoarderY;
+	mainInsideBoarder.w = insideLargeYellowBoarderWidth;
+	mainInsideBoarder.h = insideLargeYellowBoarderHeight;
+		
+	// set black color
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 
 	if (SDL_RenderFillRect(mainRenderer, &mainOutsideBoarder))
 		fprintf(stderr, "Error\n");
 
-	//yellow
+	// set yellow color
 	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 0, 0);
 
 	if (SDL_RenderFillRect(mainRenderer, &mainInsideBoarder))
 		fprintf(stderr, "Error\n");
 
-	//blue
+	// set blue color
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 
 	return false;

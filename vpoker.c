@@ -28,7 +28,7 @@ SDL_Renderer *mainWindowRenderer = NULL;
 SDL_Event event;
 struct card hand[5];
 
-// resolution variables
+// resolution variables and default initialization
 int intWindowWidth = DEFAULT_WINDOW_WIDTH;
 int intWindowHeight = DEFAULT_WINDOW_HEIGHT;
 
@@ -88,43 +88,49 @@ int main(int argc, char *argv[])
 								// 1080p
 								if(strcmp(argv[argCounter], "1920x1080") == 0)
 								{
-									intWindowWidth = 1920;
-									intWindowHeight = 1080;
+									//intWindowWidth = 1920;
+									//intWindowHeight = 1080;
+									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
 									argCounter++;
 								}
 								// 720p
 								else if(strcmp(argv[argCounter], "1280x720") == 0)
 								{
-									intWindowWidth = 1280;
-									intWindowHeight = 720;
+									//intWindowWidth = 1280;
+									//intWindowHeight = 720;
+									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
 									argCounter++;
 								}
 								// 1280x1024 SuperXGA
 								else if(strcmp(argv[argCounter], "1280x1024") == 0)
 								{
-									intWindowWidth = 1280;
-									intWindowHeight = 1024;
+									//intWindowWidth = 1280;
+									//intWindowHeight = 1024;
+									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
 									argCounter++;
 								}
 								// 1024x768 XGA
 								else if(strcmp(argv[argCounter], "1024x768") == 0)
 								{
-									intWindowWidth = 1024;
-									intWindowHeight = 768;
+									//intWindowWidth = 1024;
+									//intWindowHeight = 768;
+									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
 									argCounter++;
 								}
 								// 800x600 SVGA
 								else if(strcmp(argv[argCounter], "800x600") == 0)
 								{
-									intWindowWidth = 800;
-									intWindowHeight = 600;
+									//intWindowWidth = 800;
+									//intWindowHeight = 600;
+									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
 									argCounter++;
 								}
 								// 640x480 VGA
 								else if(strcmp(argv[argCounter], "640x480") == 0)
 								{
-									intWindowWidth = 640;
-									intWindowHeight = 480;
+									//intWindowWidth = 640;
+									//intWindowHeight = 480;
+									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
 									argCounter++;
 								}
 								else

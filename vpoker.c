@@ -16,7 +16,7 @@
 #include "events.h"
 
 /* function prototypes */
-int initsdl(struct fonts *, struct fiveCardDeckImageData *, struct gameDenomButtonImageData *, struct gamePokerControlButtonImageData *);
+int initsdl(bool, struct fonts *, struct fiveCardDeckImageData *, struct gameDenomButtonImageData *, struct gamePokerControlButtonImageData *);
 void closesdl(void);
 int loadDeck(struct fiveCardDeckImageData *);
 void closeDeck(struct fiveCardDeckImageData *);
@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 	bool displayFps = false;
 	float floatGameCash = 0;
 	int intBetLevel = 1;
+	bool fullscreen = false;
 
 	// large structure containing game font datas.
 	struct fonts gameFonts;
@@ -75,62 +76,64 @@ int main(int argc, char *argv[])
 							printf("Video Poker - A copy of a vegas poker game.\n");
 							printf("arguments:\n");
 							printf("\t-h  This menu.\n");
-							printf("\t-r  Adjust screen resolution\n");
+							printf("\t-r  Adjust screen resolution.  -r fs for full screen\n");
+							printf("\t\t1920x1080, 1280x720, 1280x1024, 1024x768, 800x600, and 640x480\n");
 							printf("\t-f  Display framerate on screen\n");
-							return 0;
+							return EXIT_SUCCESS;
 							break;
 
 						case 'r':
-							if((argc - 1) > argCounter)
+							if ((argc - 1) > argCounter)
 							{
 								argCounter++;
 
-								// 1080p
-								if(strcmp(argv[argCounter], "1920x1080") == 0)
+								// full screen
+								if(strcmp(argv[argCounter], "fs") == 0)
 								{
-									//intWindowWidth = 1920;
-									//intWindowHeight = 1080;
-									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
+									fullscreen = true;
+									argCounter++;
+								}
+
+								// 1080p
+								else if(strcmp(argv[argCounter], "1920x1080") == 0)
+								{
+									intWindowWidth = 1920;
+									intWindowHeight = 1080;
 									argCounter++;
 								}
 								// 720p
 								else if(strcmp(argv[argCounter], "1280x720") == 0)
 								{
-									//intWindowWidth = 1280;
-									//intWindowHeight = 720;
-									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
+									intWindowWidth = 1280;
+									intWindowHeight = 720;
 									argCounter++;
 								}
 								// 1280x1024 SuperXGA
 								else if(strcmp(argv[argCounter], "1280x1024") == 0)
 								{
-									//intWindowWidth = 1280;
-									//intWindowHeight = 1024;
-									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
+									intWindowWidth = 1280;
+									intWindowHeight = 1024;
 									argCounter++;
 								}
 								// 1024x768 XGA
 								else if(strcmp(argv[argCounter], "1024x768") == 0)
 								{
-									//intWindowWidth = 1024;
-									//intWindowHeight = 768;
-									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
+									intWindowWidth = 1024;
+									intWindowHeight = 768;
 									argCounter++;
 								}
 								// 800x600 SVGA
 								else if(strcmp(argv[argCounter], "800x600") == 0)
 								{
-									//intWindowWidth = 800;
-									//intWindowHeight = 600;
-									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
+									intWindowWidth = 800;
+									intWindowHeight = 600;
 									argCounter++;
 								}
 								// 640x480 VGA
 								else if(strcmp(argv[argCounter], "640x480") == 0)
 								{
-									//intWindowWidth = 640;
-									//intWindowHeight = 480;
-									fprintf(stderr, "Resolution adjustments temporarally disabled.\n");
+									intWindowWidth = 640;
+									intWindowHeight = 480;
 									argCounter++;
 								}
 								else
@@ -142,7 +145,11 @@ int main(int argc, char *argv[])
 								break;
 							}
 							else
-								return 1;
+							{
+								fprintf(stderr, "Missing resolution argument.\n");
+								return EXIT_FAILURE;
+							}
+
 							break;
 
 						case 'f':
@@ -153,7 +160,7 @@ int main(int argc, char *argv[])
 						default:
 							printf("%d\n", argCounter);
 							printf("Invalid argument(s)\n");
-							return 1;
+							return EXIT_FAILURE;
 							break;
 					}
 				}
@@ -166,8 +173,8 @@ int main(int argc, char *argv[])
 	}
 
 	// start the game here
-        if(initsdl(&gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData))  /* initialize sdl */
-        	return 1;
+        if(initsdl(fullscreen, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData) == EXIT_FAILURE)  /* initialize sdl */
+        	return EXIT_FAILURE;
 		else
 		{
 			// timing variables
@@ -187,8 +194,8 @@ int main(int argc, char *argv[])
 			
 			// gameHeldText:  Generates textures and calculations for game held text.
 			if (gameHeldText(&gameFonts))
-				return 1;
-
+				return EXIT_FAILURE;
+					
 			while (event.type != SDL_QUIT)
 			{
 				bool handState = FIRST_HAND;
@@ -245,42 +252,71 @@ int main(int argc, char *argv[])
 	closepokercontrolbuttons(&gamePokerControlButtonImageData);
 	closesdl();
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 /* initsdl:  Start up SDL */
-int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, struct gamePokerControlButtonImageData *gamePokerControlButtonImageData)
+int initsdl(bool fullscreen ,struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, struct gamePokerControlButtonImageData *gamePokerControlButtonImageData)
 {
 	int imageFlags = IMG_INIT_PNG;
 
 	if(SDL_Init(SDL_INIT_VIDEO))
 	{
 		fprintf(stderr, "SDL unable to initialize: %s\n", SDL_GetError());
-		return 1;
+		return EXIT_FAILURE;
 	}
 	else
 	{
 		if((IMG_Init(imageFlags) & imageFlags) != imageFlags)
 		{
 			fprintf(stderr, "SDL unable to initialize IMG_Init: %s\n", IMG_GetError());
-			return 1;
+			return EXIT_FAILURE;
 		}
 		else
+		{
 			mainWindow = SDL_CreateWindow("Video Poker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, intWindowWidth, intWindowHeight, SDL_WINDOW_SHOWN);
+		}
 	}
 
 	if(mainWindow == NULL)
 	{
 		fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
-		return 1;
+		return EXIT_FAILURE;
 	}
 	else
-		mainWindowSurface = SDL_GetWindowSurface(mainWindow);
+	{
+		// main window has been created.  We can modifiy it here after we verify its been created.
+		SDL_SetWindowBordered(mainWindow, SDL_FALSE);
 
+		// forumulate full screen
+		if (fullscreen == true)
+		{
+			SDL_SetWindowFullscreen(mainWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+			SDL_DisplayMode currentDisplayMode;
+			if (SDL_GetCurrentDisplayMode(SDL_GetWindowDisplayIndex(mainWindow), &currentDisplayMode))
+			{
+				fprintf(stderr, "Couldn't get current display mode: %s\n", SDL_GetError());
+				return EXIT_FAILURE;
+			}
+			else
+			{
+				intWindowWidth = currentDisplayMode.w;
+				intWindowHeight = currentDisplayMode.h;
+			}
+				
+
+		}
+
+		// create main window surface
+		mainWindowSurface = SDL_GetWindowSurface(mainWindow);
+	}
+
+	// check to see if main window surface was created
 	if(mainWindowSurface == NULL)
 	{
 		fprintf(stderr, "Window surface could not be created: %s\n", SDL_GetError());
-		return 1;
+		return EXIT_FAILURE;
 	}
 	else
 		mainWindowRenderer = SDL_CreateRenderer(mainWindow, -1, SDL_RENDERER_ACCELERATED);
@@ -288,38 +324,38 @@ int initsdl(struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData
 	if(mainWindowRenderer == NULL)
 	{
 		fprintf(stderr, "SDL could not create renderer: %s\n", SDL_GetError());
- 	return 1;
+ 		return EXIT_FAILURE;
 	}
 
 	/* Error checking for loading the texture deck */
 	if(loadDeck(deckImageData))
-		return 1;
+		return EXIT_FAILURE;
 
 	if(TTF_Init() == -1)
 	{
 		fprintf(stderr, "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	if(loadFonts(gameFonts))
 	{
 		fprintf(stderr, "Failure to load game fonts.\n");
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	if(loaddenombuttons(gameDenomButtonImageData))
 	{
 		fprintf(stderr, "Failure to load game buttons.\n");
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	if (loadpokercontrolbuttons(gamePokerControlButtonImageData))
 	{
 		fprintf(stderr, "Failure to load poker control buttons.\n");
-		return 1;
+		return EXIT_FAILURE;
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 /* closesdl:  Shut down SDL */
@@ -336,18 +372,14 @@ void closesdl(void)
 	SDL_Quit();
 }
 
-/* loadDeck:  Load deck of card images into memory. */
+// loadDeck:  Load deck of card images into memory.
 int loadDeck(struct fiveCardDeckImageData *deckImageData)
 {
 	int suit, i, spaceWidth = 0;
-	float resCorrectedSpaceWidth = 0.0;
-	float resCorrectedInterval = 0.0;
-	float cardResHeightCorrected = 0.0;
-	float cardResWidthCorrected = 0.0;
-	float cardXEdge = 0.0;
-	float cardHalf = 0.0;
-	float edgeToCenter = 0.0;
-	float spacingDistance = 0.0;
+	int cardResHeightCorrected;
+	int cardResWidthCorrected;
+	int cardHalf = 0.0;
+	int spacingDistance;
 	SDL_Surface *cards[5];
 
 	// null the card surfaces
@@ -356,64 +388,64 @@ int loadDeck(struct fiveCardDeckImageData *deckImageData)
 		cards[suit] = NULL;
 	}
 
-	/* load the cards into memory for manipulation */
+	// load the cards into memory for manipulation
 	cards[0] = NULL;
 	cards[1] = IMG_Load("images/cardh.png");
 	cards[2] = IMG_Load("images/cardd.png");
 	cards[3] = IMG_Load("images/cardc.png");
 	cards[4] = IMG_Load("images/cards.png");
 
-	/* Error loading card images */
+	// Error loading card images
 	for(suit = 1; suit < 5; suit++)
 	{
 		if(cards[suit] == NULL)
  		{
 			printf("SDL could not load images: %s\n", IMG_GetError());
-    		return 1;
+    		return EXIT_FAILURE;
     	}
 	}
 
-  	/* Null the whole deck texture array */
+  	// Null the whole deck texture array
 	for(suit = 0; suit < 5; suit++)
 	{
 		deckImageData->suitTexture[suit] = NULL;
 	}
 
-  	/* convert the surface to comply with the screen */
+  	// convert the surface to comply with the screen 
   	for(suit = 1; suit < 5; suit++)
   	{
     		deckImageData->suitTexture[suit] = SDL_CreateTextureFromSurface(mainWindowRenderer, cards[suit]);
   	}
 
-  	/* Error check to see if deck texture was loaded into memory */
+  	// Error check to see if deck texture was loaded into memory
   	for(suit = 1; suit < 5; suit++)
   	{
   		if(deckImageData->suitTexture[suit] == NULL)
 		{
 			printf("SDL could not load deck textures: %s\n", SDL_GetError());
-			return 1;
+			return EXIT_FAILURE;
 		}
   	}
 
-  	/* free the function local surfaces */
+  	// free the function local surfaces
   	for(suit = 0; suit < 5; suit++)
   	{
     		SDL_FreeSurface(cards[suit]);
     		cards[suit] = NULL;
   	}
 
-	/* calculate the cards width and height corrected for set screen resolution.  0.7 is a correction factor since cards are made for 1920x1080 resolution */
+	// calculate the cards width and height corrected for set screen resolution.  0.7 is a correction factor since cards are made for 1920x1080 resolution.  Correction factor must result in whole number
 	cardResWidthCorrected = ((intWindowWidth / 1920.0) * CARD_WIDTH) * 0.7;
 	cardResHeightCorrected = ((intWindowHeight / 1200.0) * CARD_HEIGHT) * 0.72;
-
+	
 	// card spacing calculations
 	cardHalf = cardResWidthCorrected / 2;
 	spacingDistance = intWindowWidth / 7.4;
 
-	/* create output render coordinates dependent on screen resolution */
+	// create output render coordinates dependent on screen resolution
 	for(i = 0; i < 5; i++)
 	{
-		deckImageData->cardDest[i].y = intWindowHeight/ 2;
+		deckImageData->cardDest[i].y = intWindowHeight / 2;
 		deckImageData->cardDest[i].w = cardResWidthCorrected;
 		deckImageData->cardDest[i].h = cardResHeightCorrected;
 	}
@@ -424,8 +456,8 @@ int loadDeck(struct fiveCardDeckImageData *deckImageData)
 	deckImageData->cardDest[3].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 1);
 	deckImageData->cardDest[4].x = ((intWindowWidth / 2) - cardHalf) + (spacingDistance * 2);
 
-	/* create coordinates for the cards from the image deck textures */
-        /* first set element of the structure is ignored */
+	// create coordinates for the cards from the image deck textures
+    // first set element of the structure is ignored
 	for(suit = 1; suit < 5; suit++)
 		for(i = 0; i < 15; i++)
 		{
@@ -434,7 +466,7 @@ int loadDeck(struct fiveCardDeckImageData *deckImageData)
 			deckImageData->cardSource[suit].card[i].w = CARD_WIDTH;
 			deckImageData->cardSource[suit].card[i].h = CARD_HEIGHT;
 		}
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 /* closeDeck:  Free the images that were loaded for the deck of cards */

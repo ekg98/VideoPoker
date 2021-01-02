@@ -12,7 +12,7 @@ extern SDL_Renderer* mainWindowRenderer;
 // JacksOrBetterRender:  Renders the whole graphical selection of Jacks Or Better to the renderer
 void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, struct gamePokerControlButtonImageData *gamePokerControlButtonImageData, bool handState, float floatGameCash, int intBetLevel, enum denomtype denom)
 {
-
+	// vPokerStatusTableRender:  Draws the status table on the top of the screen.
 	if (vPokerStatusTableRender(mainWindowRenderer, JACKS_OR_BETTER, gamePokerControlButtonImageData))
 		fprintf(stderr,"Couldn't render Status table properly.\n");
 

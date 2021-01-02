@@ -15,10 +15,10 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	SDL_Rect mainOutsideBoarder;
 	SDL_Rect mainInsideBoarder;	
 	
-	int mainBoarderHeight = 500;
+	int mainBoarderHeight = intWindowHeight / 2.5;
 	
 	// Yellow boarder spacing.  This value removes (x) pixels from each side of the box.  Even numbers only.
-	int insideLargeYellowBoarderSpacing = 6;
+	int insideLargeYellowBoarderSpacing = 4;
 	
 	//  large outside black boarder
 	mainOutsideBoarder.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;

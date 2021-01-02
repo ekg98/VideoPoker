@@ -14,8 +14,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-/* Window resolutions and card resolutions - Must be floating point */
-#define DEFAULT_WINDOW_WIDTH  1920
+// Window resolutions and card resolutions
+#define DEFAULT_WINDOW_WIDTH 1920
 #define DEFAULT_WINDOW_HEIGHT 1200
 #define CARD_WIDTH  350
 #define CARD_HEIGHT 500
@@ -24,12 +24,14 @@
 #define	TRUE	1
 #define	FALSE	0
 
+// gametype:  Enum for selection of a game type to play.
 enum gametype {
 		MAIN_MENU,
 		JACKS_OR_BETTER,
 		DUCES_WILD
 };
 
+// handState:  Enum for the state of a poker hand.  Used to determine if on first or second hand for held card logic.
 enum handState {
 	SECOND_HAND,
 	FIRST_HAND 
@@ -60,6 +62,7 @@ enum buttonId {
 	CARD_FIVE
 };
 
+// commonGameStats:  Structure holding some common game stats used in various places.
 struct commonGameStats {
 	
 	// mouse X and Y

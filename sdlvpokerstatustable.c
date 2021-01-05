@@ -32,7 +32,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	int insideLargeYellowBoarderX = ((mainOutsideBoarder.w - insideLargeYellowBoarderWidth) / 2) + mainOutsideBoarder.x;
 	int insideLargeYellowBoarderY = ((mainOutsideBoarder.h - insideLargeYellowBoarderHeight) / 2) + mainOutsideBoarder.y;
 
-	// large inside yellow boarder
+	// large inside yellow boarder assignments
 	mainInsideBoarder.x = insideLargeYellowBoarderX;
 	mainInsideBoarder.y = insideLargeYellowBoarderY;
 	mainInsideBoarder.w = insideLargeYellowBoarderWidth;
@@ -41,16 +41,18 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	// set black color
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 
+	// draw primary black outside boarder trim
 	if (SDL_RenderFillRect(mainRenderer, &mainOutsideBoarder))
 		fprintf(stderr, "Error\n");
 
 	// set yellow color
 	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 0, 0);
 
+	// draw primary yellow inside boarder
 	if (SDL_RenderFillRect(mainRenderer, &mainInsideBoarder))
 		fprintf(stderr, "Error\n");
 
-	// set blue color
+	// set back to blue color for gameplay.  Unsure if needed.  Good practice
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 
 	return false;

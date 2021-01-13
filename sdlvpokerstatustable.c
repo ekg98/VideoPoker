@@ -56,12 +56,12 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	// calculations for card text column black trim
 	int columnOneHandDescriptionTextTrimWidth = mainInsideBoarderTrim.w - blackBoarderSpacing;
 	int columnOneHandDescriptionTextTrimHeight = mainInsideBoarderTrim.h - blackBoarderSpacing;
-	int columnOneHandDescriptionTextTrimX = (mainInsideBoarderTrim.w - columnOneHandDescriptionTextTrimWidth);
-	int columnOneHandDescriptionTextTrimY;
+	int columnOneHandDescriptionTextTrimX = ((mainInsideBoarderTrim.w - columnOneHandDescriptionTextTrimWidth) / 2) + mainInsideBoarderTrim.x;
+	int columnOneHandDescriptionTextTrimY = ((mainInsideBoarderTrim.h - columnOneHandDescriptionTextTrimHeight) / 2) + mainInsideBoarderTrim.y;
 
 	// columnOneHandDescriptionTextTrim assignments
-	columnOneHandDescriptionTextTrim.x;
-	columnOneHandDescriptionTextTrim.y;
+	columnOneHandDescriptionTextTrim.x = columnOneHandDescriptionTextTrimX;
+	columnOneHandDescriptionTextTrim.y = columnOneHandDescriptionTextTrimY;
 	columnOneHandDescriptionTextTrim.w = columnOneHandDescriptionTextTrimWidth;
 	columnOneHandDescriptionTextTrim.h = columnOneHandDescriptionTextTrimHeight;
 
@@ -69,19 +69,26 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 
 	// draw the status table
 
-	// set black color
+	// set black color for outside boarder trim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 
 	// draw primary black outside boarder trim
 	if (SDL_RenderFillRect(mainRenderer, &mainOutsideBoarderTrim))
 		fprintf(stderr, "Error drawing video poker status table primary outside black boarder trim.\n");
 
-	// set yellow color
+	// set yellow color for inside boarder trim
 	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 0, 0);
 
 	// draw primary yellow inside boarder trim
 	if (SDL_RenderFillRect(mainRenderer, &mainInsideBoarderTrim))
 		fprintf(stderr, "Error drawing video poker status table primary inside yellow boarder trim.\n");
+
+	// set black color for column one hand description text trim
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
+
+	// draw column one hand description text trim
+	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionTextTrim));
+		fprintf(stderr, "Error drawing video poker status table column one hand description text trim.\n");
 
 	// set back to blue color for gameplay.  Unsure if needed.  Good practice
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);

@@ -19,7 +19,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	SDL_Rect columnOneHandDescriptionText, columnTwoBetOneValue, columnThreeBetTwoValue, columnFourBetThreeValue, columnFiveBetFourValue, columnSixBetFiveValue;
 
 	// black boarder trim spacing.  This value removes (x) pixels from each side of the box.  Even numbers only.
-	int blackBoarderSpacing = 4;
+	int blackBoarderSpacing = 6;
 
 
 
@@ -102,49 +102,60 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	columnTwoBetOneValue.w = columnTwoBetOneValueWidth;
 	columnTwoBetOneValue.h = columnTwoBetOneValueHeight;
 
+	// columnThreeBetTwoTrim
+	columnThreeBetTwoValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
+	columnThreeBetTwoValueTrim.w = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 9);
+	columnThreeBetTwoValueTrim.x = (columnTwoBetOneValueTrim.x + columnTwoBetOneValueTrim.w) + (blackBoarderSpacing / 2);
+	columnThreeBetTwoValueTrim.y = (mainInsideBoarderTrim.h - columnThreeBetTwoValueTrim.h) / 2 + mainInsideBoarderTrim.y;
+	
+	// columnThreeBetTwoValue
+	columnThreeBetTwoValue.h = columnThreeBetTwoValueTrim.h - blackBoarderSpacing;
+	columnThreeBetTwoValue.w = columnThreeBetTwoValueTrim.w - blackBoarderSpacing;
+	columnThreeBetTwoValue.x = columnThreeBetTwoValueTrim.x + (blackBoarderSpacing / 2);
+	columnThreeBetTwoValue.y = columnThreeBetTwoValueTrim.y + (blackBoarderSpacing / 2);
 
-	// draw the status table
 
-	// set black color for outside boarder trim
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
+	// render the status table
 
 	// draw primary black outside boarder trim
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &mainOutsideBoarderTrim))
 		fprintf(stderr, "Error drawing video poker status table primary outside black boarder trim.\n");
 
-	// set yellow color for inside boarder trim
-	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 0, 0);
-
 	// draw primary yellow inside boarder trim
+	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &mainInsideBoarderTrim))
 		fprintf(stderr, "Error drawing video poker status table primary inside yellow boarder trim.\n");
-
-	// set black color for column one hand description text trim
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
-
+		
 	// draw column one hand description text trim
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionTextTrim))
 		fprintf(stderr, "Error drawing video poker status table column one hand description text trim.\n");
 
-	// set to blue
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-
 	// draw column one hand description text box
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionText))
 		fprintf(stderr, "Error drawing video poker status table column one hand description text box.\n");
-
-	// set black color for column one hand description text trim
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
-
+		
 	// draw column two bet one value trim
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnTwoBetOneValueTrim))
 		fprintf(stderr, "Error drawing video poker status table column two bet one text trim.\n");
 	
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-
 	// draw column two bet one value
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnTwoBetOneValue))
 		fprintf(stderr, "Error drawing video poker status table column two bet one text box.\n");
+
+	// render columnThreeBetTwoValueTrim
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
+	if (SDL_RenderFillRect(mainRenderer, &columnThreeBetTwoValueTrim))
+		fprintf(stderr, "Error drawing video poker status table column three bet two text trim.\n");
+
+	// render columnThreeBetTwoValue
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	if (SDL_RenderFillRect(mainRenderer, &columnThreeBetTwoValue))
+		fprintf(stderr, "Error drawing video poker status table column three bet two text box.\n");
 
 	// set back to blue color for gameplay.  Unsure if needed.  Good practice
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);

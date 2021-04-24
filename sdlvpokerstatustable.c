@@ -78,6 +78,30 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	columnOneHandDescriptionText.w = columnOneHandDescriptionTextWidth;
 	columnOneHandDescriptionText.h = columnOneHandDescriptionTextHeight;
 
+	// calculations for column two bet one value trim
+	int columnTwoBetOneValueTrimWidth = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 9);
+	int columnTwoBetOneValueTrimHeight = mainInsideBoarderTrim.h - blackBoarderSpacing;
+	int columnTwoBetOneValueTrimX = (columnOneHandDescriptionTextTrim.x + columnOneHandDescriptionTextTrim.w) + (blackBoarderSpacing / 2);
+	int columnTwoBetOneValueTrimY = ((mainInsideBoarderTrim.h - columnTwoBetOneValueTrimHeight) / 2) + mainInsideBoarderTrim.y;
+
+	//columnTwoBetOneValueTrim assignments
+	columnTwoBetOneValueTrim.x = columnTwoBetOneValueTrimX;
+	columnTwoBetOneValueTrim.y = columnTwoBetOneValueTrimY;
+	columnTwoBetOneValueTrim.w = columnTwoBetOneValueTrimWidth;
+	columnTwoBetOneValueTrim.h = columnTwoBetOneValueTrimHeight;
+
+	// columnTwoBetOneValue
+	int columnTwoBetOneValueWidth = columnTwoBetOneValueTrim.w - blackBoarderSpacing;
+	int columnTwoBetOneValueHeight = columnTwoBetOneValueTrim.h - blackBoarderSpacing;
+	int columnTwoBetOneValueX = columnTwoBetOneValueTrim.x + (blackBoarderSpacing / 2);
+	int columnTwoBetOneValueY = columnTwoBetOneValueTrim.y + (blackBoarderSpacing / 2);
+
+	//columnTwoBetOneValue assignments
+	columnTwoBetOneValue.x = columnTwoBetOneValueX;
+	columnTwoBetOneValue.y = columnTwoBetOneValueY;
+	columnTwoBetOneValue.w = columnTwoBetOneValueWidth;
+	columnTwoBetOneValue.h = columnTwoBetOneValueHeight;
+
 
 	// draw the status table
 
@@ -108,6 +132,19 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	// draw column one hand description text box
 	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionText))
 		fprintf(stderr, "Error drawing video poker status table column one hand description text box.\n");
+
+	// set black color for column one hand description text trim
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
+
+	// draw column two bet one value trim
+	if (SDL_RenderFillRect(mainRenderer, &columnTwoBetOneValueTrim))
+		fprintf(stderr, "Error drawing video poker status table column two bet one text trim.\n");
+	
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+
+	// draw column two bet one value
+	if (SDL_RenderFillRect(mainRenderer, &columnTwoBetOneValue))
+		fprintf(stderr, "Error drawing video poker status table column two bet one text box.\n");
 
 	// set back to blue color for gameplay.  Unsure if needed.  Good practice
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);

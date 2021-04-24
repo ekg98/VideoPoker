@@ -54,9 +54,9 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 
 
 	// calculations for card text column black trim
-	int columnOneHandDescriptionTextTrimWidth = mainInsideBoarderTrim.w - blackBoarderSpacing;
+	int columnOneHandDescriptionTextTrimWidth = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 3);
 	int columnOneHandDescriptionTextTrimHeight = mainInsideBoarderTrim.h - blackBoarderSpacing;
-	int columnOneHandDescriptionTextTrimX = ((mainInsideBoarderTrim.w - columnOneHandDescriptionTextTrimWidth) / 2) + mainInsideBoarderTrim.x;
+	int columnOneHandDescriptionTextTrimX = mainInsideBoarderTrim.x + (blackBoarderSpacing / 2);
 	int columnOneHandDescriptionTextTrimY = ((mainInsideBoarderTrim.h - columnOneHandDescriptionTextTrimHeight) / 2) + mainInsideBoarderTrim.y;
 
 	// columnOneHandDescriptionTextTrim assignments
@@ -87,7 +87,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 
 	// draw column one hand description text trim
-	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionTextTrim));
+	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionTextTrim))
 		fprintf(stderr, "Error drawing video poker status table column one hand description text trim.\n");
 
 	// set back to blue color for gameplay.  Unsure if needed.  Good practice

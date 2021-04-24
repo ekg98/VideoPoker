@@ -137,6 +137,18 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	columnFiveBetFourValue.w = columnFiveBetFourValueTrim.w - blackBoarderSpacing;
 	columnFiveBetFourValue.x = columnFiveBetFourValueTrim.x + (blackBoarderSpacing / 2);
 	columnFiveBetFourValue.y = columnFiveBetFourValueTrim.y + (blackBoarderSpacing / 2);
+
+	// columnSixBetFiveTrim
+	columnSixBetFiveValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
+	columnSixBetFiveValueTrim.w = ((columnOneHandDescriptionTextTrim.w / 3) * 2) - (blackBoarderSpacing * 2.5);
+	columnSixBetFiveValueTrim.x = (columnFiveBetFourValueTrim.x + columnFiveBetFourValueTrim.w) + (blackBoarderSpacing / 2);
+	columnSixBetFiveValueTrim.y = (mainInsideBoarderTrim.h - columnSixBetFiveValueTrim.h) / 2 + mainInsideBoarderTrim.y;
+
+	// columnSixBetFiveValue
+	columnSixBetFiveValue.h = columnSixBetFiveValueTrim.h - blackBoarderSpacing;
+	columnSixBetFiveValue.w = columnSixBetFiveValueTrim.w - blackBoarderSpacing;
+	columnSixBetFiveValue.x = columnSixBetFiveValueTrim.x + (blackBoarderSpacing / 2);
+	columnSixBetFiveValue.y = columnSixBetFiveValueTrim.y + (blackBoarderSpacing / 2);
 	
 
 
@@ -201,6 +213,16 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnFiveBetFourValue))
 		fprintf(stderr, "Error drawing video poker status table column five bet four text box.\n");
+
+	// render columnSixBetFiveValueTrim
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
+	if (SDL_RenderFillRect(mainRenderer, &columnSixBetFiveValueTrim))
+		fprintf(stderr, "Error drawing video poker status table column six bet five text trim.\n");
+
+	// render columnSixBetFiveValue
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	if (SDL_RenderFillRect(mainRenderer, &columnSixBetFiveValue))
+		fprintf(stderr, "Error drawing video poker status table column six bet five text box.\n");
 
 	// set back to blue color for gameplay.  Unsure if needed.  Good practice
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);

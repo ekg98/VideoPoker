@@ -1,6 +1,7 @@
 // sdlvpokerstatustable.c:  Source file for graphical status table in video poker
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "common.h"
 #include "sdlbuttons.h"
 
@@ -14,7 +15,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 
 	// variable declarations
 	SDL_Rect mainOutsideBoarderTrim;
-	SDL_Rect mainInsideBoarderTrim;	
+	SDL_Rect mainInsideBoarderTrim;
 	SDL_Rect columnOneHandDescriptionTextTrim, columnTwoBetOneValueTrim, columnThreeBetTwoValueTrim, columnFourBetThreeValueTrim, columnFiveBetFourValueTrim, columnSixBetFiveValueTrim;
 	SDL_Rect columnOneHandDescriptionText, columnTwoBetOneValue, columnThreeBetTwoValue, columnFourBetThreeValue, columnFiveBetFourValue, columnSixBetFiveValue;
 
@@ -28,9 +29,9 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 
 	// sets position of video poker status table in the vertical
 	int mainBoarderHeight = intWindowHeight / 2.5;
-	
-			
-	
+
+
+
 	// calculations for large outside black boarder trim 
 	mainOutsideBoarderTrim.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;
 	mainOutsideBoarderTrim.y = 10;
@@ -50,7 +51,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	mainInsideBoarderTrim.y = insideLargeYellowBoarderY;
 	mainInsideBoarderTrim.w = insideLargeYellowBoarderWidth;
 	mainInsideBoarderTrim.h = insideLargeYellowBoarderHeight;
-	
+
 
 
 	// calculations for card text column black trim
@@ -107,7 +108,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	columnThreeBetTwoValueTrim.w = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 9);
 	columnThreeBetTwoValueTrim.x = (columnTwoBetOneValueTrim.x + columnTwoBetOneValueTrim.w) + (blackBoarderSpacing / 2);
 	columnThreeBetTwoValueTrim.y = (mainInsideBoarderTrim.h - columnThreeBetTwoValueTrim.h) / 2 + mainInsideBoarderTrim.y;
-	
+
 	// columnThreeBetTwoValue
 	columnThreeBetTwoValue.h = columnThreeBetTwoValueTrim.h - blackBoarderSpacing;
 	columnThreeBetTwoValue.w = columnThreeBetTwoValueTrim.w - blackBoarderSpacing;
@@ -149,83 +150,125 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	columnSixBetFiveValue.w = columnSixBetFiveValueTrim.w - blackBoarderSpacing;
 	columnSixBetFiveValue.x = columnSixBetFiveValueTrim.x + (blackBoarderSpacing / 2);
 	columnSixBetFiveValue.y = columnSixBetFiveValueTrim.y + (blackBoarderSpacing / 2);
-	
+
 
 
 	// render the status table
 
-	// draw primary black outside boarder trim
+	// renderMainOutsideBoarderTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &mainOutsideBoarderTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table primary outside black boarder trim.\n");
+		return EXIT_FAILURE;
+	}
 
-	// draw primary yellow inside boarder trim
+	// render mainInsideBoarderTrim
 	SDL_SetRenderDrawColor(mainRenderer, 255, 255, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &mainInsideBoarderTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table primary inside yellow boarder trim.\n");
-		
-	// draw column one hand description text trim
+		return EXIT_FAILURE;
+	}
+
+	// render columnOneHandDescriptionTextTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionTextTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table column one hand description text trim.\n");
+		return EXIT_FAILURE;
+	}
 
-	// draw column one hand description text box
+	// render columnOneHandDescriptionText
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionText))
+	{
 		fprintf(stderr, "Error drawing video poker status table column one hand description text box.\n");
-		
-	// draw column two bet one value trim
+		return EXIT_FAILURE;
+	}
+
+	// render columnTwoBetOneValueTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnTwoBetOneValueTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table column two bet one text trim.\n");
-	
-	// draw column two bet one value
+		return EXIT_FAILURE;
+	}
+
+	// render columnTwoBetOneValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnTwoBetOneValue))
+	{
 		fprintf(stderr, "Error drawing video poker status table column two bet one text box.\n");
+		return EXIT_FAILURE;
+	}
 
 	// render columnThreeBetTwoValueTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnThreeBetTwoValueTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table column three bet two text trim.\n");
+		return EXIT_FAILURE;
+	}
 
 	// render columnThreeBetTwoValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnThreeBetTwoValue))
+	{
 		fprintf(stderr, "Error drawing video poker status table column three bet two text box.\n");
+		return EXIT_FAILURE;
+	}
 
 	// render columnFourBetThreeValueTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnFourBetThreeValueTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table column four bet three text trim.\n");
+		return EXIT_FAILURE;
+	}
 
 	// render columnFourBetThreeValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnFourBetThreeValue))
+	{
 		fprintf(stderr, "Error drawing video poker status table column four bet three text box.\n");
+		return EXIT_FAILURE;
+	}
 
 	// render columnFiveBetFourValueTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnFiveBetFourValueTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table column five bet four text trim.\n");
+		return EXIT_FAILURE;
+	}
 
 	// render columnFiveBetFourValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnFiveBetFourValue))
+	{
 		fprintf(stderr, "Error drawing video poker status table column five bet four text box.\n");
-
+		return EXIT_FAILURE;
+	}
 	// render columnSixBetFiveValueTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnSixBetFiveValueTrim))
+	{
 		fprintf(stderr, "Error drawing video poker status table column six bet five text trim.\n");
+		return EXIT_FAILURE;
+	}
 
 	// render columnSixBetFiveValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &columnSixBetFiveValue))
+	{
 		fprintf(stderr, "Error drawing video poker status table column six bet five text box.\n");
+		return EXIT_FAILURE;
+	}
 
 	// set back to blue color for gameplay.  Unsure if needed.  Good practice
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 
-	return false;
+	// everything was rendered correctly
+	return EXIT_SUCCESS;
 }

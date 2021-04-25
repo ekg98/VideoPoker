@@ -14,15 +14,12 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	// The boarders of the table on the top of the screen are controlled by the spacing of the buttons on the lower control panel.  This gives illusion of squaring off the game.
 
 	// variable declarations
-	SDL_Rect mainOutsideBoarderTrim;
-	SDL_Rect mainInsideBoarderTrim;
+	SDL_Rect mainOutsideBoarderTrim, mainInsideBoarderTrim;
 	SDL_Rect columnOneHandDescriptionTextTrim, columnTwoBetOneValueTrim, columnThreeBetTwoValueTrim, columnFourBetThreeValueTrim, columnFiveBetFourValueTrim, columnSixBetFiveValueTrim;
 	SDL_Rect columnOneHandDescriptionText, columnTwoBetOneValue, columnThreeBetTwoValue, columnFourBetThreeValue, columnFiveBetFourValue, columnSixBetFiveValue;
 
 	// black boarder trim spacing.  This value removes (x) pixels from each side of the box.  Even numbers only.
 	int blackBoarderSpacing = 6;
-
-
 
 
 	// calculations for video poker status table
@@ -31,77 +28,41 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	int mainBoarderHeight = intWindowHeight / 2.5;
 
 
-
 	// calculations for large outside black boarder trim 
 	mainOutsideBoarderTrim.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;
 	mainOutsideBoarderTrim.y = 10;
 	mainOutsideBoarderTrim.w = (gamePokerControlButtonImageData->pokerControlButtonDest[5].x - gamePokerControlButtonImageData->pokerControlButtonDest[0].x) + gamePokerControlButtonImageData->pokerControlButtonDest[0].w;
 	mainOutsideBoarderTrim.h = mainBoarderHeight;
 
-
-
 	// calculations for large inside yellow boarder trim
-	int insideLargeYellowBoarderWidth = mainOutsideBoarderTrim.w - blackBoarderSpacing;
-	int insideLargeYellowBoarderHeight = mainOutsideBoarderTrim.h - blackBoarderSpacing;
-	int insideLargeYellowBoarderX = ((mainOutsideBoarderTrim.w - insideLargeYellowBoarderWidth) / 2) + mainOutsideBoarderTrim.x;
-	int insideLargeYellowBoarderY = ((mainOutsideBoarderTrim.h - insideLargeYellowBoarderHeight) / 2) + mainOutsideBoarderTrim.y;
+	mainInsideBoarderTrim.h = mainOutsideBoarderTrim.h - blackBoarderSpacing;
+	mainInsideBoarderTrim.w = mainOutsideBoarderTrim.w - blackBoarderSpacing;
+	mainInsideBoarderTrim.x = ((mainOutsideBoarderTrim.w - mainInsideBoarderTrim.w) / 2) + mainOutsideBoarderTrim.x;
+	mainInsideBoarderTrim.y = ((mainOutsideBoarderTrim.h - mainInsideBoarderTrim.h) / 2) + mainOutsideBoarderTrim.y;
+		
+	// columnOneHandDescriptionTextTrim
+	columnOneHandDescriptionTextTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
+	columnOneHandDescriptionTextTrim.w = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 3);
+	columnOneHandDescriptionTextTrim.x = mainInsideBoarderTrim.x + (blackBoarderSpacing / 2);
+	columnOneHandDescriptionTextTrim.y = ((mainInsideBoarderTrim.h - columnOneHandDescriptionTextTrim.h) / 2) + mainInsideBoarderTrim.y;
+	
+	// columnOneHandDescriptionText
+	columnOneHandDescriptionText.x = columnOneHandDescriptionTextTrim.x + (blackBoarderSpacing / 2);
+	columnOneHandDescriptionText.y = columnOneHandDescriptionTextTrim.y + (blackBoarderSpacing / 2);
+	columnOneHandDescriptionText.w = columnOneHandDescriptionTextTrim.w - blackBoarderSpacing;
+	columnOneHandDescriptionText.h = columnOneHandDescriptionTextTrim.h - blackBoarderSpacing;
 
-	// large inside yellow boarder trim assignments
-	mainInsideBoarderTrim.x = insideLargeYellowBoarderX;
-	mainInsideBoarderTrim.y = insideLargeYellowBoarderY;
-	mainInsideBoarderTrim.w = insideLargeYellowBoarderWidth;
-	mainInsideBoarderTrim.h = insideLargeYellowBoarderHeight;
-
-
-
-	// calculations for card text column black trim
-	int columnOneHandDescriptionTextTrimWidth = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 3);
-	int columnOneHandDescriptionTextTrimHeight = mainInsideBoarderTrim.h - blackBoarderSpacing;
-	int columnOneHandDescriptionTextTrimX = mainInsideBoarderTrim.x + (blackBoarderSpacing / 2);
-	int columnOneHandDescriptionTextTrimY = ((mainInsideBoarderTrim.h - columnOneHandDescriptionTextTrimHeight) / 2) + mainInsideBoarderTrim.y;
-
-	// columnOneHandDescriptionTextTrim assignments
-	columnOneHandDescriptionTextTrim.x = columnOneHandDescriptionTextTrimX;
-	columnOneHandDescriptionTextTrim.y = columnOneHandDescriptionTextTrimY;
-	columnOneHandDescriptionTextTrim.w = columnOneHandDescriptionTextTrimWidth;
-	columnOneHandDescriptionTextTrim.h = columnOneHandDescriptionTextTrimHeight;
-
-	// calculations for card text column blue box
-
-	int columnOneHandDescriptionTextWidth = columnOneHandDescriptionTextTrim.w - blackBoarderSpacing;
-	int columnOneHandDescriptionTextHeight = columnOneHandDescriptionTextTrim.h - blackBoarderSpacing;
-	int columnOneHandDescriptionTextX = columnOneHandDescriptionTextTrim.x + (blackBoarderSpacing / 2);
-	int columnOneHandDescriptionTextY = columnOneHandDescriptionTextTrim.y + (blackBoarderSpacing / 2);
-
-	// columnOneHandDescriptionText assignments
-	columnOneHandDescriptionText.x = columnOneHandDescriptionTextX;
-	columnOneHandDescriptionText.y = columnOneHandDescriptionTextY;
-	columnOneHandDescriptionText.w = columnOneHandDescriptionTextWidth;
-	columnOneHandDescriptionText.h = columnOneHandDescriptionTextHeight;
-
-	// calculations for column two bet one value trim
-	int columnTwoBetOneValueTrimWidth = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 9);
-	int columnTwoBetOneValueTrimHeight = mainInsideBoarderTrim.h - blackBoarderSpacing;
-	int columnTwoBetOneValueTrimX = (columnOneHandDescriptionTextTrim.x + columnOneHandDescriptionTextTrim.w) + (blackBoarderSpacing / 2);
-	int columnTwoBetOneValueTrimY = ((mainInsideBoarderTrim.h - columnTwoBetOneValueTrimHeight) / 2) + mainInsideBoarderTrim.y;
-
-	//columnTwoBetOneValueTrim assignments
-	columnTwoBetOneValueTrim.x = columnTwoBetOneValueTrimX;
-	columnTwoBetOneValueTrim.y = columnTwoBetOneValueTrimY;
-	columnTwoBetOneValueTrim.w = columnTwoBetOneValueTrimWidth;
-	columnTwoBetOneValueTrim.h = columnTwoBetOneValueTrimHeight;
-
+	// columnTwoBetOneValueTrim
+	columnTwoBetOneValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
+	columnTwoBetOneValueTrim.w = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 9);
+	columnTwoBetOneValueTrim.x = (columnOneHandDescriptionTextTrim.x + columnOneHandDescriptionTextTrim.w) + (blackBoarderSpacing / 2);
+	columnTwoBetOneValueTrim.y = ((mainInsideBoarderTrim.h - columnTwoBetOneValueTrim.h) / 2) + mainInsideBoarderTrim.y;
+		
 	// columnTwoBetOneValue
-	int columnTwoBetOneValueWidth = columnTwoBetOneValueTrim.w - blackBoarderSpacing;
-	int columnTwoBetOneValueHeight = columnTwoBetOneValueTrim.h - blackBoarderSpacing;
-	int columnTwoBetOneValueX = columnTwoBetOneValueTrim.x + (blackBoarderSpacing / 2);
-	int columnTwoBetOneValueY = columnTwoBetOneValueTrim.y + (blackBoarderSpacing / 2);
-
-	//columnTwoBetOneValue assignments
-	columnTwoBetOneValue.x = columnTwoBetOneValueX;
-	columnTwoBetOneValue.y = columnTwoBetOneValueY;
-	columnTwoBetOneValue.w = columnTwoBetOneValueWidth;
-	columnTwoBetOneValue.h = columnTwoBetOneValueHeight;
+	columnTwoBetOneValue.w = columnTwoBetOneValueTrim.w - blackBoarderSpacing;
+	columnTwoBetOneValue.h = columnTwoBetOneValueTrim.h - blackBoarderSpacing;
+	columnTwoBetOneValue.x = columnTwoBetOneValueTrim.x + (blackBoarderSpacing / 2);
+	columnTwoBetOneValue.y = columnTwoBetOneValueTrim.y + (blackBoarderSpacing / 2);
 
 	// columnThreeBetTwoTrim
 	columnThreeBetTwoValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;

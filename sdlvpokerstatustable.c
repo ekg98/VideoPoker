@@ -7,15 +7,6 @@
 extern int intWindowWidth;
 extern int intWindowHeight;
 
-bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
-{
-	// perform calculations and apply them to the renderer
-	if (vPokerStatusTableBoxCalculations(mainRenderer, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
-		return EXIT_FAILURE;
-
-	return EXIT_SUCCESS;
-}
-
 bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	// The boarders of the table on the top of the screen are controlled by the spacing of the buttons on the lower control panel.  This gives illusion of squaring off the game.
@@ -238,5 +229,33 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, enum gametype 
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 
 	// everything was rendered correctly
+	return EXIT_SUCCESS;
+}
+
+bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, enum gametype gameType)
+{
+	switch (gameType)
+	{
+	case JACKS_OR_BETTER:
+		break;
+	default:
+		fprintf(stderr, "Error: Game type not found.\n");
+		return EXIT_FAILURE;
+		break;
+	}
+
+	return EXIT_SUCCESS;
+}
+
+bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+{
+	// perform calculations and apply them to the renderer.  Necessary for all poker games.  gameType not needed.
+	if (vPokerStatusTableBoxCalculations(mainRenderer, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
+		return EXIT_FAILURE;
+
+	// perform calculations and apply them to the renderer for the text in the status table.
+	if (vPokerStatusTableTextCalculations(mainRenderer, gameType) == EXIT_FAILURE)
+		return EXIT_FAILURE;
+
 	return EXIT_SUCCESS;
 }

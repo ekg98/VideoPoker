@@ -14,7 +14,10 @@ void JacksOrBetterRender(struct card *hand, struct fonts *gameFonts, struct five
 {
 	// vPokerStatusTableRender:  Draws the status table on the top of the screen.
 	if (vPokerStatusTableRender(mainWindowRenderer, JACKS_OR_BETTER, gamePokerControlButtonImageData))
-		fprintf(stderr,"Couldn't render Status table properly.\n");
+	{
+		fprintf(stderr, "Couldn't render Status table properly.\n");
+		exit(EXIT_FAILURE);
+	}
 
 	// draw cards on renderer
 	for (int intCounter = 0; intCounter < 5; intCounter++)

@@ -1,15 +1,22 @@
 // sdlvpokerstatustable.c:  Source file for graphical status table in video poker
 
-#include <stdio.h>
-#include <stdlib.h>
 #include "common.h"
 #include "sdlbuttons.h"
+#include "sdlvpokerstatustable.h"
 
 extern int intWindowWidth;
 extern int intWindowHeight;
 
-// vPokerStatusTableRender:  Renders the video poker status table on the screen for the gametype desired
 bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+{
+	// perform calculations and apply them to the renderer
+	if (vPokerStatusTableBoxCalculations(mainRenderer, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
+		return EXIT_FAILURE;
+
+	return EXIT_SUCCESS;
+}
+
+bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	// The boarders of the table on the top of the screen are controlled by the spacing of the buttons on the lower control panel.  This gives illusion of squaring off the game.
 
@@ -19,13 +26,13 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	SDL_Rect columnOneHandDescriptionText, columnTwoBetOneValue, columnThreeBetTwoValue, columnFourBetThreeValue, columnFiveBetFourValue, columnSixBetFiveValue;
 
 	// black boarder trim spacing.  This value removes (x) pixels from each side of the box.  Even numbers only.
-	int blackBoarderSpacing = 6;
+	const int blackBoarderSpacing = 6;
 
 
 	// calculations for video poker status table
 
 	// sets position of video poker status table in the vertical
-	int mainBoarderHeight = intWindowHeight / 2.5;
+	const int mainBoarderHeight = intWindowHeight / 2.5;
 
 
 	// calculations for large outside black boarder trim 
@@ -39,13 +46,13 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	mainInsideBoarderTrim.w = mainOutsideBoarderTrim.w - blackBoarderSpacing;
 	mainInsideBoarderTrim.x = ((mainOutsideBoarderTrim.w - mainInsideBoarderTrim.w) / 2) + mainOutsideBoarderTrim.x;
 	mainInsideBoarderTrim.y = ((mainOutsideBoarderTrim.h - mainInsideBoarderTrim.h) / 2) + mainOutsideBoarderTrim.y;
-		
+
 	// columnOneHandDescriptionTextTrim
 	columnOneHandDescriptionTextTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
 	columnOneHandDescriptionTextTrim.w = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 3);
 	columnOneHandDescriptionTextTrim.x = mainInsideBoarderTrim.x + (blackBoarderSpacing / 2);
 	columnOneHandDescriptionTextTrim.y = ((mainInsideBoarderTrim.h - columnOneHandDescriptionTextTrim.h) / 2) + mainInsideBoarderTrim.y;
-	
+
 	// columnOneHandDescriptionText
 	columnOneHandDescriptionText.x = columnOneHandDescriptionTextTrim.x + (blackBoarderSpacing / 2);
 	columnOneHandDescriptionText.y = columnOneHandDescriptionTextTrim.y + (blackBoarderSpacing / 2);
@@ -57,7 +64,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 	columnTwoBetOneValueTrim.w = ((mainInsideBoarderTrim.w - blackBoarderSpacing) / 9);
 	columnTwoBetOneValueTrim.x = (columnOneHandDescriptionTextTrim.x + columnOneHandDescriptionTextTrim.w) + (blackBoarderSpacing / 2);
 	columnTwoBetOneValueTrim.y = ((mainInsideBoarderTrim.h - columnTwoBetOneValueTrim.h) / 2) + mainInsideBoarderTrim.y;
-		
+
 	// columnTwoBetOneValue
 	columnTwoBetOneValue.w = columnTwoBetOneValueTrim.w - blackBoarderSpacing;
 	columnTwoBetOneValue.h = columnTwoBetOneValueTrim.h - blackBoarderSpacing;

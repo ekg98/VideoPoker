@@ -9,13 +9,12 @@ extern int intWindowHeight;
 
 bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
-	// The boarders of the table on the top of the screen are controlled by the spacing of the buttons on the lower control panel.  This gives illusion of squaring off the game.
+	// The table on the top of the screen is controlled by the spacing of the buttons on the lower control panel.  This gives illusion of squaring off the game.
 
 	// variable declarations
-	SDL_Rect mainOutsideBoarderTrim, mainInsideBoarderTrim;
+	SDL_Rect mainInsideBoarderTrim;
 	SDL_Rect columnOneHandDescriptionTextTrim, columnTwoBetOneValueTrim, columnThreeBetTwoValueTrim, columnFourBetThreeValueTrim, columnFiveBetFourValueTrim, columnSixBetFiveValueTrim;
-	SDL_Rect columnOneHandDescriptionText, columnTwoBetOneValue, columnThreeBetTwoValue, columnFourBetThreeValue, columnFiveBetFourValue, columnSixBetFiveValue;
-
+	
 	// black boarder trim spacing.  This value removes (x) pixels from each side of the box.  Even numbers only.
 	const int blackBoarderSpacing = 6;
 
@@ -26,17 +25,17 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	const int mainBoarderHeight = intWindowHeight / 2.5;
 
 
-	// calculations for large outside black boarder trim 
-	mainOutsideBoarderTrim.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;
-	mainOutsideBoarderTrim.y = 10;
-	mainOutsideBoarderTrim.w = (gamePokerControlButtonImageData->pokerControlButtonDest[5].x - gamePokerControlButtonImageData->pokerControlButtonDest[0].x) + gamePokerControlButtonImageData->pokerControlButtonDest[0].w;
-	mainOutsideBoarderTrim.h = mainBoarderHeight;
+	// largeBlackBox
+	tableCoordinates->largeBlackBox.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;
+	tableCoordinates->largeBlackBox.y = 10;
+	tableCoordinates->largeBlackBox.w = (gamePokerControlButtonImageData->pokerControlButtonDest[5].x - gamePokerControlButtonImageData->pokerControlButtonDest[0].x) + gamePokerControlButtonImageData->pokerControlButtonDest[0].w;
+	tableCoordinates->largeBlackBox.h = mainBoarderHeight;
 
 	// calculations for large inside yellow boarder trim
-	mainInsideBoarderTrim.h = mainOutsideBoarderTrim.h - blackBoarderSpacing;
-	mainInsideBoarderTrim.w = mainOutsideBoarderTrim.w - blackBoarderSpacing;
-	mainInsideBoarderTrim.x = ((mainOutsideBoarderTrim.w - mainInsideBoarderTrim.w) / 2) + mainOutsideBoarderTrim.x;
-	mainInsideBoarderTrim.y = ((mainOutsideBoarderTrim.h - mainInsideBoarderTrim.h) / 2) + mainOutsideBoarderTrim.y;
+	mainInsideBoarderTrim.h = tableCoordinates->largeBlackBox.h - blackBoarderSpacing;
+	mainInsideBoarderTrim.w = tableCoordinates->largeBlackBox.w - blackBoarderSpacing;
+	mainInsideBoarderTrim.x = ((tableCoordinates->largeBlackBox.w - mainInsideBoarderTrim.w) / 2) + tableCoordinates->largeBlackBox.x;
+	mainInsideBoarderTrim.y = ((tableCoordinates->largeBlackBox.h - mainInsideBoarderTrim.h) / 2) + tableCoordinates->largeBlackBox.y;
 
 	// columnOneHandDescriptionTextTrim
 	columnOneHandDescriptionTextTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
@@ -44,11 +43,11 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	columnOneHandDescriptionTextTrim.x = mainInsideBoarderTrim.x + (blackBoarderSpacing / 2);
 	columnOneHandDescriptionTextTrim.y = ((mainInsideBoarderTrim.h - columnOneHandDescriptionTextTrim.h) / 2) + mainInsideBoarderTrim.y;
 
-	// columnOneHandDescriptionText
-	columnOneHandDescriptionText.x = columnOneHandDescriptionTextTrim.x + (blackBoarderSpacing / 2);
-	columnOneHandDescriptionText.y = columnOneHandDescriptionTextTrim.y + (blackBoarderSpacing / 2);
-	columnOneHandDescriptionText.w = columnOneHandDescriptionTextTrim.w - blackBoarderSpacing;
-	columnOneHandDescriptionText.h = columnOneHandDescriptionTextTrim.h - blackBoarderSpacing;
+	// blueBox #0
+	tableCoordinates->blueBox[0].x = columnOneHandDescriptionTextTrim.x + (blackBoarderSpacing / 2);
+	tableCoordinates->blueBox[0].y = columnOneHandDescriptionTextTrim.y + (blackBoarderSpacing / 2);
+	tableCoordinates->blueBox[0].w = columnOneHandDescriptionTextTrim.w - blackBoarderSpacing;
+	tableCoordinates->blueBox[0].h = columnOneHandDescriptionTextTrim.h - blackBoarderSpacing;
 
 	// columnTwoBetOneValueTrim
 	columnTwoBetOneValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
@@ -56,11 +55,11 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	columnTwoBetOneValueTrim.x = (columnOneHandDescriptionTextTrim.x + columnOneHandDescriptionTextTrim.w) + (blackBoarderSpacing / 2);
 	columnTwoBetOneValueTrim.y = ((mainInsideBoarderTrim.h - columnTwoBetOneValueTrim.h) / 2) + mainInsideBoarderTrim.y;
 
-	// columnTwoBetOneValue
-	columnTwoBetOneValue.w = columnTwoBetOneValueTrim.w - blackBoarderSpacing;
-	columnTwoBetOneValue.h = columnTwoBetOneValueTrim.h - blackBoarderSpacing;
-	columnTwoBetOneValue.x = columnTwoBetOneValueTrim.x + (blackBoarderSpacing / 2);
-	columnTwoBetOneValue.y = columnTwoBetOneValueTrim.y + (blackBoarderSpacing / 2);
+	// blueBox #1
+	tableCoordinates->blueBox[1].h = columnTwoBetOneValueTrim.h - blackBoarderSpacing;
+	tableCoordinates->blueBox[1].w = columnTwoBetOneValueTrim.w - blackBoarderSpacing;
+	tableCoordinates->blueBox[1].x = columnTwoBetOneValueTrim.x + (blackBoarderSpacing / 2);
+	tableCoordinates->blueBox[1].y = columnTwoBetOneValueTrim.y + (blackBoarderSpacing / 2);
 
 	// columnThreeBetTwoTrim
 	columnThreeBetTwoValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
@@ -68,11 +67,11 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	columnThreeBetTwoValueTrim.x = (columnTwoBetOneValueTrim.x + columnTwoBetOneValueTrim.w) + (blackBoarderSpacing / 2);
 	columnThreeBetTwoValueTrim.y = (mainInsideBoarderTrim.h - columnThreeBetTwoValueTrim.h) / 2 + mainInsideBoarderTrim.y;
 
-	// columnThreeBetTwoValue
-	columnThreeBetTwoValue.h = columnThreeBetTwoValueTrim.h - blackBoarderSpacing;
-	columnThreeBetTwoValue.w = columnThreeBetTwoValueTrim.w - blackBoarderSpacing;
-	columnThreeBetTwoValue.x = columnThreeBetTwoValueTrim.x + (blackBoarderSpacing / 2);
-	columnThreeBetTwoValue.y = columnThreeBetTwoValueTrim.y + (blackBoarderSpacing / 2);
+	// blueBox #2
+	tableCoordinates->blueBox[2].h = columnThreeBetTwoValueTrim.h - blackBoarderSpacing;
+	tableCoordinates->blueBox[2].w = columnThreeBetTwoValueTrim.w - blackBoarderSpacing;
+	tableCoordinates->blueBox[2].x = columnThreeBetTwoValueTrim.x + (blackBoarderSpacing / 2);
+	tableCoordinates->blueBox[2].y = columnThreeBetTwoValueTrim.y + (blackBoarderSpacing / 2);
 
 	// columnFourBetThreeTrim
 	columnFourBetThreeValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
@@ -80,11 +79,11 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	columnFourBetThreeValueTrim.x = (columnThreeBetTwoValueTrim.x + columnThreeBetTwoValueTrim.w) + (blackBoarderSpacing / 2);
 	columnFourBetThreeValueTrim.y = (mainInsideBoarderTrim.h - columnFourBetThreeValueTrim.h) / 2 + mainInsideBoarderTrim.y;
 
-	// columnFourBetThreeValue
-	columnFourBetThreeValue.h = columnFourBetThreeValueTrim.h - blackBoarderSpacing;
-	columnFourBetThreeValue.w = columnFourBetThreeValueTrim.w - blackBoarderSpacing;
-	columnFourBetThreeValue.x = columnFourBetThreeValueTrim.x + (blackBoarderSpacing / 2);
-	columnFourBetThreeValue.y = columnFourBetThreeValueTrim.y + (blackBoarderSpacing / 2);
+	// blueBox #3
+	tableCoordinates->blueBox[3].h = columnFourBetThreeValueTrim.h - blackBoarderSpacing;
+	tableCoordinates->blueBox[3].w = columnFourBetThreeValueTrim.w - blackBoarderSpacing;
+	tableCoordinates->blueBox[3].x = columnFourBetThreeValueTrim.x + (blackBoarderSpacing / 2);
+	tableCoordinates->blueBox[3].y = columnFourBetThreeValueTrim.y + (blackBoarderSpacing / 2);
 
 	// columnFiveBetFourTrim
 	columnFiveBetFourValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
@@ -92,11 +91,11 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	columnFiveBetFourValueTrim.x = (columnFourBetThreeValueTrim.x + columnFourBetThreeValueTrim.w) + (blackBoarderSpacing / 2);
 	columnFiveBetFourValueTrim.y = (mainInsideBoarderTrim.h - columnFiveBetFourValueTrim.h) / 2 + mainInsideBoarderTrim.y;
 
-	// columnFiveBetFourValue
-	columnFiveBetFourValue.h = columnFiveBetFourValueTrim.h - blackBoarderSpacing;
-	columnFiveBetFourValue.w = columnFiveBetFourValueTrim.w - blackBoarderSpacing;
-	columnFiveBetFourValue.x = columnFiveBetFourValueTrim.x + (blackBoarderSpacing / 2);
-	columnFiveBetFourValue.y = columnFiveBetFourValueTrim.y + (blackBoarderSpacing / 2);
+	// blueBox #4
+	tableCoordinates->blueBox[4].h = columnFiveBetFourValueTrim.h - blackBoarderSpacing;
+	tableCoordinates->blueBox[4].w = columnFiveBetFourValueTrim.w - blackBoarderSpacing;
+	tableCoordinates->blueBox[4].x = columnFiveBetFourValueTrim.x + (blackBoarderSpacing / 2);
+	tableCoordinates->blueBox[4].y = columnFiveBetFourValueTrim.y + (blackBoarderSpacing / 2);
 
 	// columnSixBetFiveTrim
 	columnSixBetFiveValueTrim.h = mainInsideBoarderTrim.h - blackBoarderSpacing;
@@ -104,7 +103,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	columnSixBetFiveValueTrim.x = (columnFiveBetFourValueTrim.x + columnFiveBetFourValueTrim.w) + (blackBoarderSpacing / 2);
 	columnSixBetFiveValueTrim.y = (mainInsideBoarderTrim.h - columnSixBetFiveValueTrim.h) / 2 + mainInsideBoarderTrim.y;
 
-	// columnSixBetFiveValue
+	// blueBox #5
 	tableCoordinates->blueBox[5].h = columnSixBetFiveValueTrim.h - blackBoarderSpacing;
 	tableCoordinates->blueBox[5].w = columnSixBetFiveValueTrim.w - blackBoarderSpacing;
 	tableCoordinates->blueBox[5].x = columnSixBetFiveValueTrim.x + (blackBoarderSpacing / 2);
@@ -115,9 +114,9 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 
 	// renderMainOutsideBoarderTrim
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 0, 0);
-	if (SDL_RenderFillRect(mainRenderer, &mainOutsideBoarderTrim))
+	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->largeBlackBox))
 	{
-		fprintf(stderr, "Error drawing video poker status table primary outside black boarder trim.\n");
+		fprintf(stderr, "Error drawing video poker status table primary outside black box.\n");
 		return EXIT_FAILURE;
 	}
 
@@ -139,9 +138,9 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 
 	// render columnOneHandDescriptionText
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-	if (SDL_RenderFillRect(mainRenderer, &columnOneHandDescriptionText))
+	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[0]))
 	{
-		fprintf(stderr, "Error drawing video poker status table column one hand description text box.\n");
+		fprintf(stderr, "Error drawing video poker status table #0 blue box.\n");
 		return EXIT_FAILURE;
 	}
 
@@ -155,9 +154,9 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 
 	// render columnTwoBetOneValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-	if (SDL_RenderFillRect(mainRenderer, &columnTwoBetOneValue))
+	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[1]))
 	{
-		fprintf(stderr, "Error drawing video poker status table column two bet one text box.\n");
+		fprintf(stderr, "Error drawing video poker status table #1 blue box.\n");
 		return EXIT_FAILURE;
 	}
 
@@ -171,9 +170,9 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 
 	// render columnThreeBetTwoValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-	if (SDL_RenderFillRect(mainRenderer, &columnThreeBetTwoValue))
+	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[2]))
 	{
-		fprintf(stderr, "Error drawing video poker status table column three bet two text box.\n");
+		fprintf(stderr, "Error drawing video poker status table #2 blue box.\n");
 		return EXIT_FAILURE;
 	}
 
@@ -187,9 +186,9 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 
 	// render columnFourBetThreeValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-	if (SDL_RenderFillRect(mainRenderer, &columnFourBetThreeValue))
+	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[3]))
 	{
-		fprintf(stderr, "Error drawing video poker status table column four bet three text box.\n");
+		fprintf(stderr, "Error drawing video poker status table #3 blue box.\n");
 		return EXIT_FAILURE;
 	}
 
@@ -203,9 +202,9 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 
 	// render columnFiveBetFourValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-	if (SDL_RenderFillRect(mainRenderer, &columnFiveBetFourValue))
+	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[4]))
 	{
-		fprintf(stderr, "Error drawing video poker status table column five bet four text box.\n");
+		fprintf(stderr, "Error drawing video poker status table #4 blue box.\n");
 		return EXIT_FAILURE;
 	}
 	// render columnSixBetFiveValueTrim
@@ -220,7 +219,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[5]))
 	{
-		fprintf(stderr, "Error drawing video poker status table column six bet five text box.\n");
+		fprintf(stderr, "Error drawing video poker status table #5 blue box.\n");
 		return EXIT_FAILURE;
 	}
 

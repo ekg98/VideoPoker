@@ -7,7 +7,7 @@
 extern int intWindowWidth;
 extern int intWindowHeight;
 
-bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	// The boarders of the table on the top of the screen are controlled by the spacing of the buttons on the lower control panel.  This gives illusion of squaring off the game.
 
@@ -105,12 +105,11 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, enum gametype 
 	columnSixBetFiveValueTrim.y = (mainInsideBoarderTrim.h - columnSixBetFiveValueTrim.h) / 2 + mainInsideBoarderTrim.y;
 
 	// columnSixBetFiveValue
-	columnSixBetFiveValue.h = columnSixBetFiveValueTrim.h - blackBoarderSpacing;
-	columnSixBetFiveValue.w = columnSixBetFiveValueTrim.w - blackBoarderSpacing;
-	columnSixBetFiveValue.x = columnSixBetFiveValueTrim.x + (blackBoarderSpacing / 2);
-	columnSixBetFiveValue.y = columnSixBetFiveValueTrim.y + (blackBoarderSpacing / 2);
-
-
+	tableCoordinates->blueBox[5].h = columnSixBetFiveValueTrim.h - blackBoarderSpacing;
+	tableCoordinates->blueBox[5].w = columnSixBetFiveValueTrim.w - blackBoarderSpacing;
+	tableCoordinates->blueBox[5].x = columnSixBetFiveValueTrim.x + (blackBoarderSpacing / 2);
+	tableCoordinates->blueBox[5].y = columnSixBetFiveValueTrim.y + (blackBoarderSpacing / 2);
+	
 
 	// render the status table
 
@@ -219,7 +218,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, enum gametype 
 
 	// render columnSixBetFiveValue
 	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
-	if (SDL_RenderFillRect(mainRenderer, &columnSixBetFiveValue))
+	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[5]))
 	{
 		fprintf(stderr, "Error drawing video poker status table column six bet five text box.\n");
 		return EXIT_FAILURE;
@@ -232,8 +231,8 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, enum gametype 
 	return EXIT_SUCCESS;
 }
 
-bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, enum gametype gameType)
-{
+bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType)
+{ 
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:
@@ -249,12 +248,14 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, enum gametype
 
 bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
+	struct vPokerStatusTableCoordinates tableCoordinates;
+
 	// perform calculations and apply them to the renderer.  Necessary for all poker games.  gameType not needed.
-	if (vPokerStatusTableBoxCalculations(mainRenderer, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
+	if (vPokerStatusTableBoxCalculations(mainRenderer, &tableCoordinates, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
 		return EXIT_FAILURE;
 
 	// perform calculations and apply them to the renderer for the text in the status table.
-	if (vPokerStatusTableTextCalculations(mainRenderer, gameType) == EXIT_FAILURE)
+	if (vPokerStatusTableTextCalculations(mainRenderer, &tableCoordinates, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;

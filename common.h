@@ -17,8 +17,8 @@
 #include <math.h>
 
 // Window resolutions and card resolutions
-#define DEFAULT_WINDOW_WIDTH 600 // 1920
-#define DEFAULT_WINDOW_HEIGHT 800 // was 1200
+#define DEFAULT_WINDOW_WIDTH 1920 // 1920
+#define DEFAULT_WINDOW_HEIGHT 1200 // was 1200
 #define CARD_WIDTH  350
 #define CARD_HEIGHT 500
 #define MAX_FRAMERATE	60

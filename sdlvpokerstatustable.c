@@ -7,7 +7,7 @@
 extern int intWindowWidth;
 extern int intWindowHeight;
 
-bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	// The table on the top of the screen is controlled by the spacing of the buttons on the lower control panel.  This gives illusion of squaring off the game.
 			
@@ -149,7 +149,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	}
 
 	// render blueBox #1
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	setBoxColor(mainRenderer, commonGameStats, 1);
 	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[1]))
 	{
 		fprintf(stderr, "Error drawing video poker status table #1 blue box.\n");
@@ -165,7 +165,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	}
 
 	// render blueBox #2
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	setBoxColor(mainRenderer, commonGameStats, 2);
 	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[2]))
 	{
 		fprintf(stderr, "Error drawing video poker status table #2 blue box.\n");
@@ -181,7 +181,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	}
 
 	// render blueBox #3
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	setBoxColor(mainRenderer, commonGameStats, 3);
 	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[3]))
 	{
 		fprintf(stderr, "Error drawing video poker status table #3 blue box.\n");
@@ -197,7 +197,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	}
 
 	// render blueBox #4
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	setBoxColor(mainRenderer, commonGameStats, 4);
 	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[4]))
 	{
 		fprintf(stderr, "Error drawing video poker status table #4 blue box.\n");
@@ -212,7 +212,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct vPokerS
 	}
 
 	// render blueBox #5
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	setBoxColor(mainRenderer, commonGameStats, 5);
 	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[5]))
 	{
 		fprintf(stderr, "Error drawing video poker status table #5 blue box.\n");
@@ -241,12 +241,12 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 	return EXIT_SUCCESS;
 }
 
-bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	struct vPokerStatusTableCoordinates tableCoordinates;
-
+		
 	// perform calculations and apply them to the renderer.  Necessary for all poker games.  gameType not needed.
-	if (vPokerStatusTableBoxCalculations(mainRenderer, &tableCoordinates, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
+	if (vPokerStatusTableBoxCalculations(mainRenderer, commonGameStats, &tableCoordinates, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
 		return EXIT_FAILURE;
 
 	// perform calculations and apply them to the renderer for the text in the status table.
@@ -254,4 +254,14 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, enum gametype gameType,
 		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;
+}
+
+void setBoxColor(SDL_Renderer *mainRenderer ,struct commonGameStats *commonGameStats, int intBox)
+{
+	if (commonGameStats->currentBetLevel == intBox)
+		SDL_SetRenderDrawColor(mainRenderer, 255, 0, 0, 0);
+	else
+		SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+
+	return;
 }

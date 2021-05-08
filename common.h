@@ -79,6 +79,9 @@ struct commonGameStats {
 	// current currency value
 	float currentGameCash;
 
+	// current bet level
+	int currentBetLevel;
+
 	// mouse location in or out of button
 	enum buttonId inButton;
 

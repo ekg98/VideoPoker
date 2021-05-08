@@ -188,6 +188,7 @@ int main(int argc, char *argv[])
 			commonGameStats.currentGameCash = 0.0;
 			commonGameStats.currentGame = JACKS_OR_BETTER;
 			commonGameStats.currentDenom = QUARTER;
+			commonGameStats.currentBetLevel = 1;
 
 			srand(time(NULL));
 			inithand(hand, 5);
@@ -209,7 +210,10 @@ int main(int argc, char *argv[])
 
 				// poll loop for events, mouse ,or keyboard input.  Loop clears all events before continuing
 				handState = getEvents(&commonGameStats, &event, hand, &intBetLevel, &gamePokerControlButtonImageData, &deckImageData);
-							
+				
+				// temporary
+				commonGameStats.currentBetLevel = intBetLevel;
+
 				// frame rate limiting for display functions.  Used instead of vsync limiting
 				if (runTicks > tickInterval)
 				{
@@ -227,7 +231,7 @@ int main(int argc, char *argv[])
 						case MAIN_MENU:
 							break;
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, commonGameStats.currentGameCash, intBetLevel, commonGameStats.currentDenom);
+							JacksOrBetterRender(&commonGameStats ,hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, commonGameStats.currentGameCash, intBetLevel, commonGameStats.currentDenom);
 							break;
 						case DUCES_WILD:
 							break;

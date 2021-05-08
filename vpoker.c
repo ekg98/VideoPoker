@@ -189,6 +189,9 @@ int main(int argc, char *argv[])
 			commonGameStats.currentGame = JACKS_OR_BETTER;
 			commonGameStats.currentDenom = QUARTER;
 			commonGameStats.currentBetLevel = 1;
+			commonGameStats.windowWidth = intWindowWidth;
+			commonGameStats.windowHeight = intWindowHeight;
+
 
 			srand(time(NULL));
 			inithand(hand, 5);

@@ -16,16 +16,12 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 
 
 	// calculations for video poker status table
-
-	// sets position of video poker status table in the vertical
-	const int mainBorderHeight = intWindowHeight / 2.5;
-
-
-	// largeBlackBox
+		
+	// largeBlackBox - height of black box is windowHeight / 2.5.  This makes largeBlackBox 43.2% of the screen height. Location from top of screen is set at .5% from top.
 	tableCoordinates->largeBlackBox.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;
-	tableCoordinates->largeBlackBox.y = 10;
+	tableCoordinates->largeBlackBox.y = round(commonGameStats->windowHeight * .005);
 	tableCoordinates->largeBlackBox.w = (gamePokerControlButtonImageData->pokerControlButtonDest[5].x - gamePokerControlButtonImageData->pokerControlButtonDest[0].x) + gamePokerControlButtonImageData->pokerControlButtonDest[0].w;
-	tableCoordinates->largeBlackBox.h = mainBorderHeight;
+	tableCoordinates->largeBlackBox.h = commonGameStats->windowHeight / 2.5;
 
 	// largeYellowBox
 	tableCoordinates->largeYellowBox.h = tableCoordinates->largeBlackBox.h - BLACKBORDERSPACING;

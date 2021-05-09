@@ -224,7 +224,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 	return EXIT_SUCCESS;
 }
 
-bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType)
+bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, struct fonts *gameFonts, enum gametype gameType)
 { 
 	struct payoutTables *payoutTables;
 	payoutTables = getPayoutTables();
@@ -251,7 +251,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 		return EXIT_FAILURE;
 
 	// perform calculations and apply them to the renderer for the text in the status table.
-	if (vPokerStatusTableTextCalculations(mainRenderer, &tableCoordinates, gameType) == EXIT_FAILURE)
+	if (vPokerStatusTableTextCalculations(mainRenderer, &tableCoordinates, gameFonts, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
 
 	// load the fonts into memory only once

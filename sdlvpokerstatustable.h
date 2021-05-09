@@ -12,7 +12,7 @@ struct vPokerStatusTableCoordinates {
 bool vPokerStatusTableBoxCalculations(SDL_Renderer*, struct commonGameStats *,struct vPokerStatusTableCoordinates *, enum gametype, struct gamePokerControlButtonImageData*);
 
 // vPokerStatusTableTextCalculations():  Performs calculations and applies them to the appropriate renderer for the text in the status table.
-bool vPokerStatusTableTextCalculations(SDL_Renderer*, struct vPokerStatusTableCoordinates *,  enum gametype);
+bool vPokerStatusTableTextCalculations(SDL_Renderer*, struct vPokerStatusTableCoordinates *, struct fonts *,  enum gametype);
 
 // vPokerStatusTableRenderer():  Renders the status table at the top of a poker game depending on game selected.
 bool vPokerStatusTableRender(SDL_Renderer *, struct commonGameStats *, struct fonts *, enum gametype, struct gamePokerControlButtonImageData*);

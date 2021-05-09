@@ -4,6 +4,7 @@
 #include "sdlbuttons.h"
 #include "sdlvpokerstatustable.h"
 #include "payouttables.h"
+#include "sdlfonts.h"
 
 extern int intWindowWidth;
 extern int intWindowHeight;
@@ -264,4 +265,45 @@ void setBoxColor(SDL_Renderer *mainRenderer ,struct commonGameStats *commonGameS
 		SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
 
 	return;
+}
+
+bool loadvPokerStatusTableFonts(struct fonts *gameFonts, enum gametype gameType)
+{
+	gameFonts->vPokerStatusTableFont = NULL;
+		
+	switch (gameType)
+	{
+	case JACKS_OR_BETTER:
+		gameFonts->vPokerStatusTableFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
+
+		if (gameFonts->vPokerStatusTableFont == NULL)
+		{
+			fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+			return EXIT_FAILURE;
+		}
+
+		break;
+	default:
+		fprintf(stderr, "Error:  unknown game type for status table.\n");
+		return EXIT_FAILURE;
+		break;
+	}
+
+	return EXIT_SUCCESS;
+}
+
+bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
+{
+	if (gameFonts->vPokerStatusTableFont == NULL)
+	{
+		fprintf(stderr, "Error:  Cannot unload vPokerStatusTableFont.\n");
+		return EXIT_FAILURE;
+	}
+	else
+	{
+		TTF_CloseFont(gameFonts->vPokerStatusTableFont);
+		gameFonts->vPokerStatusTableFont == NULL;
+	}
+
+	return EXIT_SUCCESS;
 }

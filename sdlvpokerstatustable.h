@@ -19,3 +19,9 @@ bool vPokerStatusTableRender(SDL_Renderer *, struct commonGameStats *, enum game
 
 // setBoxColor():  Sets the box color for the correct bet level.
 void setBoxColor(SDL_Renderer *, struct commonGameStats *, int intBox);
+
+// loadvPokerStatusTableFonts():  Loads fonts into memory for vPokerStatusTable depending on what game is desired.
+bool loadvPokerStatusTableFonts(struct fonts *, enum gametype);
+
+// unloadvPokerStatusTableFonts():  Unloads fonts from memory for vPokerStatusTable.
+bool unloadvPokerStatusTableFonts(struct fonts *);

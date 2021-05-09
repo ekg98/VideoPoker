@@ -21,6 +21,7 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameFpsFont = NULL;
 	gameFonts->gameCashFont = NULL;
 	gameFonts->gameBetLevelFont = NULL;
+	gameFonts->vPokerStatusTableFont = NULL;
 
 	// pointer to open holdFont
 	gameFonts->heldFont = TTF_OpenFont("fonts/OneSlot.ttf", 40);
@@ -87,6 +88,7 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameFpsTextTexture = NULL;
 	gameFonts->gameCashTextTexture = NULL;
 	gameFonts->gameBetLevelTextTexture = NULL;
+	gameFonts->vPokerStatusTableTexture = NULL;
 
 	return 0;
 }

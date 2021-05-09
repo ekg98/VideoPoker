@@ -15,7 +15,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer*, struct commonGameStats *,st
 bool vPokerStatusTableTextCalculations(SDL_Renderer*, struct vPokerStatusTableCoordinates *,  enum gametype);
 
 // vPokerStatusTableRenderer():  Renders the status table at the top of a poker game depending on game selected.
-bool vPokerStatusTableRender(SDL_Renderer *, struct commonGameStats *, enum gametype, struct gamePokerControlButtonImageData*);
+bool vPokerStatusTableRender(SDL_Renderer *, struct commonGameStats *, struct fonts *, enum gametype, struct gamePokerControlButtonImageData*);
 
 // setBoxColor():  Sets the box color for the correct bet level.
 void setBoxColor(SDL_Renderer *, struct commonGameStats *, int intBox);

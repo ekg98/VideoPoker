@@ -242,10 +242,10 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 	return EXIT_SUCCESS;
 }
 
-bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct fonts *gameFonts, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	struct vPokerStatusTableCoordinates tableCoordinates;
-		
+	
 	// perform calculations and apply them to the renderer.  Necessary for all poker games.  gameType not needed.
 	if (vPokerStatusTableBoxCalculations(mainRenderer, commonGameStats, &tableCoordinates, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
 		return EXIT_FAILURE;
@@ -253,6 +253,16 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 	// perform calculations and apply them to the renderer for the text in the status table.
 	if (vPokerStatusTableTextCalculations(mainRenderer, &tableCoordinates, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
+
+	// load the fonts into memory only once
+	if (gameFonts->vPokerStatusTableFontLoaded == false)
+	{
+		if (loadvPokerStatusTableFonts(gameFonts, gameType) == EXIT_SUCCESS)
+			gameFonts->vPokerStatusTableFontLoaded = true;
+		else
+			return EXIT_FAILURE;
+	}
+	
 
 	return EXIT_SUCCESS;
 }
@@ -269,6 +279,8 @@ void setBoxColor(SDL_Renderer *mainRenderer ,struct commonGameStats *commonGameS
 
 bool loadvPokerStatusTableFonts(struct fonts *gameFonts, enum gametype gameType)
 {
+	// need to edit this funciton.  Doesn't matter what game is requested font size is not changed here.
+
 	gameFonts->vPokerStatusTableFont = NULL;
 		
 	switch (gameType)
@@ -278,7 +290,7 @@ bool loadvPokerStatusTableFonts(struct fonts *gameFonts, enum gametype gameType)
 
 		if (gameFonts->vPokerStatusTableFont == NULL)
 		{
-			fprintf(stderr, "Failed to load font, %s\n", TTF_GetError());
+			fprintf(stderr, "Failed to load vPokerStatusTableFont, %s\n", TTF_GetError());
 			return EXIT_FAILURE;
 		}
 

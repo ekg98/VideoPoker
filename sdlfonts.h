@@ -41,6 +41,8 @@ struct fonts {
 	SDL_Texture* gameBetLevelTextTexture;
 	SDL_Rect gameBetLevelTextDest;
 		
+	bool vPokerStatusTableFontLoaded;
+
 	TTF_Font* vPokerStatusTableFont;
 	SDL_Texture* vPokerStatusTableTexture;
 	SDL_Rect vPokerStatusTableText[6][10];

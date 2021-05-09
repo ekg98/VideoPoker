@@ -13,6 +13,9 @@ extern int intWindowHeight;
 
 int loadFonts(struct fonts *gameFonts)
 {
+	// status table font is not loaded here.
+	gameFonts->vPokerStatusTableFontLoaded = false;
+
 	// nulling fonts
 	gameFonts->heldFont = NULL;
 	gameFonts->gameStatusWinFont = NULL;
@@ -117,6 +120,12 @@ void closeText(struct fonts *gameFonts)
 	TTF_CloseFont(gameFonts->gameBetLevelFont);
 	gameFonts->gameBetLevelFont = NULL;
 
+	if (gameFonts->vPokerStatusTableFont != NULL)
+	{
+		TTF_CloseFont(gameFonts->vPokerStatusTableFont);
+		gameFonts->vPokerStatusTableFont = NULL;
+	}
+
 	SDL_DestroyTexture(gameFonts->heldTexture);
 	gameFonts->heldTexture = NULL;
 
@@ -137,6 +146,7 @@ void closeText(struct fonts *gameFonts)
 
 	SDL_DestroyTexture(gameFonts->gameBetLevelTextTexture);
 	gameFonts->gameBetLevelTextTexture = NULL;
+		
 }
 
 bool gameStatusWinText(struct card *hand, struct fonts *gameFonts)

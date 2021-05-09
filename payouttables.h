@@ -1,8 +1,8 @@
 // payouttables.h:  Payout tables for various poker games
 
-struct payoutTable {
+struct payoutTables {
 	int intJacksOrBetter[9][5];
 };
 
-// initPayoutTable():  Initialize the list of payout tables in memory.
-struct payoutTable * getPayoutTables(void);
+// getPayoutTables():  Initialize the list of payout tables in memory.
+struct payoutTables * getPayoutTables(void);

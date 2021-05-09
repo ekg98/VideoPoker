@@ -225,8 +225,8 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 
 bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType)
 { 
-	struct payoutTable *payoutTable;
-	payoutTable = getPayoutTables();
+	struct payoutTables *payoutTables;
+	payoutTables = getPayoutTables();
 		
 	switch (gameType)
 	{

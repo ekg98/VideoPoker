@@ -2,9 +2,9 @@
 
 #include "payouttables.h"
 
-struct payoutTable * getPayoutTables(void)
+struct payoutTables * getPayoutTables(void)
 {
-	static const struct payoutTable payoutTable = { 
+	static const struct payoutTables payoutTables = { 
 		// jacks or better
 		{{250, 500, 750, 100, 4000},
 		{50, 100, 150, 200, 250},
@@ -18,5 +18,5 @@ struct payoutTable * getPayoutTables(void)
 		// add more here
 	};
 
-	return &payoutTable;
+	return &payoutTables;
 }

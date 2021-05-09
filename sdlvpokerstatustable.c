@@ -3,6 +3,7 @@
 #include "common.h"
 #include "sdlbuttons.h"
 #include "sdlvpokerstatustable.h"
+#include "payouttables.h"
 
 extern int intWindowWidth;
 extern int intWindowHeight;
@@ -21,7 +22,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 	tableCoordinates->largeBlackBox.x = gamePokerControlButtonImageData->pokerControlButtonDest[0].x;
 	tableCoordinates->largeBlackBox.y = round(commonGameStats->windowHeight * .005);
 	tableCoordinates->largeBlackBox.w = (gamePokerControlButtonImageData->pokerControlButtonDest[5].x - gamePokerControlButtonImageData->pokerControlButtonDest[0].x) + gamePokerControlButtonImageData->pokerControlButtonDest[0].w;
-	tableCoordinates->largeBlackBox.h = commonGameStats->windowHeight / 2.5;
+	tableCoordinates->largeBlackBox.h = round(commonGameStats->windowHeight / 2.5);
 	
 	// largeYellowBox
 	tableCoordinates->largeYellowBox.h = tableCoordinates->largeBlackBox.h - BLACKBORDERSPACING;
@@ -224,6 +225,9 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 
 bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, enum gametype gameType)
 { 
+	struct payoutTable *payoutTable;
+	payoutTable = getPayoutTables();
+		
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:

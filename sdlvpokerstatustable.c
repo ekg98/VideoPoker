@@ -234,7 +234,7 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 	case JACKS_OR_BETTER:
 		break;
 	default:
-		fprintf(stderr, "Error: Game type not found.\n");
+		fprintf(stderr, "Error: Unknown game type.\n");
 		return EXIT_FAILURE;
 		break;
 	}
@@ -245,7 +245,7 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct fonts *gameFonts, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	struct vPokerStatusTableCoordinates tableCoordinates;
-	
+		
 	// perform calculations and apply them to the renderer.  Necessary for all poker games.  gameType not needed.
 	if (vPokerStatusTableBoxCalculations(mainRenderer, commonGameStats, &tableCoordinates, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
 		return EXIT_FAILURE;
@@ -263,6 +263,9 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 			return EXIT_FAILURE;
 	}
 	
+	// create surfaces and textures
+	if (loadvPokerStatusTableTextures(gameFonts, gameType) == EXIT_FAILURE)
+		return EXIT_FAILURE;
 
 	return EXIT_SUCCESS;
 }
@@ -315,6 +318,21 @@ bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
 	{
 		TTF_CloseFont(gameFonts->vPokerStatusTableFont);
 		gameFonts->vPokerStatusTableFont == NULL;
+	}
+
+	return EXIT_SUCCESS;
+}
+
+bool loadvPokerStatusTableTextures(struct fonts *gameFonts, enum gametype gametype)
+{
+	SDL_Color vPokerStatusTableTextYellow = { 255,255,0 };
+	SDL_Color vPokerStatusTableTextWhite = { 255,255,255 };
+
+	// Null textures
+	for (int intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for(int intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+			gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] = NULL;
 	}
 
 	return EXIT_SUCCESS;

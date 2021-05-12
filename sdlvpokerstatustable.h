@@ -25,3 +25,6 @@ bool loadvPokerStatusTableFonts(struct fonts *, enum gametype);
 
 // unloadvPokerStatusTableFonts():  Unloads fonts from memory for vPokerStatusTable.
 bool unloadvPokerStatusTableFonts(struct fonts *);
+
+// loadvPokerStatusTableTexture():  Creates surfaces and textures for vPokerStatusTable.
+bool loadvPokerStatusTableTextures(struct fonts *, enum gametype);

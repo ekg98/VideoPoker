@@ -91,7 +91,7 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameFpsTextTexture = NULL;
 	gameFonts->gameCashTextTexture = NULL;
 	gameFonts->gameBetLevelTextTexture = NULL;
-	gameFonts->vPokerStatusTableTexture = NULL;
+	
 
 	return 0;
 }

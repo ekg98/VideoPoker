@@ -261,9 +261,11 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 			return EXIT_FAILURE;
 	}
 	
+	/*
 	// create surfaces and textures
-	if (loadvPokerStatusTableTextures(gameFonts, gameType) == EXIT_FAILURE)
+	if (loadvPokerStatusTableTextures(mainRenderer, gameFonts, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
+	*/
 
 	return EXIT_SUCCESS;
 }
@@ -321,7 +323,7 @@ bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
 	return EXIT_SUCCESS;
 }
 
-bool loadvPokerStatusTableTextures(struct fonts *gameFonts, enum gametype gametype)
+bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gameFonts, enum gametype gametype)
 {
 	struct payoutTables* payoutTables;
 	payoutTables = getPayoutTables();
@@ -329,8 +331,69 @@ bool loadvPokerStatusTableTextures(struct fonts *gameFonts, enum gametype gamety
 	SDL_Color vPokerStatusTableTextYellow = { 255,255,0 };
 	SDL_Color vPokerStatusTableTextWhite = { 255,255,255 };
 
+	SDL_Surface* vPokerStatusTableSurface[6][10];
+
 	int intCounterColumn = 0, intCounterRow = 0;
-		
+	
+	//
+	// get strings for surfaces
+	//
+
+	// null surfaces.
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+			vPokerStatusTableSurface[intCounterColumn][intCounterRow] = NULL;
+	}
+
+	//
+	// insert here code to TTF_Render_Solid the surface based on font, string, and color.
+	//
+
+	// check textures for null.  If not null destroy.
+	for ( intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for ( intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		{
+			if (gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] != NULL)
+			{
+				SDL_DestroyTexture(gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow]);
+				gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] = NULL;
+			}
+		}
+	}
+
+	// create textures from surfaces
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		{
+			if (vPokerStatusTableSurface[intCounterColumn][intCounterRow] == NULL)
+			{
+				fprintf(stderr, "Error:  vPokerStatusTableSurface did not load properly.\n");
+				return EXIT_FAILURE;
+			}
+
+			gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] = SDL_CreateTextureFromSurface(mainRenderer, vPokerStatusTableSurface[intCounterColumn][intCounterRow]);
+
+			if (gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] == NULL)
+			{
+				fprintf(stderr, "Error:  vPokerStatusTableTexture did not load properly.\n");
+				return EXIT_FAILURE;
+			}
+		}
+	}
+
+	// free surfaces
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		{
+			SDL_FreeSurface(vPokerStatusTableSurface[intCounterColumn][intCounterRow]);
+			vPokerStatusTableSurface[intCounterColumn][intCounterRow] = NULL;
+		}
+	}
+
 	return EXIT_SUCCESS;
 }
 

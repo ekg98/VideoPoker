@@ -226,9 +226,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 
 bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, struct fonts *gameFonts, enum gametype gameType)
 { 
-	struct payoutTables *payoutTables;
-	payoutTables = getPayoutTables();
-		
+			
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:
@@ -325,14 +323,26 @@ bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
 
 bool loadvPokerStatusTableTextures(struct fonts *gameFonts, enum gametype gametype)
 {
+	struct payoutTables* payoutTables;
+	payoutTables = getPayoutTables();
+
 	SDL_Color vPokerStatusTableTextYellow = { 255,255,0 };
 	SDL_Color vPokerStatusTableTextWhite = { 255,255,255 };
 
-	// Null textures
+	int intCounterColumn = 0, intCounterRow = 0;
+		
+	return EXIT_SUCCESS;
+}
+
+bool unloadvPokerStatusTableTextures(struct fonts *gameFonts)
+{
 	for (int intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
 	{
-		for(int intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		for (int intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		{
+			SDL_DestroyTexture(gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow]);
 			gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] = NULL;
+		}
 	}
 
 	return EXIT_SUCCESS;

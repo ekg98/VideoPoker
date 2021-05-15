@@ -92,6 +92,12 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameCashTextTexture = NULL;
 	gameFonts->gameBetLevelTextTexture = NULL;
 	
+	for (int intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (int intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+			gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] = NULL;
+	}
+
 
 	return 0;
 }
@@ -146,7 +152,8 @@ void closeText(struct fonts *gameFonts)
 
 	SDL_DestroyTexture(gameFonts->gameBetLevelTextTexture);
 	gameFonts->gameBetLevelTextTexture = NULL;
-		
+
+	unloadvPokerStatusTableTextures(gameFonts);
 }
 
 bool gameStatusWinText(struct card *hand, struct fonts *gameFonts)

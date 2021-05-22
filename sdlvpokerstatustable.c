@@ -271,11 +271,7 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 	// perform calculations and apply them to the renderer.  Necessary for all poker games.  gameType not needed.
 	if (vPokerStatusTableBoxCalculations(mainRenderer, commonGameStats, &tableCoordinates, gameType, gamePokerControlButtonImageData) == EXIT_FAILURE)
 		return EXIT_FAILURE;
-
-	// perform calculations and apply them to the renderer for the text in the status table.
-	if (vPokerStatusTableTextCalculations(mainRenderer, &tableCoordinates, gameFonts, gameType) == EXIT_FAILURE)
-		return EXIT_FAILURE;
-
+	
 	// load the fonts into memory only once
 	if (gameFonts->vPokerStatusTableFontLoaded == false)
 	{
@@ -298,6 +294,10 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 	if (loadvPokerStatusTableTextures(mainRenderer, gameFonts, gameText, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
 	
+	// perform calculations for the text in the status table.
+	if (vPokerStatusTableTextCalculations(mainRenderer, &tableCoordinates, gameFonts, gameType) == EXIT_FAILURE)
+		return EXIT_FAILURE;
+
 	// render textures to vPokerStatusTable
 	switch (gameType)
 	{
@@ -379,9 +379,7 @@ bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
 
 bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gameFonts, struct text *gameText, enum gametype gametype)
 {
-	struct payoutTables* payoutTables;
-	payoutTables = getPayoutTables();
-
+	
 	SDL_Color vPokerStatusTableTextYellow = { 255,255,0 };
 	SDL_Color vPokerStatusTableTextWhite = { 255,255,255 };
 
@@ -500,6 +498,9 @@ bool unloadvPokerStatusTableTextures(struct fonts *gameFonts)
 
 bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
 {
+	struct payoutTables* payoutTables;
+	payoutTables = getPayoutTables();
+
 	int intCounterColumn = 0, intCounterRow = 0;
 
 	// null array in gameText

@@ -1,7 +1,7 @@
 // sdlfonts.h:  Header file for sdl ttf fonts used in Video Poker by ekg98.
 
 int loadFonts(struct fonts *);
-void closeText(struct fonts *);
+void closeText(struct fonts *, struct text *);
 bool gameHeldText(struct fonts *);
 bool gameStatusWinText(struct card *, struct fonts *);
 bool gameTypeText(enum gametype, struct fonts *);
@@ -42,10 +42,11 @@ struct fonts {
 	SDL_Rect gameBetLevelTextDest;
 		
 	bool vPokerStatusTableFontLoaded;
-
 	TTF_Font* vPokerStatusTableFont;
 	SDL_Texture* vPokerStatusTableTexture[6][10];
 	SDL_Rect vPokerStatusTableText[6][10];
+	SDL_Color vPokerStatusTableTextColor[6][10];
+
 };
 
 // various game strings

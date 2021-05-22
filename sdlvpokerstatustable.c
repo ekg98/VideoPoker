@@ -270,11 +270,11 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 			return EXIT_FAILURE;
 	}
 
-	/*
+	
 	// create surfaces and textures
 	if (loadvPokerStatusTableTextures(mainRenderer, gameFonts, gameText, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
-	*/
+	
 
 	return EXIT_SUCCESS;
 }
@@ -332,7 +332,7 @@ bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
 	return EXIT_SUCCESS;
 }
 
-bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gameFonts,struct text *gameText, enum gametype gametype)
+bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gameFonts, struct text *gameText, enum gametype gametype)
 {
 	struct payoutTables* payoutTables;
 	payoutTables = getPayoutTables();
@@ -345,7 +345,7 @@ bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gam
 	int intCounterColumn = 0, intCounterRow = 0;
 	
 	//
-	// get strings for surfaces
+	// get strings for surfaces from gameText structure
 	//
 
 	// null surfaces.
@@ -355,9 +355,32 @@ bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gam
 			vPokerStatusTableSurface[intCounterColumn][intCounterRow] = NULL;
 	}
 
-	//
-	// insert here code to TTF_Render_Solid the surface based on font, string, and color.
-	//
+	// make them all white.  Need to change this so it reflects winner for each hand.
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+			gameFonts->vPokerStatusTableTextColor[intCounterColumn][intCounterRow] = vPokerStatusTableTextWhite;
+	}
+
+	// create surfaces from strings
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		{
+			if (gameText->vPokerStatusTableString[intCounterColumn][intCounterRow] == NULL)
+				vPokerStatusTableSurface[intCounterColumn][intCounterRow] = TTF_RenderText_Solid(gameFonts->vPokerStatusTableFont, "NULL", gameFonts->vPokerStatusTableTextColor[intCounterColumn][intCounterRow]);
+			else
+				vPokerStatusTableSurface[intCounterColumn][intCounterRow] = TTF_RenderText_Solid(gameFonts->vPokerStatusTableFont, gameText->vPokerStatusTableString[intCounterColumn][intCounterRow], gameFonts->vPokerStatusTableTextColor[intCounterColumn][intCounterRow]);
+		}
+	}
+	
+	// check surfaces for null.  If null exit.
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+			if (vPokerStatusTableSurface[intCounterColumn][intCounterRow] == NULL)
+				return EXIT_FAILURE;
+	}
 
 	// check textures for null.  If not null destroy.
 	for ( intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
@@ -422,11 +445,36 @@ bool unloadvPokerStatusTableTextures(struct fonts *gameFonts)
 
 bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
 {
-	
+	int intCounterColumn = 0, intCounterRow = 0;
+
+	// null array in gameText
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+			gameText->vPokerStatusTableString[intCounterColumn][intCounterRow] = NULL;	
+	}
+
+	//
+	//  Populate gameText array here
+	//
+
+	gameText->vPokerStatusTableStringsLoaded = true;
+
 	return EXIT_SUCCESS;
 }
 
 bool unloadvPokerStatusTableStrings(struct text* gameText, enum gametype gameType)
 {
+	int intCounterColumn = 0, intCounterRow = 0;
+
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+			if(gameText->vPokerStatusTableString[intCounterColumn][intCounterRow] != NULL)
+				free(gameText->vPokerStatusTableString[intCounterColumn][intCounterRow]);
+	}
+
+	gameText->vPokerStatusTableStringsLoaded = false;
+
 	return EXIT_SUCCESS;
 }

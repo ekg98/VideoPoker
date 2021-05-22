@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 
 
 	closeDeck(&deckImageData);
-	closeText(&gameFonts);
+	closeText(&gameFonts, &gameText);
 	closedenombuttons(&gameDenomButtonImageData);
 	closepokercontrolbuttons(&gamePokerControlButtonImageData);
 	closesdl();

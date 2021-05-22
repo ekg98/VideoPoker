@@ -101,7 +101,7 @@ int loadFonts(struct fonts *gameFonts)
 }
 
 // closeText:  close any open ttf texts
-void closeText(struct fonts *gameFonts)
+void closeText(struct fonts *gameFonts, struct text *gameText)
 {
 	TTF_CloseFont(gameFonts->heldFont);
 	gameFonts->heldFont = NULL;
@@ -152,6 +152,7 @@ void closeText(struct fonts *gameFonts)
 	gameFonts->gameBetLevelTextTexture = NULL;
 
 	unloadvPokerStatusTableTextures(gameFonts);
+	unloadvPokerStatusTableStrings(gameText);
 }
 
 bool gameStatusWinText(struct card *hand, struct fonts *gameFonts)

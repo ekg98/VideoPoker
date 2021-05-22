@@ -13,9 +13,7 @@ extern int intWindowHeight;
 
 int loadFonts(struct fonts *gameFonts)
 {
-	// status table font is not loaded here.
-	gameFonts->vPokerStatusTableFontLoaded = false;
-
+	
 	// nulling fonts
 	gameFonts->heldFont = NULL;
 	gameFonts->gameStatusWinFont = NULL;

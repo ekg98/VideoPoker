@@ -43,6 +43,11 @@ int main(int argc, char *argv[])
 
 	// large structure containing game font datas.
 	struct fonts gameFonts;
+	gameFonts.vPokerStatusTableFontLoaded = false;
+
+	// large structure containing game text datas.
+	struct text gameText;
+	gameText.vPokerStatusTableStringsLoaded = false;
 
 	// large structure containing game deck image data for five card poker.
 	struct fiveCardDeckImageData deckImageData;
@@ -234,7 +239,7 @@ int main(int argc, char *argv[])
 						case MAIN_MENU:
 							break;
 						case JACKS_OR_BETTER:
-							JacksOrBetterRender(&commonGameStats ,hand, &gameFonts, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, commonGameStats.currentGameCash, intBetLevel, commonGameStats.currentDenom);
+							JacksOrBetterRender(&commonGameStats ,hand, &gameFonts, &gameText, &deckImageData, &gameDenomButtonImageData, &gamePokerControlButtonImageData, handState, commonGameStats.currentGameCash, intBetLevel, commonGameStats.currentDenom);
 							break;
 						case DUCES_WILD:
 							break;

@@ -47,3 +47,11 @@ struct fonts {
 	SDL_Texture* vPokerStatusTableTexture[6][10];
 	SDL_Rect vPokerStatusTableText[6][10];
 };
+
+// various game strings
+struct text {
+
+	bool vPokerStatusTableStringsLoaded;
+	char *vPokerStatusTableString[6][10];
+
+};

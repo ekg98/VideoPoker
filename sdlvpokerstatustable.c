@@ -240,7 +240,7 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 	return EXIT_SUCCESS;
 }
 
-bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct fonts *gameFonts, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct fonts *gameFonts, struct text *gameText, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	struct vPokerStatusTableCoordinates tableCoordinates;
 		
@@ -261,9 +261,18 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 			return EXIT_FAILURE;
 	}
 	
+	// load strings into memory
+	if (gameText->vPokerStatusTableStringsLoaded == false)
+	{
+		if (loadvPokerStatusTableStrings(gameText, gameType) == EXIT_SUCCESS)
+			gameText->vPokerStatusTableStringsLoaded = true;
+		else
+			return EXIT_FAILURE;
+	}
+
 	/*
 	// create surfaces and textures
-	if (loadvPokerStatusTableTextures(mainRenderer, gameFonts, gameType) == EXIT_FAILURE)
+	if (loadvPokerStatusTableTextures(mainRenderer, gameFonts, gameText, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
 	*/
 
@@ -317,13 +326,13 @@ bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
 	else
 	{
 		TTF_CloseFont(gameFonts->vPokerStatusTableFont);
-		gameFonts->vPokerStatusTableFont == NULL;
+		gameFonts->vPokerStatusTableFont = NULL;
 	}
 
 	return EXIT_SUCCESS;
 }
 
-bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gameFonts, enum gametype gametype)
+bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gameFonts,struct text *gameText, enum gametype gametype)
 {
 	struct payoutTables* payoutTables;
 	payoutTables = getPayoutTables();
@@ -408,5 +417,16 @@ bool unloadvPokerStatusTableTextures(struct fonts *gameFonts)
 		}
 	}
 
+	return EXIT_SUCCESS;
+}
+
+bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
+{
+	
+	return EXIT_SUCCESS;
+}
+
+bool unloadvPokerStatusTableStrings(struct text* gameText, enum gametype gameType)
+{
 	return EXIT_SUCCESS;
 }

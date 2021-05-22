@@ -226,10 +226,33 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 
 bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, struct fonts *gameFonts, enum gametype gameType)
 { 
-			
+	int intCounterColumn, intCounterRow;
+	int correctedTextWidth[6][10], correctedTextHeight[6][10];
+
+	// adjust for resolution height and width
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		{
+			gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].h = (intWindowWidth / 1920.0) * gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].h;
+			gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].w = (intWindowHeight / 1200.0) * gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].w;
+		}
+	}
+
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:
+		// set X
+		for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+		{
+			for (intCounterRow = 0; intCounterRow < 9; intCounterRow++)
+			{
+				gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].x = tableCoordinates->blueBox[intCounterColumn].x;
+				gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].y = (tableCoordinates->blueBox[intCounterColumn].y + (intCounterRow * gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].h));
+			}
+		}
+
+
 		break;
 	default:
 		fprintf(stderr, "Error: Unknown game type.\n");
@@ -242,6 +265,7 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 
 bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct fonts *gameFonts, struct text *gameText, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
+	int intCounterColumn, intCounterRow;
 	struct vPokerStatusTableCoordinates tableCoordinates;
 		
 	// perform calculations and apply them to the renderer.  Necessary for all poker games.  gameType not needed.
@@ -269,12 +293,33 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 		else
 			return EXIT_FAILURE;
 	}
-
-	
+		
 	// create surfaces and textures
 	if (loadvPokerStatusTableTextures(mainRenderer, gameFonts, gameText, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
 	
+	// render textures to vPokerStatusTable
+	switch (gameType)
+	{
+	case JACKS_OR_BETTER:
+		for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+		{
+			for (intCounterRow = 0; intCounterRow < 9; intCounterRow++)
+				SDL_RenderCopy(mainRenderer, gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow], NULL, &gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow]);
+		}
+		break;
+	case DUCES_WILD:
+		for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+		{
+			for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+				SDL_RenderCopy(mainRenderer, gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow], NULL, &gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow]);
+		}
+		break;
+	default:
+		fprintf(stderr, "Error: Unknown game type.\n");
+		return EXIT_FAILURE;
+		break;
+	}
 
 	return EXIT_SUCCESS;
 }
@@ -347,7 +392,7 @@ bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gam
 	//
 	// get strings for surfaces from gameText structure
 	//
-
+	
 	// null surfaces.
 	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
 	{
@@ -413,6 +458,16 @@ bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gam
 				fprintf(stderr, "Error:  vPokerStatusTableTexture did not load properly.\n");
 				return EXIT_FAILURE;
 			}
+		}
+	}
+
+	// grab height and width coordinates for sdl rect on screen.
+	for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	{
+		for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+		{
+			gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].h = vPokerStatusTableSurface[intCounterColumn][intCounterRow]->h;
+			gameFonts->vPokerStatusTableText[intCounterColumn][intCounterRow].w = vPokerStatusTableSurface[intCounterColumn][intCounterRow]->w;
 		}
 	}
 

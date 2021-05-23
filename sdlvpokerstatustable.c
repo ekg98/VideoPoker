@@ -517,7 +517,7 @@ bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
 	case JACKS_OR_BETTER:
 		for (intCounterRow = 0; intCounterRow < 9; intCounterRow++)
 		{
-			for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+			for (intCounterColumn = 0; intCounterColumn < 5; intCounterColumn++)
 			{
 				sprintf(buffer, "%d", payoutTables->intJacksOrBetter[intCounterRow][intCounterColumn]);
 				gameText->vPokerStatusTableString[intCounterRow][intCounterColumn + 1] = malloc(strlen(buffer) + 1);

@@ -5,6 +5,7 @@
 #include "sdlvpokerstatustable.h"
 #include "payouttables.h"
 #include "sdlfonts.h"
+#include "cards.h"
 
 
 extern int intWindowWidth;
@@ -264,7 +265,7 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 	return EXIT_SUCCESS;
 }
 
-bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct fonts *gameFonts, struct text *gameText, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
+bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats *commonGameStats, struct card *hand, struct fonts *gameFonts, struct text *gameText, enum gametype gameType, struct gamePokerControlButtonImageData* gamePokerControlButtonImageData)
 {
 	int intCounterColumn, intCounterRow;
 	struct vPokerStatusTableCoordinates tableCoordinates;
@@ -291,6 +292,10 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 			return EXIT_FAILURE;
 	}
 		
+	// update vPokerStatusTableColors
+	if (updatevPokerStatusTableTextColor(commonGameStats, hand, gameFonts, gameType) == EXIT_FAILURE)
+		return EXIT_FAILURE;
+
 	// create surfaces and textures
 	if (loadvPokerStatusTableTextures(mainRenderer, gameFonts, gameText, gameType) == EXIT_FAILURE)
 		return EXIT_FAILURE;
@@ -380,32 +385,17 @@ bool unloadvPokerStatusTableFonts(struct fonts *gameFonts)
 
 bool loadvPokerStatusTableTextures(SDL_Renderer *mainRenderer, struct fonts *gameFonts, struct text *gameText, enum gametype gametype)
 {
-	
-	SDL_Color vPokerStatusTableTextYellow = { 255,255,0 };
-	SDL_Color vPokerStatusTableTextWhite = { 255,255,255 };
-
 	SDL_Surface* vPokerStatusTableSurface[10][6];
 
 	int intCounterColumn = 0, intCounterRow = 0;
-	
-	//
-	// get strings for surfaces from gameText structure
-	//
-	
+			
 	// null surfaces.
 	for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
 	{
 		for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
 			vPokerStatusTableSurface[intCounterRow][intCounterColumn] = NULL;
 	}
-
-	// make them all white.  Need to change this so it reflects winner for each hand.
-	for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
-	{
-		for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
-			gameFonts->vPokerStatusTableTextColor[intCounterRow][intCounterColumn] = vPokerStatusTableTextYellow;
-	}
-	
+			
 	// create surfaces from strings
 	for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
 	{
@@ -512,6 +502,7 @@ bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
 			gameText->vPokerStatusTableString[intCounterRow][intCounterColumn] = NULL;	
 	}
 
+	// load numbers into gameText array
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:
@@ -549,5 +540,77 @@ bool unloadvPokerStatusTableStrings(struct text* gameText, enum gametype gameTyp
 
 	gameText->vPokerStatusTableStringsLoaded = false;
 
+	return EXIT_SUCCESS;
+}
+
+bool updatevPokerStatusTableTextColor(struct commonGameStats *commonGameStats ,struct card *hand, struct fonts *gameFonts, enum gametype gameType)
+{
+	SDL_Color vPokerStatusTableTextYellow = { 255,255,0 };
+	SDL_Color vPokerStatusTableTextWhite = { 255,255,255 };
+
+	int intCounterRow, intCounterColumn;
+	
+	// make them all yellow.
+	for (intCounterRow = 0; intCounterRow < 10; intCounterRow++)
+	{
+		for (intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+			gameFonts->vPokerStatusTableTextColor[intCounterRow][intCounterColumn] = vPokerStatusTableTextYellow;
+	}
+
+	switch (gameType)
+	{
+	case JACKS_OR_BETTER:
+		
+		if (isroyalflush(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[0][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[0][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (isstraightflush(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[1][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[1][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (isfourkind(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[2][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[2][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (isfullhouse(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[3][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[3][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (isflush(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[4][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[4][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (isstraight(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[5][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[5][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (isthreekind(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[6][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[6][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (istwopair(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[7][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[7][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		else if (isjacksorbetterpair(hand, 5))
+		{
+			gameFonts->vPokerStatusTableTextColor[8][0] = vPokerStatusTableTextWhite;
+			gameFonts->vPokerStatusTableTextColor[8][commonGameStats->currentBetLevel] = vPokerStatusTableTextWhite;
+		}
+		break;
+	default:
+		fprintf(stderr, "Error:  gametype not found.\n");
+		return EXIT_FAILURE;
+		break;
+	}
 	return EXIT_SUCCESS;
 }

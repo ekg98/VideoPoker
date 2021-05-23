@@ -15,7 +15,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer*, struct commonGameStats *,st
 bool vPokerStatusTableTextCalculations(SDL_Renderer*, struct vPokerStatusTableCoordinates *, struct fonts *,  enum gametype);
 
 // vPokerStatusTableRenderer():  Renders the status table at the top of a poker game depending on game selected.
-bool vPokerStatusTableRender(SDL_Renderer *, struct commonGameStats *, struct fonts *, struct text *, enum gametype, struct gamePokerControlButtonImageData*);
+bool vPokerStatusTableRender(SDL_Renderer *, struct commonGameStats *, struct card *, struct fonts *, struct text *, enum gametype, struct gamePokerControlButtonImageData*);
 
 // setBoxColor():  Sets the box color for the correct bet level.
 void setBoxColor(SDL_Renderer *, struct commonGameStats *, int intBox);
@@ -27,7 +27,7 @@ bool loadvPokerStatusTableFonts(struct fonts *, enum gametype);
 bool unloadvPokerStatusTableFonts(struct fonts *);
 
 // loadvPokerStatusTableTexture():  Creates surfaces and textures for vPokerStatusTable.
-bool loadvPokerStatusTableTextures(SDL_Renderer *,struct fonts *, struct text*, enum gametype);
+bool loadvPokerStatusTableTextures(SDL_Renderer *, struct fonts *, struct text*, enum gametype);
 
 // unloadvPokerStatusTableTextures():  Unloads textures from memory for vPokerStatusTable.
 bool unloadvPokerStatusTableTextures(struct fonts*);
@@ -37,3 +37,6 @@ bool loadvPokerStatusTableStrings(struct text *, enum gametype);
 
 // unloadvPokerStatusTableStrings():  Unloads strings from memory for vPokerStatusTable.
 bool unloadvPokerStatusTableStrings(struct text*, enum gametype);
+
+// updatevPokerStatusTableTextColor():  Updates the color array for the vPokerStatusTableText depending on the hand agrument.
+bool updatevPokerStatusTableTextColor(struct commonGameStats *, struct card *, struct fonts *, enum gametype);

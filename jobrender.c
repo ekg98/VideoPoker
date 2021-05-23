@@ -13,7 +13,7 @@ extern SDL_Renderer* mainWindowRenderer;
 void JacksOrBetterRender(struct commonGameStats *commonGameStats ,struct card *hand, struct fonts *gameFonts, struct text *gameText, struct fiveCardDeckImageData *deckImageData, struct gameDenomButtonImageData *gameDenomButtonImageData, struct gamePokerControlButtonImageData *gamePokerControlButtonImageData, bool handState, float floatGameCash, int intBetLevel, enum denomtype denom)
 {
 	// vPokerStatusTableRender:  Draws the status table on the top of the screen.
-	if (vPokerStatusTableRender(mainWindowRenderer, commonGameStats, gameFonts, gameText, JACKS_OR_BETTER, gamePokerControlButtonImageData))
+	if (vPokerStatusTableRender(mainWindowRenderer, commonGameStats, hand, gameFonts, gameText, JACKS_OR_BETTER, gamePokerControlButtonImageData))
 	{
 		fprintf(stderr, "Error:  Could not render Status table properly.\n");
 		exit(EXIT_FAILURE);

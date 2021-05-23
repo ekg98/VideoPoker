@@ -134,7 +134,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 	}
 
 	// render blueBox #0
-	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+	SDL_SetRenderDrawColor(mainRenderer, 0, 0, 139, 0);
 	if (SDL_RenderFillRect(mainRenderer, &tableCoordinates->blueBox[0]))
 	{
 		fprintf(stderr, "Error drawing video poker status table #0 blue box.\n");
@@ -334,9 +334,11 @@ bool vPokerStatusTableRender(SDL_Renderer* mainRenderer, struct commonGameStats 
 void setBoxColor(SDL_Renderer *mainRenderer ,struct commonGameStats *commonGameStats, int intBox)
 {
 	if (commonGameStats->currentBetLevel == intBox)
+		// red
 		SDL_SetRenderDrawColor(mainRenderer, 255, 0, 0, 0);
 	else
-		SDL_SetRenderDrawColor(mainRenderer, 0, 0, 255, 0);
+		// dark blue
+		SDL_SetRenderDrawColor(mainRenderer, 0, 0, 139, 0);
 
 	return;
 }

@@ -45,6 +45,9 @@
     <ClCompile Include="payouttables.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dataStrings.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cards.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="payouttables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dataStrings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

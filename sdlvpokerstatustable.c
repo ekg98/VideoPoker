@@ -4,6 +4,7 @@
 #include "sdlbuttons.h"
 #include "sdlvpokerstatustable.h"
 #include "payouttables.h"
+#include "dataStrings.h"
 #include "sdlfonts.h"
 #include "cards.h"
 
@@ -492,6 +493,9 @@ bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
 	struct payoutTables* payoutTables;
 	payoutTables = getPayoutTables();
 
+	struct vPokerStatusTableJacksOrBetterStrings *vPokerStatusTableJacksOrBetterStrings;
+	vPokerStatusTableJacksOrBetterStrings = getvPokerStatusTableJacksOrBetterStrings();
+
 	int intCounterColumn = 0, intCounterRow = 0;
 	char buffer[8];
 
@@ -502,10 +506,11 @@ bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
 			gameText->vPokerStatusTableString[intCounterRow][intCounterColumn] = NULL;	
 	}
 
-	// load numbers into gameText array
+	// load numbers and text into gameText array
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:
+		// numbers
 		for (intCounterRow = 0; intCounterRow < 9; intCounterRow++)
 		{
 			for (intCounterColumn = 0; intCounterColumn < 5; intCounterColumn++)
@@ -514,6 +519,12 @@ bool loadvPokerStatusTableStrings(struct text *gameText, enum gametype gameType)
 				gameText->vPokerStatusTableString[intCounterRow][intCounterColumn + 1] = malloc(strlen(buffer) + 1);
 				strcpy(gameText->vPokerStatusTableString[intCounterRow][intCounterColumn + 1], buffer);
 			}
+		}
+
+		// strings
+		for (intCounterRow = 0; intCounterRow < 9; intCounterRow++)
+		{
+			*gameText->vPokerStatusTableString[intCounterRow] = vPokerStatusTableJacksOrBetterStrings->string[intCounterRow];
 		}
 		break;
 	default:
@@ -557,6 +568,7 @@ bool updatevPokerStatusTableTextColor(struct commonGameStats *commonGameStats ,s
 			gameFonts->vPokerStatusTableTextColor[intCounterRow][intCounterColumn] = vPokerStatusTableTextYellow;
 	}
 
+	// turn only on the ones that need to be white depending on win condition.  Leave the rest yellow.  If no winner leave all yellow.
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:

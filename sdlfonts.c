@@ -90,10 +90,11 @@ int loadFonts(struct fonts *gameFonts)
 	gameFonts->gameCashTextTexture = NULL;
 	gameFonts->gameBetLevelTextTexture = NULL;
 	
-	for (int intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+	// nulling vPokerStatusTableTextures
+	for (int intCounterRow = 0; intCounterRow < 10; intCounterRow++)
 	{
-		for (int intCounterRow = 0; intCounterRow < 10; intCounterRow++)
-			gameFonts->vPokerStatusTableTexture[intCounterColumn][intCounterRow] = NULL;
+		for (int intCounterColumn = 0; intCounterColumn < 6; intCounterColumn++)
+			gameFonts->vPokerStatusTableTexture[intCounterRow][intCounterColumn] = NULL;
 	}
 
 

@@ -43,9 +43,9 @@ struct fonts {
 		
 	bool vPokerStatusTableFontLoaded;
 	TTF_Font* vPokerStatusTableFont;
-	SDL_Texture* vPokerStatusTableTexture[6][10];
-	SDL_Rect vPokerStatusTableText[6][10];
-	SDL_Color vPokerStatusTableTextColor[6][10];
+	SDL_Texture* vPokerStatusTableTexture[10][6];
+	SDL_Rect vPokerStatusTableText[10][6];
+	SDL_Color vPokerStatusTableTextColor[10][6];
 
 };
 
@@ -53,6 +53,6 @@ struct fonts {
 struct text {
 
 	bool vPokerStatusTableStringsLoaded;
-	char *vPokerStatusTableString[6][10];
+	char *vPokerStatusTableString[10][6];
 
 };

@@ -359,7 +359,7 @@ bool loadvPokerStatusTableFonts(struct fonts *gameFonts, enum gametype gameType)
 	switch (gameType)
 	{
 	case JACKS_OR_BETTER:
-		gameFonts->vPokerStatusTableFont = TTF_OpenFont("fonts/OneSlot.ttf", 44);
+		gameFonts->vPokerStatusTableFont = TTF_OpenFont("fonts/OneSlot.ttf", 45);
 
 		if (gameFonts->vPokerStatusTableFont == NULL)
 		{

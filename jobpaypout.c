@@ -9,7 +9,7 @@ void JacksOrBetterPayout(struct card *hand, int intBetLevel, float *floatGameCas
 {
 	// payout table for jacks or better.  This is in credits.
 	const int intJacksOrBetterPayoutTable[9][5] = {
-		{250, 500, 750, 100, 4000},
+		{250, 500, 750, 1000, 4000},
 		{50, 100, 150, 200, 250},
 		{25, 50, 75, 100, 125},
 		{9, 18, 27, 36, 45},

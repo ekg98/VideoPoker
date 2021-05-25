@@ -6,7 +6,7 @@ struct payoutTables * getPayoutTables(void)
 {
 	static const struct payoutTables payoutTables = { 
 		// jacks or better
-		{{250, 500, 750, 100, 4000},
+		{{250, 500, 750, 1000, 4000},
 		{50, 100, 150, 200, 250},
 		{25, 50, 75, 100, 125},
 		{9, 18, 27, 36, 45},

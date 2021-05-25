@@ -230,8 +230,7 @@ bool vPokerStatusTableBoxCalculations(SDL_Renderer* mainRenderer, struct commonG
 bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPokerStatusTableCoordinates *tableCoordinates, struct fonts *gameFonts, enum gametype gameType)
 { 
 	int intCounterColumn, intCounterRow;
-	int correctedTextWidth[10][6], correctedTextHeight[10][6];
-
+	
 	const int SPACING = 4;
 
 	// adjust for resolution height and width
@@ -250,11 +249,11 @@ bool vPokerStatusTableTextCalculations(SDL_Renderer *mainRenderer, struct vPoker
 		// set X
 		for (intCounterRow = 0; intCounterRow < 9; intCounterRow++)
 		{
-			// set X for 0 column
+			// set X and Y for 0 column
 			gameFonts->vPokerStatusTableText[intCounterRow][0].x = tableCoordinates->blueBox[0].x + SPACING;
 			gameFonts->vPokerStatusTableText[intCounterRow][0].y = (tableCoordinates->blueBox[0].y + (intCounterRow * gameFonts->vPokerStatusTableText[intCounterRow][0].h));
 
-			// set X for 1 to 5 column
+			// set X and Y for 1 to 5 column
 			for (intCounterColumn = 1; intCounterColumn < 6; intCounterColumn++)
 			{
 				gameFonts->vPokerStatusTableText[intCounterRow][intCounterColumn].x = ((tableCoordinates->blueBox[intCounterColumn].x + tableCoordinates->blueBox[intCounterColumn].w) - gameFonts->vPokerStatusTableText[intCounterRow][intCounterColumn].w) - SPACING;

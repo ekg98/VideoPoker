@@ -5,15 +5,15 @@
 struct vPokerStatusTableJacksOrBetterStrings* getvPokerStatusTableJacksOrBetterStrings(void)
 {
 	static const struct vPokerStatusTableJacksOrBetterStrings vPokerStatusTableJacksOrBetterStrings = {
-		{"ROYAL FLUSH",
-		"STRAIGHT FLUSH",
-		"FOUR OF A KIND",
-		"FULL HOUSE",
-		"FLUSH",
-		"STRAIGHT",
-		"THREE OF A KIND",
-		"TWO PAIR",
-		"JACKS OR BETTER"}
+		{"ROYAL FLUSH ··············",
+		"STRAIGHT FLUSH ···········",
+		"FOUR OF A KIND ···········",
+		"FULL HOUSE ···············",
+		"FLUSH ····················",
+		"STRAIGHT ·················",
+		"THREE OF A KIND ··········",
+		"TWO PAIR ·················",
+		"JACKS OR BETTER ··········"}
 	};
 
 	return &vPokerStatusTableJacksOrBetterStrings;
